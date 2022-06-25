@@ -18,15 +18,15 @@
   <meta name="author" content="0P1N">
   <meta name="keywords" content="">
   
-    <meta name="description" content="王道计算机考研 计算机组成原理1.1计算机的发展   发展阶段 时间 逻辑元件 速度（次&#x2F;秒） 内存 外存    第一代 1946-1957 电子管 几千-几万 汞延迟线、磁鼓 穿孔卡片、纸带   第二代 1958-1964 晶体管 几万-几十万 磁芯存储器 磁带   第三代 1964-1971 中小规模集成电路 几十万-几百万 半导体存储器 磁带、磁盘   第四代 1972-现在 大规">
+    <meta name="description" content="数据结构与算法基础（青岛大学-王卓）1.2基本概念和术语1.数据（Data）能输入计算机且能被计算机处理的各种符号的集合 信息的载体；是对客观事物符号化的表示；能够被计算机识别、存储和加工 包括： 1）数值型的数据：整数、实数等 2）非数值型的数据：文字、图像、图形、声音等 2.数据元素（Data element）和数据项数据元素：是数据的基本单位，在计算机程序中通常作为一个整体进行考虑和处理。也">
 <meta property="og:type" content="article">
-<meta property="og:title" content="计算机组成原理笔记">
-<meta property="og:url" content="https://lkliki.github.io/2022/06/24/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:title" content="数据结构与算法笔记">
+<meta property="og:url" content="https://lkliki.github.io/2022/06/25/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/index.html">
 <meta property="og:site_name" content="0P1N">
-<meta property="og:description" content="王道计算机考研 计算机组成原理1.1计算机的发展   发展阶段 时间 逻辑元件 速度（次&#x2F;秒） 内存 外存    第一代 1946-1957 电子管 几千-几万 汞延迟线、磁鼓 穿孔卡片、纸带   第二代 1958-1964 晶体管 几万-几十万 磁芯存储器 磁带   第三代 1964-1971 中小规模集成电路 几十万-几百万 半导体存储器 磁带、磁盘   第四代 1972-现在 大规">
+<meta property="og:description" content="数据结构与算法基础（青岛大学-王卓）1.2基本概念和术语1.数据（Data）能输入计算机且能被计算机处理的各种符号的集合 信息的载体；是对客观事物符号化的表示；能够被计算机识别、存储和加工 包括： 1）数值型的数据：整数、实数等 2）非数值型的数据：文字、图像、图形、声音等 2.数据元素（Data element）和数据项数据元素：是数据的基本单位，在计算机程序中通常作为一个整体进行考虑和处理。也">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2022-06-24T06:32:34.000Z">
-<meta property="article:modified_time" content="2022-06-25T14:07:05.799Z">
+<meta property="article:published_time" content="2022-06-25T14:06:12.000Z">
+<meta property="article:modified_time" content="2022-06-25T14:06:41.120Z">
 <meta property="article:author" content="0P1N">
 <meta property="article:tag" content="学习笔记">
 <meta name="twitter:card" content="summary_large_image">
@@ -35,7 +35,7 @@
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>计算机组成原理笔记 - 0P1N</title>
+  <title>数据结构与算法笔记 - 0P1N</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -227,7 +227,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="计算机组成原理笔记"></span>
+            <span id="subtitle" data-typed-text="数据结构与算法笔记"></span>
           
         </div>
 
@@ -238,8 +238,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-06-24 14:32" pubdate>
-          2022年6月24日 下午
+        <time datetime="2022-06-25 22:06" pubdate>
+          2022年6月25日 晚上
         </time>
       </span>
     
@@ -250,7 +250,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          713 字
+          303 字
         
       </span>
     
@@ -261,7 +261,7 @@
         
         
         
-          6 分钟
+          3 分钟
         
       </span>
     
@@ -307,135 +307,20 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">计算机组成原理笔记</h1>
+            <h1 style="display: none">数据结构与算法笔记</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="王道计算机考研-计算机组成原理"><a href="#王道计算机考研-计算机组成原理" class="headerlink" title="王道计算机考研 计算机组成原理"></a>王道计算机考研 计算机组成原理</h1><h3 id="1-1计算机的发展"><a href="#1-1计算机的发展" class="headerlink" title="1.1计算机的发展"></a>1.1计算机的发展</h3><table>
-<thead>
-<tr>
-<th>发展阶段</th>
-<th>时间</th>
-<th>逻辑元件</th>
-<th>速度（次&#x2F;秒）</th>
-<th>内存</th>
-<th>外存</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>第一代</td>
-<td>1946-1957</td>
-<td>电子管</td>
-<td>几千-几万</td>
-<td>汞延迟线、磁鼓</td>
-<td>穿孔卡片、纸带</td>
-</tr>
-<tr>
-<td>第二代</td>
-<td>1958-1964</td>
-<td>晶体管</td>
-<td>几万-几十万</td>
-<td>磁芯存储器</td>
-<td>磁带</td>
-</tr>
-<tr>
-<td>第三代</td>
-<td>1964-1971</td>
-<td>中小规模集成电路</td>
-<td>几十万-几百万</td>
-<td>半导体存储器</td>
-<td>磁带、磁盘</td>
-</tr>
-<tr>
-<td>第四代</td>
-<td>1972-现在</td>
-<td>大规模、超大规模集成电路</td>
-<td>上千万-万亿</td>
-<td>半导体存储器</td>
-<td>磁盘、磁带、光盘、半导体存储器</td>
-</tr>
-</tbody></table>
-<p>第一代：电子管时代  体积超大、耗电量高   使用机器语言编程（纸带机）</p>
-<p>第二代：晶体管时代   体积减小、功耗降低  出现面向过程的程序设计语言：FORTRAN  有了操作系统雏形</p>
-<p>第三代：中小规模集成电路时代  计算机主要用于科学计算等专业用途  高级语言迅速发展  开始有了分时操作系统</p>
-<p>第四代：大规模、超大规模集成电路时代    开始出现微处理器、微型计算机  个人计算机（pc）萌芽 </p>
-<p>操作系统：windows、MacOS、Linux</p>
-<h4 id="微处理器的发展"><a href="#微处理器的发展" class="headerlink" title="微处理器的发展"></a>微处理器的发展</h4><p>机器字长：计算机一次整数运算所能处理的二进制位数</p>
-<p>微型计算机的发展以微处理器技术为标志</p>
-<table>
-<thead>
-<tr>
-<th>微处理器</th>
-<th>机器字长</th>
-<th>年份</th>
-<th>晶体管数目</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>8080</td>
-<td>8位</td>
-<td>1974</td>
-<td></td>
-</tr>
-<tr>
-<td>8086</td>
-<td>16位</td>
-<td>1979</td>
-<td>2.9万</td>
-</tr>
-<tr>
-<td>80286</td>
-<td>16位</td>
-<td>1982</td>
-<td>13.4万</td>
-</tr>
-<tr>
-<td>80386</td>
-<td>32位</td>
-<td>1985</td>
-<td>27.5万</td>
-</tr>
-<tr>
-<td>80486</td>
-<td>32位</td>
-<td>1989</td>
-<td>120.0万</td>
-</tr>
-<tr>
-<td>Pentium</td>
-<td>64位</td>
-<td>1993</td>
-<td>310.0万</td>
-</tr>
-<tr>
-<td>Pentium pro</td>
-<td>64位</td>
-<td>1995</td>
-<td>550.0万</td>
-</tr>
-<tr>
-<td>Pentium II</td>
-<td>64位</td>
-<td>1997</td>
-<td>750.0万</td>
-</tr>
-<tr>
-<td>Pentium III</td>
-<td>64位</td>
-<td>1999</td>
-<td>950.0万</td>
-</tr>
-<tr>
-<td>Pentium IV</td>
-<td>64位</td>
-<td>2000</td>
-<td>4200.0万</td>
-</tr>
-</tbody></table>
-<h3 id="目前的发展趋势"><a href="#目前的发展趋势" class="headerlink" title="目前的发展趋势"></a>目前的发展趋势</h3><p>“两极”分化</p>
-<p>一极是微型计算机向更微型化、网络化、高性能、多用途方向发展</p>
-<p>另一极是巨型机向更巨型化、超高速并行处理、智能化方向发展</p>
+                <h1 id="数据结构与算法基础（青岛大学-王卓）"><a href="#数据结构与算法基础（青岛大学-王卓）" class="headerlink" title="数据结构与算法基础（青岛大学-王卓）"></a>数据结构与算法基础（青岛大学-王卓）</h1><h2 id="1-2基本概念和术语"><a href="#1-2基本概念和术语" class="headerlink" title="1.2基本概念和术语"></a>1.2基本概念和术语</h2><h3 id="1-数据（Data）"><a href="#1-数据（Data）" class="headerlink" title="1.数据（Data）"></a>1.数据（Data）</h3><p>能输入计算机且能被计算机处理的各种符号的集合</p>
+<p>信息的载体；是对客观事物符号化的表示；能够被计算机识别、存储和加工</p>
+<p>包括：</p>
+<p>1）数值型的数据：整数、实数等</p>
+<p>2）非数值型的数据：文字、图像、图形、声音等</p>
+<h3 id="2-数据元素（Data-element）和数据项"><a href="#2-数据元素（Data-element）和数据项" class="headerlink" title="2.数据元素（Data element）和数据项"></a>2.数据元素（Data element）和数据项</h3><p>数据元素：是数据的基本单位，在计算机程序中通常作为一个整体进行考虑和处理。也简称为元素，或称为记录、结点或顶点。</p>
+<p>数据项：构成数据元素的不可分割的最小单位</p>
+<h3 id="数据、数据元素、数据项三者之间的关系："><a href="#数据、数据元素、数据项三者之间的关系：" class="headerlink" title="数据、数据元素、数据项三者之间的关系："></a>数据、数据元素、数据项三者之间的关系：</h3><p>数据&gt;数据元素&gt;数据项</p>
+<p>例：学生表&gt;包含学号姓名等内容的单项个人记录&gt;学号、姓名等</p>
 
                 
               </div>
@@ -481,8 +366,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>计算机组成原理笔记</div>
-      <div>https://lkliki.github.io/2022/06/24/计算机组成原理笔记/</div>
+      <div>数据结构与算法笔记</div>
+      <div>https://lkliki.github.io/2022/06/25/数据结构与算法笔记/</div>
     </div>
     <div class="license-meta">
       
@@ -494,7 +379,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年6月24日</div>
+          <div>2022年6月25日</div>
         </div>
       
       
@@ -524,18 +409,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="../%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8%E7%AC%94%E8%AE%B0/" title="数据库原理及应用笔记">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">数据库原理及应用笔记</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="../%E6%82%A0%E5%93%89%E6%97%A5%E5%B8%B8/" title="悠哉日常">
-                        <span class="hidden-mobile">悠哉日常</span>
+                      <a href="../%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%AC%94%E8%AE%B0/" title="">
+                        <span class="hidden-mobile"></span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

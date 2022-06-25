@@ -4,6 +4,44 @@
   
   
   <entry>
+    <title>数据结构与算法笔记</title>
+    <link href="/2022/06/25/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/"/>
+    <url>/2022/06/25/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/</url>
+    
+    <content type="html"><![CDATA[<h1 id="数据结构与算法基础（青岛大学-王卓）"><a href="#数据结构与算法基础（青岛大学-王卓）" class="headerlink" title="数据结构与算法基础（青岛大学-王卓）"></a>数据结构与算法基础（青岛大学-王卓）</h1><h2 id="1-2基本概念和术语"><a href="#1-2基本概念和术语" class="headerlink" title="1.2基本概念和术语"></a>1.2基本概念和术语</h2><h3 id="1-数据（Data）"><a href="#1-数据（Data）" class="headerlink" title="1.数据（Data）"></a>1.数据（Data）</h3><p>能输入计算机且能被计算机处理的各种符号的集合</p><p>信息的载体；是对客观事物符号化的表示；能够被计算机识别、存储和加工</p><p>包括：</p><p>1）数值型的数据：整数、实数等</p><p>2）非数值型的数据：文字、图像、图形、声音等</p><h3 id="2-数据元素（Data-element）和数据项"><a href="#2-数据元素（Data-element）和数据项" class="headerlink" title="2.数据元素（Data element）和数据项"></a>2.数据元素（Data element）和数据项</h3><p>数据元素：是数据的基本单位，在计算机程序中通常作为一个整体进行考虑和处理。也简称为元素，或称为记录、结点或顶点。</p><p>数据项：构成数据元素的不可分割的最小单位</p><h3 id="数据、数据元素、数据项三者之间的关系："><a href="#数据、数据元素、数据项三者之间的关系：" class="headerlink" title="数据、数据元素、数据项三者之间的关系："></a>数据、数据元素、数据项三者之间的关系：</h3><p>数据&gt;数据元素&gt;数据项</p><p>例：学生表&gt;包含学号姓名等内容的单项个人记录&gt;学号、姓名等</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>学习笔记</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>学习笔记</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title></title>
+    <link href="/2022/06/25/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%AC%94%E8%AE%B0/"/>
+    <url>/2022/06/25/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BD%91%E7%BB%9C%E7%AC%94%E8%AE%B0/</url>
+    
+    <content type="html"><![CDATA[]]></content>
+    
+    
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>前端笔记</title>
     <link href="/2022/06/24/%E5%89%8D%E7%AB%AF%E7%AC%94%E8%AE%B0/"/>
     <url>/2022/06/24/%E5%89%8D%E7%AB%AF%E7%AC%94%E8%AE%B0/</url>
@@ -58,7 +96,7 @@
     <link href="/2022/06/24/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E7%AC%94%E8%AE%B0/"/>
     <url>/2022/06/24/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E7%AC%94%E8%AE%B0/</url>
     
-    <content type="html"><![CDATA[<h1 id="王道计算机考研-计算机组成原理"><a href="#王道计算机考研-计算机组成原理" class="headerlink" title="王道计算机考研 计算机组成原理"></a>王道计算机考研 计算机组成原理</h1><h3 id="1-1计算机的发展"><a href="#1-1计算机的发展" class="headerlink" title="1.1计算机的发展"></a>1.1计算机的发展</h3><table><thead><tr><th>发展阶段</th><th>时间</th><th>逻辑元件</th><th>速度（次&#x2F;秒）</th><th>内存</th><th>外存</th></tr></thead><tbody><tr><td>第一代</td><td>1946-1957</td><td>电子管</td><td>几千-几万</td><td>汞延迟线、磁鼓</td><td>穿孔卡片、纸带</td></tr><tr><td>第二代</td><td>1958-1964</td><td>晶体管</td><td>几万-几十万</td><td>磁芯存储器</td><td>磁带</td></tr><tr><td>第三代</td><td>1964-1971</td><td>中小规模集成电路</td><td>几十万-几百万</td><td>半导体存储器</td><td>磁带、磁盘</td></tr><tr><td>第四代</td><td>1972-现在</td><td>大规模、超大规模集成电路</td><td>上千万-万亿</td><td>半导体存储器</td><td>磁盘、磁带、光盘、半导体存储器</td></tr></tbody></table><p>第一代：电子管时代  体积超大、耗电量高   使用机器语言编程（纸带机）</p><p>第二代：晶体管时代   体积减小、功耗降低  出现面向过程的程序设计语言：FORTRAN  有了操作系统雏形</p><p>第三代：中小规模集成电路时代  计算机主要用于科学计算等专业用途  高级语言迅速发展  开始有了分时操作系统</p><p>第四代：大规模、超大规模集成电路时代    开始出现微处理器、微型计算机  个人计算机（pc）萌芽 </p><p>操作系统：windows、MacOS、Linux</p><h4 id="微处理器的发展"><a href="#微处理器的发展" class="headerlink" title="微处理器的发展"></a>微处理器的发展</h4><p>机器字长：计算机一次整数运算所能处理的二进制位数</p>]]></content>
+    <content type="html"><![CDATA[<h1 id="王道计算机考研-计算机组成原理"><a href="#王道计算机考研-计算机组成原理" class="headerlink" title="王道计算机考研 计算机组成原理"></a>王道计算机考研 计算机组成原理</h1><h3 id="1-1计算机的发展"><a href="#1-1计算机的发展" class="headerlink" title="1.1计算机的发展"></a>1.1计算机的发展</h3><table><thead><tr><th>发展阶段</th><th>时间</th><th>逻辑元件</th><th>速度（次&#x2F;秒）</th><th>内存</th><th>外存</th></tr></thead><tbody><tr><td>第一代</td><td>1946-1957</td><td>电子管</td><td>几千-几万</td><td>汞延迟线、磁鼓</td><td>穿孔卡片、纸带</td></tr><tr><td>第二代</td><td>1958-1964</td><td>晶体管</td><td>几万-几十万</td><td>磁芯存储器</td><td>磁带</td></tr><tr><td>第三代</td><td>1964-1971</td><td>中小规模集成电路</td><td>几十万-几百万</td><td>半导体存储器</td><td>磁带、磁盘</td></tr><tr><td>第四代</td><td>1972-现在</td><td>大规模、超大规模集成电路</td><td>上千万-万亿</td><td>半导体存储器</td><td>磁盘、磁带、光盘、半导体存储器</td></tr></tbody></table><p>第一代：电子管时代  体积超大、耗电量高   使用机器语言编程（纸带机）</p><p>第二代：晶体管时代   体积减小、功耗降低  出现面向过程的程序设计语言：FORTRAN  有了操作系统雏形</p><p>第三代：中小规模集成电路时代  计算机主要用于科学计算等专业用途  高级语言迅速发展  开始有了分时操作系统</p><p>第四代：大规模、超大规模集成电路时代    开始出现微处理器、微型计算机  个人计算机（pc）萌芽 </p><p>操作系统：windows、MacOS、Linux</p><h4 id="微处理器的发展"><a href="#微处理器的发展" class="headerlink" title="微处理器的发展"></a>微处理器的发展</h4><p>机器字长：计算机一次整数运算所能处理的二进制位数</p><p>微型计算机的发展以微处理器技术为标志</p><table><thead><tr><th>微处理器</th><th>机器字长</th><th>年份</th><th>晶体管数目</th></tr></thead><tbody><tr><td>8080</td><td>8位</td><td>1974</td><td></td></tr><tr><td>8086</td><td>16位</td><td>1979</td><td>2.9万</td></tr><tr><td>80286</td><td>16位</td><td>1982</td><td>13.4万</td></tr><tr><td>80386</td><td>32位</td><td>1985</td><td>27.5万</td></tr><tr><td>80486</td><td>32位</td><td>1989</td><td>120.0万</td></tr><tr><td>Pentium</td><td>64位</td><td>1993</td><td>310.0万</td></tr><tr><td>Pentium pro</td><td>64位</td><td>1995</td><td>550.0万</td></tr><tr><td>Pentium II</td><td>64位</td><td>1997</td><td>750.0万</td></tr><tr><td>Pentium III</td><td>64位</td><td>1999</td><td>950.0万</td></tr><tr><td>Pentium IV</td><td>64位</td><td>2000</td><td>4200.0万</td></tr></tbody></table><h3 id="目前的发展趋势"><a href="#目前的发展趋势" class="headerlink" title="目前的发展趋势"></a>目前的发展趋势</h3><p>“两极”分化</p><p>一极是微型计算机向更微型化、网络化、高性能、多用途方向发展</p><p>另一极是巨型机向更巨型化、超高速并行处理、智能化方向发展</p>]]></content>
     
     
     <categories>
