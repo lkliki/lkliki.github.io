@@ -25,12 +25,26 @@
 <meta property="og:site_name" content="0P1N">
 <meta property="og:description" content="buu [网鼎杯 2020 青龙组]jocker本题的难点在于：第12行if语句中对加密函数encrypt的代码本体使用VirtualProtect函数进行了加密保护，再在第24，25行对encrypt函数代码与0x41异或进行解密还原，所以只有执行完for循环后才能得到真正的encrypt函数，因此需要动态调试在for循环结束后并且调用encrypt前的位置下断点，再f7步入真正的encrypt">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lkliki.github.io/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/1.png">
+<meta property="og:image" content="https://lkliki.github.io/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/2.png">
+<meta property="og:image" content="https://lkliki.github.io/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/3.png">
+<meta property="og:image" content="https://lkliki.github.io/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/4.png">
+<meta property="og:image" content="https://lkliki.github.io/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/6.png">
+<meta property="og:image" content="https://lkliki.github.io/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/5.png">
+<meta property="og:image" content="https://lkliki.github.io/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/7.png">
+<meta property="og:image" content="https://lkliki.github.io/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/8.png">
+<meta property="og:image" content="https://lkliki.github.io/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/9.png">
+<meta property="og:image" content="https://lkliki.github.io/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/10.png">
+<meta property="og:image" content="https://lkliki.github.io/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/11.png">
+<meta property="og:image" content="https://lkliki.github.io/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/12.png">
+<meta property="og:image" content="https://lkliki.github.io/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/13.png">
 <meta property="article:published_time" content="2022-07-08T15:13:11.000Z">
-<meta property="article:modified_time" content="2022-07-08T15:16:56.628Z">
+<meta property="article:modified_time" content="2022-07-08T15:38:27.834Z">
 <meta property="article:author" content="0P1N">
 <meta property="article:tag" content="buu">
 <meta property="article:tag" content="reverse">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://lkliki.github.io/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/1.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -251,7 +265,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.2k 字
+          2.3k 字
         
       </span>
     
@@ -262,7 +276,7 @@
         
         
         
-          27 分钟
+          20 分钟
         
       </span>
     
@@ -316,34 +330,34 @@
                 <h1 id="buu-网鼎杯-2020-青龙组-jocker"><a href="#buu-网鼎杯-2020-青龙组-jocker" class="headerlink" title="buu [网鼎杯 2020 青龙组]jocker"></a>buu [网鼎杯 2020 青龙组]jocker</h1><p>本题的难点在于：第12行if语句中对加密函数encrypt的代码本体使用VirtualProtect函数进行了加密保护，再在第24，25行对encrypt函数代码与0x41异或进行解密还原，所以只有执行完for循环后才能得到真正的encrypt函数，因此需要动态调试在for循环结束后并且调用encrypt前的位置下断点，再f7步入真正的encrypt函数中，将真正的加密函数dump下来，感觉就是脱壳，但是这里的壳加在了关键函数上。</p>
 <p>查看文件，无壳，32位，ida查看</p>
 <p>main函数</p>
-<p>![屏幕截图 2022-07-07 233454](青龙组-jocker&#x2F;屏幕截图 2022-07-07 233454.png)</p>
+<p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/1.png" srcset="/img/loading.gif" lazyload alt="1"></p>
 <p>读入输入的flag后复制到Destination中，再进行加密，加密函数encrypt无法查看。</p>
 <p>这里的wrong函数和omg函数暂时不用看，真正的加密过程在encrypt中。</p>
 <p>同时出现了堆栈不平衡的问题，堆栈平衡即正常函数在被调用完后会将栈指针（esp）和桢指针（ebp）还原到被调用前的状态，从而不影响调用它的函数的正常执行。（不仅如此，寄存器也会还原。一般会将调用前的寄存器压入栈，调用完再pop回去）</p>
 <p>这里出现堆栈不平衡是因为在静态编译时encrypt函数还没有被解码还原，不是一个功能正常的函数，导致调用完encrypt后栈指针（esp）没有被还原，影响了调用它的函数正常执行，程序产生错误。只要动态调试，就会进行encrypt函数的还原后再调用encrypt函数，不会出现堆栈不平衡的问题，所以其实不用理会这个问题也能把题目做出来。（网上很多writeup说不解决这个问题无法f5看伪c代码，不知道为什么我可以直接f5不受影响，总之下面是解决方法。）</p>
-<p>![屏幕截图 2022-07-08 002601](青龙组-jocker&#x2F;屏幕截图 2022-07-08 002601.png)</p>
+<p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/2.png" srcset="/img/loading.gif" lazyload alt="2"></p>
 <p> 在菜单中的option的general中勾选stack pointer查看函数调用过程中栈指针的变化进行验证</p>
-<p>![屏幕截图 2022-07-08 002629](青龙组-jocker&#x2F;屏幕截图 2022-07-08 002629.png)</p>
-<p>![屏幕截图 2022-07-08 003824](青龙组-jocker&#x2F;屏幕截图 2022-07-08 003824.png)</p>
+<p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/3.png" srcset="/img/loading.gif" lazyload alt="3"></p>
+<p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/4.png" srcset="/img/loading.gif" lazyload alt="4"></p>
 <p>可以看到call完encrypt函数后栈指针就乱了，没有被还原到0AC，所以这里手动帮encrypt函数还原栈指针,选中encrypt和finally函数的call指令，alt+k，将偏移修改为0</p>
-<p>![屏幕截图 2022-07-08 150634](青龙组-jocker&#x2F;屏幕截图 2022-07-08 150634.png)</p>
+<p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/6.png" srcset="/img/loading.gif" lazyload alt="6"></p>
 <p>修改完后f5反汇编，伪c界面的堆栈不平衡警告就没了</p>
-<p>![屏幕截图 2022-07-08 150654](青龙组-jocker&#x2F;屏幕截图 2022-07-08 150654.png) ![屏幕截图 2022-07-08 150606](青龙组-jocker&#x2F;屏幕截图 2022-07-08 150606.png)</p>
+<p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/5.png" srcset="/img/loading.gif" lazyload alt="5"> <img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/7.png" srcset="/img/loading.gif" lazyload alt="7"></p>
 <p>下面设断点动态调试dump出encrypt函数</p>
-<p>![屏幕截图 2022-07-08 170032](青龙组-jocker&#x2F;屏幕截图 2022-07-08 170032.png)</p>
+<p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/8.png" srcset="/img/loading.gif" lazyload alt="8"></p>
 <p>在ida中结合汇编和伪c判断40182B是for循环结束的位置，下面的call jocker.401500就是encrypt函数</p>
 <p>f9到断点后f7步入函数</p>
-<p>![屏幕截图 2022-07-08 170102](青龙组-jocker&#x2F;屏幕截图 2022-07-08 170102.png)</p>
+<p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/9.png" srcset="/img/loading.gif" lazyload alt="9"></p>
 <p>dump的oep是401500，用x32dbg的scylla插件dump后修复</p>
-<p>![屏幕截图 2022-07-08 171800](青龙组-jocker&#x2F;屏幕截图 2022-07-08 171800.png)</p>
+<p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/10.png" srcset="/img/loading.gif" lazyload alt="10"></p>
 <p>输入oep后点击IAT Autosearch和Get Imports，再dump出jocker_dump.exe,再点击fix dump，选择jocker_dump.exe,修复文件得到修复完成的jocker_dump_SCY.exe,ida查看</p>
 <p>下面是还原的encrypt函数</p>
 <p>修复后的main函数，观察可知需要经过start函数和sub_40159A函数</p>
-<p>![屏幕截图 2022-07-08 183515](青龙组-jocker&#x2F;屏幕截图 2022-07-08 183515.png)</p>
+<p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/11.png" srcset="/img/loading.gif" lazyload alt="11"></p>
 <p>start函数</p>
-<p>![屏幕截图 2022-07-08 172136](青龙组-jocker&#x2F;屏幕截图 2022-07-08 172136.png)</p>
+<p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/12.png" srcset="/img/loading.gif" lazyload alt="12"></p>
 <p>sub_40159A函数</p>
-<p>![屏幕截图 2022-07-08 183329](青龙组-jocker&#x2F;屏幕截图 2022-07-08 183329.png)</p>
+<p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/13.png" srcset="/img/loading.gif" lazyload alt="13"></p>
 <p>start函数可以逆向出flag的前19位，sub_40159A函数得到后5位</p>
 <p>写脚本逆向</p>
 <p>start</p>
