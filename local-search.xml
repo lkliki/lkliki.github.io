@@ -8,7 +8,7 @@
     <link href="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/"/>
     <url>/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/</url>
     
-    <content type="html"><![CDATA[<h1 id="buu-网鼎杯-2020-青龙组-jocker"><a href="#buu-网鼎杯-2020-青龙组-jocker" class="headerlink" title="buu [网鼎杯 2020 青龙组]jocker"></a>buu [网鼎杯 2020 青龙组]jocker</h1><p>本题的难点在于：第12行if语句中对加密函数encrypt的代码本体使用VirtualProtect函数进行了加密保护，再在第24，25行对encrypt函数代码与0x41异或进行解密还原，所以只有执行完for循环后才能得到真正的encrypt函数，因此需要动态调试在for循环结束后并且调用encrypt前的位置下断点，再f7步入真正的encrypt函数中，将真正的加密函数dump下来，感觉就是脱壳，但是这里的壳加在了关键函数上。</p><p>查看文件，无壳，32位，ida查看</p><p>main函数</p><p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/1.png" alt="1"></p><p>读入输入的flag后复制到Destination中，再进行加密，加密函数encrypt无法查看。</p><p>这里的wrong函数和omg函数暂时不用看，真正的加密过程在encrypt中。</p><p>同时出现了堆栈不平衡的问题，堆栈平衡即正常函数在被调用完后会将栈指针（esp）和桢指针（ebp）还原到被调用前的状态，从而不影响调用它的函数的正常执行。（不仅如此，寄存器也会还原。一般会将调用前的寄存器压入栈，调用完再pop回去）</p><p>这里出现堆栈不平衡是因为在静态编译时encrypt函数还没有被解码还原，不是一个功能正常的函数，导致调用完encrypt后栈指针（esp）没有被还原，影响了调用它的函数正常执行，程序产生错误。只要动态调试，就会进行encrypt函数的还原后再调用encrypt函数，不会出现堆栈不平衡的问题，所以其实不用理会这个问题也能把题目做出来。（网上很多writeup说不解决这个问题无法f5看伪c代码，不知道为什么我可以直接f5不受影响，总之下面是解决方法。）</p><p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/2.png" alt="2"></p><p> 在菜单中的option的general中勾选stack pointer查看函数调用过程中栈指针的变化进行验证</p><p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/3.png" alt="3"></p><p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/4.png" alt="4"></p><p>可以看到call完encrypt函数后栈指针就乱了，没有被还原到0AC，所以这里手动帮encrypt函数还原栈指针,选中encrypt和finally函数的call指令，alt+k，将偏移修改为0</p><p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/6.png" alt="6"></p><p>修改完后f5反汇编，伪c界面的堆栈不平衡警告就没了</p><p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/5.png" alt="5"> <img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/7.png" alt="7"></p><p>下面设断点动态调试dump出encrypt函数</p><p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/8.png" alt="8"></p><p>在ida中结合汇编和伪c判断40182B是for循环结束的位置，下面的call jocker.401500就是encrypt函数</p><p>f9到断点后f7步入函数</p><p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/9.png" alt="9"></p><p>dump的oep是401500，用x32dbg的scylla插件dump后修复</p><p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/10.png" alt="10"></p><p>输入oep后点击IAT Autosearch和Get Imports，再dump出jocker_dump.exe,再点击fix dump，选择jocker_dump.exe,修复文件得到修复完成的jocker_dump_SCY.exe,ida查看</p><p>下面是还原的encrypt函数</p><p>修复后的main函数，观察可知需要经过start函数和sub_40159A函数</p><p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/11.png" alt="11"></p><p>start函数</p><p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/12.png" alt="12"></p><p>sub_40159A函数</p><p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/13.png" alt="13"></p><p>start函数可以逆向出flag的前19位，sub_40159A函数得到后5位</p><p>写脚本逆向</p><p>start</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&lt;bits/stdc++.h&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br><span class="hljs-type">char</span>  str[<span class="hljs-number">19</span>]=&#123;<span class="hljs-number">0xe</span>,<span class="hljs-number">0xd</span>,<span class="hljs-number">9</span>,<span class="hljs-number">6</span>,<span class="hljs-number">0x13</span>,<span class="hljs-number">5</span>,<span class="hljs-number">0x58</span>,<span class="hljs-number">0x56</span>,<span class="hljs-number">0x3E</span>,<span class="hljs-number">6</span>,<span class="hljs-number">0xc</span>,<span class="hljs-number">0x3c</span>,<span class="hljs-number">0x1f</span>,<span class="hljs-number">0x57</span>,<span class="hljs-number">0x14</span>,<span class="hljs-number">0x6b</span>,<span class="hljs-number">0x57</span>,<span class="hljs-number">0x59</span>,<span class="hljs-number">0xd</span>&#125;;<br><span class="hljs-type">char</span>  key[]=&#123;<span class="hljs-string">&#x27;h&#x27;</span>,<span class="hljs-string">&#x27;a&#x27;</span>,<span class="hljs-string">&#x27;h&#x27;</span>,<span class="hljs-string">&#x27;a&#x27;</span>,<span class="hljs-string">&#x27;h&#x27;</span>,<span class="hljs-string">&#x27;a&#x27;</span>,<span class="hljs-string">&#x27;h&#x27;</span>,<span class="hljs-string">&#x27;a&#x27;</span>,<span class="hljs-string">&#x27;_&#x27;</span>,<span class="hljs-string">&#x27;d&#x27;</span>,<span class="hljs-string">&#x27;o&#x27;</span>,<span class="hljs-string">&#x27;_&#x27;</span>,<span class="hljs-string">&#x27;y&#x27;</span>,<span class="hljs-string">&#x27;o&#x27;</span>,<span class="hljs-string">&#x27;u&#x27;</span>,<span class="hljs-string">&#x27;_&#x27;</span>,<span class="hljs-string">&#x27;f&#x27;</span>,<span class="hljs-string">&#x27;i&#x27;</span>,<span class="hljs-string">&#x27;n&#x27;</span>,<span class="hljs-string">&#x27;d&#x27;</span>,<span class="hljs-string">&#x27;_&#x27;</span>,<span class="hljs-string">&#x27;m&#x27;</span>,<span class="hljs-string">&#x27;e&#x27;</span>,<span class="hljs-string">&#x27;?&#x27;</span>&#125;;<br>    <span class="hljs-type">char</span> flag[<span class="hljs-number">19</span>]=&#123;<span class="hljs-number">0</span>&#125;;<br><br><span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">0</span>;i&lt;=<span class="hljs-number">18</span>;i++)&#123;<br>flag[i]=str[i]^key[i];<br>cout&lt;&lt;flag[i];<br>&#125;<br><br><span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125; <br></code></pre></td></tr></table></figure><p>得到flag前19位：flag{d07abccf8a410c</p><p>sub_40159A</p><p>看代码看不出是怎么加密的，但是flag最后一位肯定是}，加密后变为：，猜测加密方式和之前相同是逐位异或，}与71异或得到：，所以异或的数字是71</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&lt;bits/stdc++.h&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br><span class="hljs-type">char</span>  str[<span class="hljs-number">5</span>]=&#123;<span class="hljs-string">&#x27;%&#x27;</span>,<span class="hljs-string">&#x27;t&#x27;</span>,<span class="hljs-string">&#x27;p&#x27;</span>,<span class="hljs-string">&#x27;&amp;&#x27;</span>,<span class="hljs-string">&#x27;:&#x27;</span>&#125;;<br> <span class="hljs-type">char</span> a;<br> <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">0</span>;i&lt;=<span class="hljs-number">4</span>;i++)&#123;<br> a=str[i]^<span class="hljs-number">71</span>;<br> cout&lt;&lt;a;<br> &#125;<br><br><span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125; <br></code></pre></td></tr></table></figure><p>flag后五位：b37a}</p><p>flag{d07abccf8a410cb37a}猜测正确</p>]]></content>
+    <content type="html"><![CDATA[<h1 id="buu-网鼎杯-2020-青龙组-jocker"><a href="#buu-网鼎杯-2020-青龙组-jocker" class="headerlink" title="buu [网鼎杯 2020 青龙组]jocker"></a>buu [网鼎杯 2020 青龙组]jocker</h1><p>本题的难点在于：第12行if语句中对加密函数encrypt的代码本体使用VirtualProtect函数进行了加密保护，再在第24，25行对encrypt函数代码与0x41异或进行解密还原，所以只有执行完for循环后才能得到真正的encrypt函数，因此需要动态调试在for循环结束后并且调用encrypt前的位置下断点，再f8步入真正的encrypt函数中，将真正的加密函数dump下来，感觉就是脱壳，但是这里的壳加在了关键函数上。</p><p>查看文件，无壳，32位，ida查看</p><p>main函数</p><p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/1.png" alt="1"></p><p>读入输入的flag后复制到Destination中，再进行加密，加密函数encrypt无法查看。</p><p>这里的wrong函数和omg函数暂时不用看，真正的加密过程在encrypt中。</p><p>同时出现了堆栈不平衡的问题，堆栈平衡即正常函数在被调用完后会将栈指针（esp）和桢指针（ebp）还原到被调用前的状态，从而不影响调用它的函数的正常执行。（不仅如此，寄存器也会还原。一般会将调用前的寄存器压入栈，调用完再pop回去）</p><p>这里出现堆栈不平衡是因为在静态编译时encrypt函数还没有被解码还原，不是一个功能正常的函数，导致调用完encrypt后栈指针（esp）没有被还原，影响了调用它的函数正常执行，程序产生错误。只要动态调试，就会进行encrypt函数的还原后再调用encrypt函数，不会出现堆栈不平衡的问题，所以其实不用理会这个问题也能把题目做出来。（网上很多writeup说不解决这个问题无法f5看伪c代码，不知道为什么我可以直接f5不受影响，总之下面是解决方法。）</p><p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/2.png" alt="2"></p><p> 在菜单中的option的general中勾选stack pointer查看函数调用过程中栈指针的变化进行验证</p><p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/3.png" alt="3"></p><p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/4.png" alt="4"></p><p>可以看到call完encrypt函数后栈指针就乱了，没有被还原到0AC，所以这里手动帮encrypt函数还原栈指针,选中encrypt和finally函数的call指令，alt+k，将偏移修改为0</p><p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/6.png" alt="6"></p><p>修改完后f5反汇编，伪c界面的堆栈不平衡警告就没了</p><p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/5.png" alt="5"> <img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/7.png" alt="7"></p><p>下面设断点动态调试dump出encrypt函数</p><p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/8.png" alt="8"></p><p>在ida中结合汇编和伪c判断40182B是for循环结束的位置，下面的call jocker.401500就是encrypt函数</p><p>f9到断点后f7步入函数</p><p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/9.png" alt="9"></p><p>dump的oep是401500，用x32dbg的scylla插件dump后修复</p><p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/10.png" alt="10"></p><p>输入oep后点击IAT Autosearch和Get Imports，再dump出jocker_dump.exe,再点击fix dump，选择jocker_dump.exe,修复文件得到修复完成的jocker_dump_SCY.exe,ida查看</p><p>下面是还原的encrypt函数</p><p>修复后的main函数，观察可知需要经过start函数和sub_40159A函数</p><p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/11.png" alt="11"></p><p>start函数</p><p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/12.png" alt="12"></p><p>sub_40159A函数</p><p><img src="/2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/13.png" alt="13"></p><p>start函数可以逆向出flag的前19位，sub_40159A函数得到后5位</p><p>写脚本逆向</p><p>start</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&lt;bits/stdc++.h&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br><span class="hljs-type">char</span>  str[<span class="hljs-number">19</span>]=&#123;<span class="hljs-number">0xe</span>,<span class="hljs-number">0xd</span>,<span class="hljs-number">9</span>,<span class="hljs-number">6</span>,<span class="hljs-number">0x13</span>,<span class="hljs-number">5</span>,<span class="hljs-number">0x58</span>,<span class="hljs-number">0x56</span>,<span class="hljs-number">0x3E</span>,<span class="hljs-number">6</span>,<span class="hljs-number">0xc</span>,<span class="hljs-number">0x3c</span>,<span class="hljs-number">0x1f</span>,<span class="hljs-number">0x57</span>,<span class="hljs-number">0x14</span>,<span class="hljs-number">0x6b</span>,<span class="hljs-number">0x57</span>,<span class="hljs-number">0x59</span>,<span class="hljs-number">0xd</span>&#125;;<br><span class="hljs-type">char</span>  key[]=&#123;<span class="hljs-string">&#x27;h&#x27;</span>,<span class="hljs-string">&#x27;a&#x27;</span>,<span class="hljs-string">&#x27;h&#x27;</span>,<span class="hljs-string">&#x27;a&#x27;</span>,<span class="hljs-string">&#x27;h&#x27;</span>,<span class="hljs-string">&#x27;a&#x27;</span>,<span class="hljs-string">&#x27;h&#x27;</span>,<span class="hljs-string">&#x27;a&#x27;</span>,<span class="hljs-string">&#x27;_&#x27;</span>,<span class="hljs-string">&#x27;d&#x27;</span>,<span class="hljs-string">&#x27;o&#x27;</span>,<span class="hljs-string">&#x27;_&#x27;</span>,<span class="hljs-string">&#x27;y&#x27;</span>,<span class="hljs-string">&#x27;o&#x27;</span>,<span class="hljs-string">&#x27;u&#x27;</span>,<span class="hljs-string">&#x27;_&#x27;</span>,<span class="hljs-string">&#x27;f&#x27;</span>,<span class="hljs-string">&#x27;i&#x27;</span>,<span class="hljs-string">&#x27;n&#x27;</span>,<span class="hljs-string">&#x27;d&#x27;</span>,<span class="hljs-string">&#x27;_&#x27;</span>,<span class="hljs-string">&#x27;m&#x27;</span>,<span class="hljs-string">&#x27;e&#x27;</span>,<span class="hljs-string">&#x27;?&#x27;</span>&#125;;<br>    <span class="hljs-type">char</span> flag[<span class="hljs-number">19</span>]=&#123;<span class="hljs-number">0</span>&#125;;<br><br><span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">0</span>;i&lt;=<span class="hljs-number">18</span>;i++)&#123;<br>flag[i]=str[i]^key[i];<br>cout&lt;&lt;flag[i];<br>&#125;<br><br><span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125; <br></code></pre></td></tr></table></figure><p>得到flag前19位：flag{d07abccf8a410c</p><p>sub_40159A</p><p>看代码看不出是怎么加密的，但是flag最后一位肯定是}，加密后变为：，猜测加密方式和之前相同是逐位异或，}与71异或得到：，所以异或的数字是71</p><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-meta">#<span class="hljs-keyword">include</span><span class="hljs-string">&lt;bits/stdc++.h&gt;</span></span><br><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> std;<br><br><span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span>&#123;<br><span class="hljs-type">char</span>  str[<span class="hljs-number">5</span>]=&#123;<span class="hljs-string">&#x27;%&#x27;</span>,<span class="hljs-string">&#x27;t&#x27;</span>,<span class="hljs-string">&#x27;p&#x27;</span>,<span class="hljs-string">&#x27;&amp;&#x27;</span>,<span class="hljs-string">&#x27;:&#x27;</span>&#125;;<br> <span class="hljs-type">char</span> a;<br> <span class="hljs-keyword">for</span>(<span class="hljs-type">int</span> i=<span class="hljs-number">0</span>;i&lt;=<span class="hljs-number">4</span>;i++)&#123;<br> a=str[i]^<span class="hljs-number">71</span>;<br> cout&lt;&lt;a;<br> &#125;<br><br><span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125; <br></code></pre></td></tr></table></figure><p>flag后五位：b37a}</p><p>flag{d07abccf8a410cb37a}猜测正确</p>]]></content>
     
     
     <categories>
@@ -58,106 +58,6 @@
   
   
   <entry>
-    <title>数据结构与算法笔记</title>
-    <link href="/2022/06/25/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/"/>
-    <url>/2022/06/25/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95%E7%AC%94%E8%AE%B0/</url>
-    
-    <content type="html"><![CDATA[<h1 id="数据结构与算法基础（青岛大学-王卓）"><a href="#数据结构与算法基础（青岛大学-王卓）" class="headerlink" title="数据结构与算法基础（青岛大学-王卓）"></a>数据结构与算法基础（青岛大学-王卓）</h1><h2 id="1-2基本概念和术语"><a href="#1-2基本概念和术语" class="headerlink" title="1.2基本概念和术语"></a>1.2基本概念和术语</h2><h3 id="1-数据（Data）"><a href="#1-数据（Data）" class="headerlink" title="1.数据（Data）"></a>1.数据（Data）</h3><p>能输入计算机且能被计算机处理的各种符号的集合</p><p>信息的载体；是对客观事物符号化的表示；能够被计算机识别、存储和加工</p><p>包括：</p><p>1）数值型的数据：整数、实数等</p><p>2）非数值型的数据：文字、图像、图形、声音等</p><h3 id="2-数据元素（Data-element）和数据项"><a href="#2-数据元素（Data-element）和数据项" class="headerlink" title="2.数据元素（Data element）和数据项"></a>2.数据元素（Data element）和数据项</h3><p>数据元素：是数据的基本单位，在计算机程序中通常作为一个整体进行考虑和处理。也简称为元素，或称为记录、结点或顶点。</p><p>数据项：构成数据元素的不可分割的最小单位</p><h3 id="数据、数据元素、数据项三者之间的关系："><a href="#数据、数据元素、数据项三者之间的关系：" class="headerlink" title="数据、数据元素、数据项三者之间的关系："></a>数据、数据元素、数据项三者之间的关系：</h3><p>数据&gt;数据元素&gt;数据项</p><p>例：学生表&gt;包含学号姓名等内容的单项个人记录&gt;学号、姓名等</p>]]></content>
-    
-    
-    <categories>
-      
-      <category>学习笔记</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>学习笔记</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>前端笔记</title>
-    <link href="/2022/06/24/%E5%89%8D%E7%AB%AF%E7%AC%94%E8%AE%B0/"/>
-    <url>/2022/06/24/%E5%89%8D%E7%AB%AF%E7%AC%94%E8%AE%B0/</url>
-    
-    <content type="html"><![CDATA[<h1 id="HTML"><a href="#HTML" class="headerlink" title="HTML"></a>HTML</h1><h2 id="一-HTML简介"><a href="#一-HTML简介" class="headerlink" title="一.HTML简介"></a>一.HTML简介</h2><p>超文本标记语言（Hyper Text Markup Language），是用来描述网页的一种语言。</p><p>HTML不是一种编程语言，而是一种标记语言（markup labguage）。</p><p>标记语言是一套标记标签（markup tag）。</p><p>超文本：可加入图片声音动画等内容（超越了文本限制）；可从一个文件跳转到另一个文件，与世界各地主机的文件连接（超级链接文本）。</p><p>tips：网页本质就是一个html文件，文本文件更改后缀名为html可直接转换</p><p>html代码文件 -&gt;浏览器显示代码（解析、渲染）-&gt;生成web页面</p><h4 id="网页和网站"><a href="#网页和网站" class="headerlink" title="网页和网站"></a>网页和网站</h4><p>网站是在因特网上根据一定的规则，使用HTML等制作的用于展示特定内容相关的网页集合。</p><p>网页是网站中的一“页”，通常是HTML格式的文件，要通过浏览器来阅读。</p><p>网页是构成网站的基本元素，它通常由图片、链接、文字、声音、视频等元素组成。通常我们看到的网页，常见以.htm或.html后缀结尾的文件，因此将其俗称为HTML文件。</p><h4 id="常用浏览器"><a href="#常用浏览器" class="headerlink" title="常用浏览器"></a>常用浏览器</h4><p>IE，火狐（firefox）、谷歌（chrome）、sarafi和opera等</p><h6 id="浏览器内核：负责读取网页内容，整理讯息，计算网页的显示方式并显示页面。"><a href="#浏览器内核：负责读取网页内容，整理讯息，计算网页的显示方式并显示页面。" class="headerlink" title="浏览器内核：负责读取网页内容，整理讯息，计算网页的显示方式并显示页面。"></a>浏览器内核：负责读取网页内容，整理讯息，计算网页的显示方式并显示页面。</h6><p><img src="/2022/06/24/%E5%89%8D%E7%AB%AF%E7%AC%94%E8%AE%B0/1.png" alt="1"></p><p>目前国内一般浏览器都会采用Webkit&#x2F;Blink内核，如360、UC、QQ、搜狗等。</p><h4 id="Web标准（重点）"><a href="#Web标准（重点）" class="headerlink" title="Web标准（重点）"></a>Web标准（重点）</h4><p>Web标准是由W3C组织和其他标准化组织制定的一系列标准的集合。W3C（万维网联盟）是国际最著名的标准化组织。</p><p>为什么需要web标准：浏览器不同，它们显示页面或者排版就有些许差异。</p><h6 id="Web标准的构成：结构（Structure）、表现（Presentation）和行为（Behavior）"><a href="#Web标准的构成：结构（Structure）、表现（Presentation）和行为（Behavior）" class="headerlink" title="Web标准的构成：结构（Structure）、表现（Presentation）和行为（Behavior）"></a>Web标准的构成：结构（Structure）、表现（Presentation）和行为（Behavior）</h6><p><img src="/2022/06/24/%E5%89%8D%E7%AB%AF%E7%AC%94%E8%AE%B0/2.png" alt="2"></p><p>Web标准提出的最佳体验方案：结构、样式、行为相分离。</p><p>简单理解：结构写到HTML文件中，表现写到CSS文件中，行为写到JavaScript文件中。</p><p><img src="/2022/06/24/%E5%89%8D%E7%AB%AF%E7%AC%94%E8%AE%B0/3.png" alt="3"></p><h2 id="二-HTML标签"><a href="#二-HTML标签" class="headerlink" title="二.HTML标签"></a>二.HTML标签</h2><h4 id="HTML语法规范"><a href="#HTML语法规范" class="headerlink" title="HTML语法规范"></a>HTML语法规范</h4><h5 id="基本语法概述"><a href="#基本语法概述" class="headerlink" title="基本语法概述"></a>基本语法概述</h5><p>1）HTML是由尖括号包围的关键词，例如<html>。</html></p><p>2)HTML通常是成对出现的，例如<html>和</html>,我们称为双标签，标签对中的第一个标签是开始标签，第二个标签是结束标签。</p><p>3）有些特殊的标签必须是单个标签（极少情况），例如<br>我们称为单标签。</p><h5 id="标签关系"><a href="#标签关系" class="headerlink" title="标签关系"></a>标签关系</h5><p>双标签关系分为：包含关系、并列关系</p><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br><span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span> //head和body是并列关系，html和head是包含关系<br></code></pre></td></tr></table></figure><h4 id="HTML基本结构标签"><a href="#HTML基本结构标签" class="headerlink" title="HTML基本结构标签"></a>HTML基本结构标签</h4><p>每个网页都会有一个基本的结构标签（也成为骨架标签），页面内容也是在这些基本标签上书写。</p><p><img src="/2022/06/24/%E5%89%8D%E7%AB%AF%E7%AC%94%E8%AE%B0/4.png" alt="4"></p><figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs html"><span class="hljs-tag">&lt;<span class="hljs-name">html</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">head</span>&gt;</span><br>        <span class="hljs-tag">&lt;<span class="hljs-name">title</span>&gt;</span>我的第一个页面<span class="hljs-tag">&lt;/<span class="hljs-name">title</span>&gt;</span><br>    <span class="hljs-tag">&lt;/<span class="hljs-name">head</span>&gt;</span><br>    <span class="hljs-tag">&lt;<span class="hljs-name">body</span>&gt;</span><br>        千里之行，始于足下<br>    <span class="hljs-tag">&lt;/<span class="hljs-name">body</span>&gt;</span><br><span class="hljs-tag">&lt;/<span class="hljs-name">html</span>&gt;</span><br></code></pre></td></tr></table></figure><h4 id="开发工具"><a href="#开发工具" class="headerlink" title="开发工具"></a>开发工具</h4><p>1)双击打开软件。</p><p>2）新建文件（ctrl+N）。</p><p>3)保存（Ctrl+S）,注意移动要保存为.html文件。</p><p>4）Ctrl+加号键 可以放大缩小视图。</p><p>5）生成页面骨架结构。</p><p>​      输入!按下Tab键。</p><p>6）利用插件在浏览器中预览页面：单击鼠标右键，在弹出出口中点击“Open In Default Browser”。</p>]]></content>
-    
-    
-    <categories>
-      
-      <category>学习笔记</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>学习笔记</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>数据库原理及应用笔记</title>
-    <link href="/2022/06/24/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8%E7%AC%94%E8%AE%B0/"/>
-    <url>/2022/06/24/%E6%95%B0%E6%8D%AE%E5%BA%93%E5%8E%9F%E7%90%86%E5%8F%8A%E5%BA%94%E7%94%A8%E7%AC%94%E8%AE%B0/</url>
-    
-    <content type="html"><![CDATA[<h1 id="数据库原理及应用-东南大学-徐立臻"><a href="#数据库原理及应用-东南大学-徐立臻" class="headerlink" title="数据库原理及应用 东南大学 徐立臻"></a>数据库原理及应用 东南大学 徐立臻</h1><h3 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h3><p>推荐书籍：数据库系统教程 电子工业出版社 王能斌</p><p>一.什么是数据库,什么是数据库管理系统DBMS(Database Management System)</p><p>数据库:对数据用不同的数据模型进行建模并储存</p><p>数据库管理系统:用来存储和管理数据库的系统软件</p><p>为什么用数据库不用文件:</p><p>1)DBMS提供了强大的基础数据管理功能.</p><p>2)对不同文件结构的兼容性.</p><p>3)并发用户的同时访问和操作.</p><p>4)数据的恢复和备份.</p><p>5)安全和访问控制.</p><p>基本的一些术语:</p><p>1)数据(Data):描述现实世界事物的各种符号.信息的一种存在形式.</p><p>2)数据模型(Data model):用来描述数据的一组概念和定义.描述数据的不同方法.</p><p>3)数据模式(Schema):用一个给定的数据模型对一组特定的数据进行描述的结果.对表的结构的描述.</p><p>4)关系型数据库(relational modal of data)是今天使用最广的数据库,其基于由行和列组成的二维表,其中行为元组,列为属性组.</p><p>数据的抽象级别  三级模式：</p><p>1)物理模式(Physical Schema)：表的存储数据结构,在磁盘上如何存储，如用什么文件结构等.</p><p>2)概念&#x2F;逻辑模式(Conceptual&#x2F;logical  Schema):各种表的结构,如关系型数据库中有多少张表,每一张表的结构等.</p><p>3)视图(外)模式(View):对表处理后,用户最终能看到的信息.概念模式中存储的是基表,外模式是用户真正看到的,由基表映射出的表格. </p><p>数据独立性(利用数据库系统进行管理最大的好处之一):</p><p>1)逻辑数据独立性(改变概念模式和视图模式之间的映射关系使概念模式改变时视图模式不变):在数据库系统上开发的应用程序可以不受数据库中数据逻辑结构变化的影响.</p><p>2)物理数据独立性(利用概念模式和物理模式间的映射):当数据的物理存储结构变化时,基于这个数据库开发的应用程序不受影响.</p><h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><p>（一）数据模型</p><p>（二）数据库用户接口和SQL语言</p><p>（三）数据库管理系统</p><p>（四）安全性和完整性约束</p><p>（五）数据库设计</p><p>（六）分布式数据库</p><p>（七）数据库在新领域的应用</p>]]></content>
-    
-    
-    <categories>
-      
-      <category>学习笔记</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>学习笔记</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>计算机组成原理笔记</title>
-    <link href="/2022/06/24/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E7%AC%94%E8%AE%B0/"/>
-    <url>/2022/06/24/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86%E7%AC%94%E8%AE%B0/</url>
-    
-    <content type="html"><![CDATA[<h1 id="王道计算机考研-计算机组成原理"><a href="#王道计算机考研-计算机组成原理" class="headerlink" title="王道计算机考研 计算机组成原理"></a>王道计算机考研 计算机组成原理</h1><h3 id="1-1计算机的发展"><a href="#1-1计算机的发展" class="headerlink" title="1.1计算机的发展"></a>1.1计算机的发展</h3><table><thead><tr><th>发展阶段</th><th>时间</th><th>逻辑元件</th><th>速度（次&#x2F;秒）</th><th>内存</th><th>外存</th></tr></thead><tbody><tr><td>第一代</td><td>1946-1957</td><td>电子管</td><td>几千-几万</td><td>汞延迟线、磁鼓</td><td>穿孔卡片、纸带</td></tr><tr><td>第二代</td><td>1958-1964</td><td>晶体管</td><td>几万-几十万</td><td>磁芯存储器</td><td>磁带</td></tr><tr><td>第三代</td><td>1964-1971</td><td>中小规模集成电路</td><td>几十万-几百万</td><td>半导体存储器</td><td>磁带、磁盘</td></tr><tr><td>第四代</td><td>1972-现在</td><td>大规模、超大规模集成电路</td><td>上千万-万亿</td><td>半导体存储器</td><td>磁盘、磁带、光盘、半导体存储器</td></tr></tbody></table><p>第一代：电子管时代  体积超大、耗电量高   使用机器语言编程（纸带机）</p><p>第二代：晶体管时代   体积减小、功耗降低  出现面向过程的程序设计语言：FORTRAN  有了操作系统雏形</p><p>第三代：中小规模集成电路时代  计算机主要用于科学计算等专业用途  高级语言迅速发展  开始有了分时操作系统</p><p>第四代：大规模、超大规模集成电路时代    开始出现微处理器、微型计算机  个人计算机（pc）萌芽 </p><p>操作系统：windows、MacOS、Linux</p><h4 id="微处理器的发展"><a href="#微处理器的发展" class="headerlink" title="微处理器的发展"></a>微处理器的发展</h4><p>机器字长：计算机一次整数运算所能处理的二进制位数</p><p>微型计算机的发展以微处理器技术为标志</p><table><thead><tr><th>微处理器</th><th>机器字长</th><th>年份</th><th>晶体管数目</th></tr></thead><tbody><tr><td>8080</td><td>8位</td><td>1974</td><td></td></tr><tr><td>8086</td><td>16位</td><td>1979</td><td>2.9万</td></tr><tr><td>80286</td><td>16位</td><td>1982</td><td>13.4万</td></tr><tr><td>80386</td><td>32位</td><td>1985</td><td>27.5万</td></tr><tr><td>80486</td><td>32位</td><td>1989</td><td>120.0万</td></tr><tr><td>Pentium</td><td>64位</td><td>1993</td><td>310.0万</td></tr><tr><td>Pentium pro</td><td>64位</td><td>1995</td><td>550.0万</td></tr><tr><td>Pentium II</td><td>64位</td><td>1997</td><td>750.0万</td></tr><tr><td>Pentium III</td><td>64位</td><td>1999</td><td>950.0万</td></tr><tr><td>Pentium IV</td><td>64位</td><td>2000</td><td>4200.0万</td></tr></tbody></table><h3 id="目前的发展趋势"><a href="#目前的发展趋势" class="headerlink" title="目前的发展趋势"></a>目前的发展趋势</h3><p>“两极”分化</p><p>一极是微型计算机向更微型化、网络化、高性能、多用途方向发展</p><p>另一极是巨型机向更巨型化、超高速并行处理、智能化方向发展</p>]]></content>
-    
-    
-    <categories>
-      
-      <category>学习笔记</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>学习笔记</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
     <title>悠哉日常</title>
     <link href="/2022/06/24/%E6%82%A0%E5%93%89%E6%97%A5%E5%B8%B8/"/>
     <url>/2022/06/24/%E6%82%A0%E5%93%89%E6%97%A5%E5%B8%B8/</url>
@@ -175,56 +75,6 @@
     <tags>
       
       <tag>日常</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>操作系统笔记</title>
-    <link href="/2022/06/24/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%AC%94%E8%AE%B0/"/>
-    <url>/2022/06/24/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F%E7%AC%94%E8%AE%B0/</url>
-    
-    <content type="html"><![CDATA[]]></content>
-    
-    
-    <categories>
-      
-      <category>学习笔记</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>学习笔记</tag>
-      
-    </tags>
-    
-  </entry>
-  
-  
-  
-  <entry>
-    <title>汇编语言笔记</title>
-    <link href="/2022/06/24/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E7%AC%94%E8%AE%B0/"/>
-    <url>/2022/06/24/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80%E7%AC%94%E8%AE%B0/</url>
-    
-    <content type="html"><![CDATA[]]></content>
-    
-    
-    <categories>
-      
-      <category>学习笔记</category>
-      
-    </categories>
-    
-    
-    <tags>
-      
-      <tag>学习笔记</tag>
       
     </tags>
     
