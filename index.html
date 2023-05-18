@@ -256,6 +256,76 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="2023/05/18/0ctf-2017-babyheap/" target="_self">
+          0ctf_2017_babyheap
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="2023/05/18/0ctf-2017-babyheap/" target="_self">
+        <div>
+          0ctf_2017_babyheap非常经典的堆题，涉及了不少知识点和坑，做个记录 题目概述： 有alloc、fill、free、dump,fill里存在堆溢出 堆的信息记录在mmap随机分配的heap_array中， 每个heap_array单元有24个字节 低地址8位记录堆是否被释放，没有被释放1，已经被释放0 中间8位记录申请的大小(用户输入值，不是chunk_size) 高地址8位记录申请
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-05-18 22:17" pubdate>
+              2023-05-18
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="categories/buu/" class="category-chain-item">buu</a>
+  
+  
+    <span>></span>
+    
+  <a href="categories/buu/pwn/" class="category-chain-item">pwn</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="tags/unsorted-bin-leak/">#unsorted_bin_leak</a>
+            
+              <a href="tags/fastbin-attack/">#fastbin_attack</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="2023/05/18/roarctf-2019-easy-pwn/" target="_self">
           roarctf_2019_easy_pwn
         </a>
@@ -310,9 +380,9 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="tags/off-by-one/">#off_by_one</a>
-            
               <a href="tags/unsorted-bin-leak/">#unsorted_bin_leak</a>
+            
+              <a href="tags/off-by-one/">#off_by_one</a>
             
               <a href="tags/realloc-hook/">#realloc_hook</a>
             
@@ -504,13 +574,13 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
+              <a href="tags/fastbin-attack/">#fastbin_attack</a>
+            
               <a href="tags/heap/">#heap</a>
             
               <a href="tags/glibc2-27/">#glibc2.27</a>
             
               <a href="tags/off-by-one/">#off_by_one</a>
-            
-              <a href="tags/fastbin-attack/">#fastbin_attack</a>
             
           </div>
         
@@ -852,67 +922,6 @@
               <a href="tags/z3/">#z3</a>
             
               <a href="tags/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/">#符号执行</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="2022/09/09/system%E7%B3%BB%E7%BB%9F%E5%87%BD%E6%95%B0/" target="_self">
-          system系统函数
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="2022/09/09/system%E7%B3%BB%E7%BB%9F%E5%87%BD%E6%95%B0/" target="_self">
-        <div>
-          简介执行 dos(windows系统) 或 shell(Linux&#x2F;Unix系统) 命令，参数字符串command为命令名。另，在windows系统下参数字符串不区分大小写。 说明：在windows系统中，system函数直接在控制台调用一个command命令。在Linux&#x2F;Unix系统中，system函数会 1.fork一个子进程； 2.在子进程中调用exec函数去执行com
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2022-09-09 13:41" pubdate>
-              2022-09-09
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="categories/basic/" class="category-chain-item">basic</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="tags/c%E8%AF%AD%E8%A8%80/">#c语言</a>
             
           </div>
         
