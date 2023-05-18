@@ -256,6 +256,274 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h1 class="index-header">
         
+        <a href="2023/05/18/roarctf-2019-easy-pwn/" target="_self">
+          roarctf_2019_easy_pwn
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="2023/05/18/roarctf-2019-easy-pwn/" target="_self">
+        <div>
+          buu刷题记录 roarctf_2019_easy_pwn一眼off_by_one,本以为很简单，没想到看着wp做还碰到不少坑，有必要做个记录 程序特征：1.有heap_arr且在bss段且其中记了size和inuse（在这题似乎不重要） 2.off by one 3.calloc 4.有edit和show 知识点及思路：1.基于off by one的后向拓展，即修改低地址chunk的size位并
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-05-18 22:04" pubdate>
+              2023-05-18
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="categories/buu/" class="category-chain-item">buu</a>
+  
+  
+    <span>></span>
+    
+  <a href="categories/buu/pwn/" class="category-chain-item">pwn</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="tags/off-by-one/">#off_by_one</a>
+            
+              <a href="tags/unsorted-bin-leak/">#unsorted_bin_leak</a>
+            
+              <a href="tags/realloc-hook/">#realloc_hook</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="2023/05/18/glibc%E5%A0%86%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E5%9F%BA%E7%A1%80/" target="_self">
+          glibc堆漏洞利用基础
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="2023/05/18/glibc%E5%A0%86%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E5%9F%BA%E7%A1%80/" target="_self">
+        <div>
+          glibc堆(ptmalloc)漏洞利用基础​                                     虚拟内存示意图  1.Arena和malloc_statearena即堆内存本身,概念上arena &gt; heap &gt; chunk 主线程的arena称为main_arena,由sbrk函数向内核申请一大片内存创建，最开始调用sbrk函数创建大小为(128 KB + c
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-05-18 21:49" pubdate>
+              2023-05-18
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="categories/pwn/" class="category-chain-item">pwn</a>
+  
+  
+    <span>></span>
+    
+  <a href="categories/pwn/heap/" class="category-chain-item">heap</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="tags/heap/">#heap</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="2023/05/18/%E5%8D%9A%E5%AE%A2%E7%BB%B4%E6%8A%A4/" target="_self">
+          博客维护
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="2023/05/18/%E5%8D%9A%E5%AE%A2%E7%BB%B4%E6%8A%A4/" target="_self">
+        <div>
+          Hexo Fluid 用户手册 当前主题的配置文件：_config.fluid.yml hexo s12hexo s1  启动本地服务器，用于预览主题。默认地址： http:&#x2F;&#x2F;localhost:4000&#x2F;  hexo s 是 hexo server 的缩写，命令效果一致； 预览的同时可以修改文章内容或主题代码，保存后刷新页面即可； 对 Hexo 根目录 _config.yml 的修改，需要重启
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-05-18 21:42" pubdate>
+              2023-05-18
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="categories/%E5%85%B6%E5%AE%83/" class="category-chain-item">其它</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
+        <a href="2023/05/18/npuctf-2020-easyheap/" target="_self">
+          npuctf_2020_easyheap
+        </a>
+      </h1>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="2023/05/18/npuctf-2020-easyheap/" target="_self">
+        <div>
+          npuctf_2020_easyheap考点：off_by_one got表可写，没开pie，ubuntu版本1804，glibc2.27  经典菜单题  create函数， 1.存在bss段的内存来存放chunk的管理结构的指针，chunk的管理结构通过malloc(0x10)申请，分别存放用户申请的chunk的size和指针 2.限制了用户只能申请0x18和0x38的size，即用户申请的ch
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-05-18 20:54" pubdate>
+              2023-05-18
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="categories/buu/" class="category-chain-item">buu</a>
+  
+  
+    <span>></span>
+    
+  <a href="categories/buu/pwn/" class="category-chain-item">pwn</a>
+  
+  
+
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="tags/heap/">#heap</a>
+            
+              <a href="tags/glibc2-27/">#glibc2.27</a>
+            
+              <a href="tags/off-by-one/">#off_by_one</a>
+            
+              <a href="tags/fastbin-attack/">#fastbin_attack</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h1 class="index-header">
+        
         <a href="2022/09/22/canary%E4%BF%9D%E6%8A%A4%E5%8F%8A%E7%BB%95%E8%BF%87%E5%AD%A6%E4%B9%A0/" target="_self">
           canary保护及绕过学习
         </a>
@@ -291,6 +559,13 @@
   <a href="categories/pwn/" class="category-chain-item">pwn</a>
   
   
+    <span>></span>
+    
+  <a href="categories/pwn/general/" class="category-chain-item">general</a>
+  
+  
+
+  
 
       </span>
     
@@ -303,9 +578,9 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="tags/pwn/">#pwn</a>
+              <a href="tags/canary/">#canary</a>
             
-              <a href="tags/%E6%A0%88%E6%BA%A2%E5%87%BA/">#栈溢出</a>
+              <a href="tags/basic/">#basic</a>
             
           </div>
         
@@ -373,11 +648,7 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="tags/pwn/">#pwn</a>
-            
-              <a href="tags/linux/">#linux</a>
-            
-              <a href="tags/basic/">#basic</a>
+              <a href="tags/pwntools/">#pwntools</a>
             
           </div>
         
@@ -445,11 +716,7 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="tags/pwn/">#pwn</a>
-            
-              <a href="tags/linux/">#linux</a>
-            
-              <a href="tags/basic/">#basic</a>
+              <a href="tags/pwndbg/">#pwndbg</a>
             
           </div>
         
@@ -500,7 +767,7 @@
   
     <span>></span>
     
-  <a href="categories/pwn/x64%E6%B1%87%E7%BC%96/" class="category-chain-item">x64汇编</a>
+  <a href="categories/pwn/general/" class="category-chain-item">general</a>
   
   
 
@@ -517,9 +784,11 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="tags/pwn/">#pwn</a>
-            
               <a href="tags/x64%E6%B1%87%E7%BC%96/">#x64汇编</a>
+            
+              <a href="tags/%E5%AD%97%E8%8A%82%E5%AF%B9%E9%BD%90/">#字节对齐</a>
+            
+              <a href="tags/%E5%A0%86%E6%A0%88%E5%B9%B3%E8%A1%A1/">#堆栈平衡</a>
             
           </div>
         
@@ -565,7 +834,7 @@
     
       <span class="category-chain">
         
-  <a href="categories/python%E5%BA%93/" class="category-chain-item">python库</a>
+  <a href="categories/basic/" class="category-chain-item">basic</a>
   
   
 
@@ -580,7 +849,7 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="tags/python/">#python</a>
+              <a href="tags/z3/">#z3</a>
             
               <a href="tags/%E7%AC%A6%E5%8F%B7%E6%89%A7%E8%A1%8C/">#符号执行</a>
             
@@ -643,8 +912,6 @@
           <div class="post-meta">
             <i class="iconfont icon-tags"></i>
             
-              <a href="tags/basic/">#basic</a>
-            
               <a href="tags/c%E8%AF%AD%E8%A8%80/">#c语言</a>
             
           </div>
@@ -653,268 +920,13 @@
     </article>
   </div>
 
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="2022/09/09/ACTF%E6%96%B0%E7%94%9F%E8%B5%9B2020-Oruga/" target="_self">
-          ACTF新生赛2020_Oruga
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="2022/09/09/ACTF%E6%96%B0%E7%94%9F%E8%B5%9B2020-Oruga/" target="_self">
-        <div>
-          知识点：迷宫题 题目显式或隐式地给出一个迷宫，定义在迷宫中移动对应的符号，通过走迷宫的形式得到flag 难点： 1.意识到这是一道迷宫题，考验代码分析能力和经验。 2.分析迷宫的类型，将迷宫还原，需要抽象思维。 3.分析在迷宫中的动作的执行规则 题目主函数  首先检测了flag格式，不对则输出”Format false!“格式错误 然后查看sub_78A函数 1234567891011121314
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2022-09-09 10:11" pubdate>
-              2022-09-09
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="categories/reverse/" class="category-chain-item">reverse</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="tags/buu/">#buu</a>
-            
-              <a href="tags/reverse/">#reverse</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="2022/09/08/linux-shell%E5%91%BD%E4%BB%A4/" target="_self">
-          linux_shell命令
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="2022/09/08/linux-shell%E5%91%BD%E4%BB%A4/" target="_self">
-        <div>
-          0.编译gcc Hello.c -o hello g++  hello.cpp -0 hello 1.打开终端命令行方法一：右键-&gt;打开终端。方法二：Ctrl+Alt+T 2.常用快捷键2.1 tab键tab键是有两个功能，一个一次tab命令补齐，另一个两次tab提示内容，如果我们不记得一个命令的全拼，或者不记得某个路径的全拼，可以输入命令的前面几个字母，然后使用tab键自动补齐命令或查看提
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2022-09-08 00:12" pubdate>
-              2022-09-08
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="categories/linux/" class="category-chain-item">linux</a>
-  
-  
-    <span>></span>
-    
-  <a href="categories/linux/basic/" class="category-chain-item">basic</a>
-  
-  
-
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="tags/linux/">#linux</a>
-            
-              <a href="tags/shell/">#shell</a>
-            
-              <a href="tags/basic/">#basic</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/" target="_self">
-          青龙组-jocker
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="2022/07/08/%E9%9D%92%E9%BE%99%E7%BB%84-jocker/" target="_self">
-        <div>
-          buu [网鼎杯 2020 青龙组]jocker本题的难点在于：第12行if语句中对加密函数encrypt的代码本体使用VirtualProtect函数进行了加密保护，再在第24，25行对encrypt函数代码与0x41异或进行解密还原，所以只有执行完for循环后才能得到真正的encrypt函数，因此需要动态调试在for循环结束后并且调用encrypt前的位置下断点，再f8步入真正的encrypt
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2022-07-08 23:13" pubdate>
-              2022-07-08
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="categories/reverse/" class="category-chain-item">reverse</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="tags/buu/">#buu</a>
-            
-              <a href="tags/reverse/">#reverse</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
-        
-        <a href="2022/06/27/buu%E5%88%AE%E5%BC%80%E6%9C%89%E5%A5%96/" target="_self">
-          buu刮开有奖
-        </a>
-      </h1>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="2022/06/27/buu%E5%88%AE%E5%BC%80%E6%9C%89%E5%A5%96/" target="_self">
-        <div>
-          buu 刮开有奖本题收获：1.有时候直接分析伪c代码的加密十分困难，跳过分析加密过程直接得到加密结果的方式有：动态调试、修复伪c代码成c代码直接运行 2.连续存储的数字或字符可以看作数组，指针和数组可以进行转换 查壳，无壳，32位文件，ida，直接进入主要函数DialogFunc   分析得加密主要有两部分：sub_4010F0和sub_401000 sub_4010F0加密v7开始的数组，这里分
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2022-06-27 11:33" pubdate>
-              2022-06-27
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="categories/reverse/" class="category-chain-item">reverse</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="tags/buu/">#buu</a>
-            
-              <a href="tags/reverse/">#reverse</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
 
 
+  <nav aria-label="navigation">
+    <span class="pagination" id="pagination">
+      <span class="page-number current">1</span><a class="page-number" href="page/2/#board">2</a><a class="extend next" rel="next" href="page/2/#board"><i class="iconfont icon-arrowright"></i></a>
+    </span>
+  </nav>
 
 
 
