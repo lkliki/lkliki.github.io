@@ -1,0 +1,727 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="../../../../img/touxiang.png">
+  <link rel="icon" href="../../../../img/touxiang.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="0P1N">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Pin简介Intel官方文档 Pin，概述，下载，手册等都有 Pin是intel开发的一个动态二进制插桩工具，提供了丰富的API，支持windows、linux、macos，适用于 IA-32、x86-64 和 MIC 指令集架构。 动态二进制插桩（Dynamic Binary Instrumentation，DBI）的含义：不需要源代码，可以在二进制可执行文件文件的任意位置插入任意的代码 (C&amp;">
+<meta property="og:type" content="article">
+<meta property="og:title" content="动态二进制插桩工具Pin和pintools">
+<meta property="og:url" content="https://lkliki.github.io/2023/10/13/%E5%8A%A8%E6%80%81%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%8F%92%E6%A1%A9pin%E5%92%8Cpintools/index.html">
+<meta property="og:site_name" content="0P1N">
+<meta property="og:description" content="Pin简介Intel官方文档 Pin，概述，下载，手册等都有 Pin是intel开发的一个动态二进制插桩工具，提供了丰富的API，支持windows、linux、macos，适用于 IA-32、x86-64 和 MIC 指令集架构。 动态二进制插桩（Dynamic Binary Instrumentation，DBI）的含义：不需要源代码，可以在二进制可执行文件文件的任意位置插入任意的代码 (C&amp;">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lkliki.github.io/2023/10/13/%E5%8A%A8%E6%80%81%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%8F%92%E6%A1%A9pin%E5%92%8Cpintools/1.png">
+<meta property="og:image" content="https://lkliki.github.io/2023/10/13/%E5%8A%A8%E6%80%81%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%8F%92%E6%A1%A9pin%E5%92%8Cpintools/2.png">
+<meta property="article:published_time" content="2023-10-13T14:24:11.000Z">
+<meta property="article:modified_time" content="2023-11-13T14:25:51.728Z">
+<meta property="article:author" content="0P1N">
+<meta property="article:tag" content="Pintools">
+<meta property="article:tag" content="插桩">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://lkliki.github.io/2023/10/13/%E5%8A%A8%E6%80%81%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%8F%92%E6%A1%A9pin%E5%92%8Cpintools/1.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>动态二进制插桩工具Pin和pintools - 0P1N</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="../../../../css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="../../../../css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="../../../../css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"lkliki.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="../../../../js/utils.js" ></script>
+  <script  src="../../../../js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="../../../../index.html">
+      <strong>Welcome To 0P1N&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../index.html">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('../../../../img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="动态二进制插桩工具Pin和pintools"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-10-13 22:24" pubdate>
+          2023年10月13日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          32 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">动态二进制插桩工具Pin和pintools</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="Pin简介"><a href="#Pin简介" class="headerlink" title="Pin简介"></a>Pin简介</h2><p><a target="_blank" rel="noopener" href="https://www.intel.cn/content/www/cn/zh/developer/articles/tool/pin-a-dynamic-binary-instrumentation-tool.html">Intel官方文档 Pin</a>，概述，下载，手册等都有</p>
+<p>Pin是intel开发的一个<strong>动态二进制插桩</strong>工具，提供了丰富的API，支持windows、linux、macos，适用于 IA-32、x86-64 和 MIC 指令集架构。</p>
+<p>动态二进制插桩（Dynamic Binary Instrumentation，DBI）的含义：不需要源代码，可以在二进制可执行文件文件的任意位置插入任意的代码 (C&#x2F;C++ 编写)，可以将代码动态地添加到正在执行地可执行文件中。目前的DBI平台有Pin、DynamoRIO、Valgrind等。</p>
+<p>基于Pin提供的API开发(c,c++,asm)的工具为pintools。Pin最初是计算机体系结构分析工具，但其灵活的API和活跃的社区（称为“ <a target="_blank" rel="noopener" href="https://groups.io/g/pinheads">Pinheads</a> ”）创建了一组用于安全、仿真和并行程序分析的多样化工具。</p>
+<p>Pin的功能：可以用自己的函数替换程序中的函数，并且在自己的函数中调用被替换的函数；可以在指令中插入对检测函数的调用，使得在执行指令时执行检测函数，同时可以给检测函数传递参数(寄存器值、指令读写的内存地址、寄存器上下文)；可以随时attach和detach进程，即可以自定义在程序中需要插桩和检测的部分；可以追踪函数调用以及syscall，检测&#x2F;改变参数；可以配合调试器（如gdb）使用，实现调试器的一些拓展功能；跟踪应用程序子线程；拦截signal信号；检测进程树等。</p>
+<h2 id="Pintool使用"><a href="#Pintool使用" class="headerlink" title="Pintool使用"></a>Pintool使用</h2><p>先看readme，介绍了pintools的编译和基本使用</p>
+<p>readme演示的是opcodemix，它可以用来分析程序包含的不同指令组合的数目，比如可以比较两款编译器编译生成的文件的指令组合的差异</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs gradle"><span class="hljs-keyword">This</span> example applies to a <span class="hljs-number">64</span>-bit application. <span class="hljs-keyword">For</span> a <span class="hljs-number">32</span>-bit application please use <span class="hljs-string">&quot;obj-ia32&quot;</span><br>instead of <span class="hljs-string">&quot;obj-intel64&quot;</span> and add <span class="hljs-string">&quot;TARGET=ia32&quot;</span> to the make command.<br><br>To build and run a sample tool on Linux*:<br><br>    cd <span class="hljs-keyword">source</span><span class="hljs-regexp">/tools/</span>SimpleExamples<br>    make obj-intel64/opcodemix.so<br>    ..<span class="hljs-regexp">/../</span>..<span class="hljs-regexp">/pin -t obj-intel64/</span>opcodemix.so -- <span class="hljs-regexp">/bin/</span>ls<br><br>    <span class="hljs-keyword">This</span> will instrument and run <span class="hljs-regexp">/bin/</span>ls, the output <span class="hljs-keyword">for</span> <span class="hljs-keyword">this</span> tool is in<br>    opcodemix.out.<br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://www.intel.cn/content/www/cn/zh/developer/articles/tool/pin-a-binary-instrumentation-tool-downloads.html">下载Pin</a></p>
+<p>编译ManualExamples下的所有Pintool(64位)，编译生成的文件会放在obj-intel64目录中</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">cd</span> <span class="hljs-built_in">source</span>/tools/ManualExamples</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">make all TARGET=intel64</span><br></code></pre></td></tr></table></figure>
+
+<p>使用编译好的工具，我们需要.so文件-t指明要使用的pintool，–后面是要插桩运行的程序</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">..<span class="hljs-regexp">/../</span>..<span class="hljs-regexp">/pin -t obj-intel64/i</span>nscount0.so -- <span class="hljs-regexp">/bin/</span>ls<br></code></pre></td></tr></table></figure>
+
+<p>这里使用的是inscount0,可以统计运行的指令数量，结果保存在运行时所在目录下的inscount.out文件，inscount0、incount1、inscount2的区别在于后者对运行效率进行了优化。</p>
+<h2 id="Pintool架构"><a href="#Pintool架构" class="headerlink" title="Pintool架构"></a>Pintool架构</h2><p>windows和linux下Pin的大致架构都是如下</p>
+<ul>
+<li>供 pintool 调用的API库。Linux下是instrumentation api 库，windows中是PIN.LIB；</li>
+<li>VM：即 virtual machine，它的功能主要是插桩并执行程序，过程类似于即时编译，只是编译变成了插桩。大致流程是：先对部分代码进行插桩，放到code cache中运行，运行时需要跳转到未插桩的代码时再对相应代码进行插桩并放入code cache。linux中包含了 emulation unit 用来处理系统调用，JIT 编译器负责编译和插桩，每次取一个 trace 编译后送到 code cache 中；windows原理相同，主要功能集中在PINVM.DLL，执行过程大概是启动pin.exe以debugger的模式，附加要分析程序的进程 -&gt; 注入pinvm.dll-&gt;注入pintool的dll-&gt;开始运行。</li>
+<li>code cache：用来存储插桩后的代码，真正执行的是 code cache 中的代码，原目标插桩文件中的代码不会执行。</li>
+</ul>
+<p>linux下的架构</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/T2777/article/details/121282703#Pin%20%E6%80%BB%E7%BB%93%F0%9F%93%98">来源</a></p>
+<p><img src="/2023/10/13/%E5%8A%A8%E6%80%81%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%8F%92%E6%A1%A9pin%E5%92%8Cpintools/1.png" srcset="/img/loading.gif" lazyload alt="1"></p>
+<p>windows下的架构</p>
+<p><a target="_blank" rel="noopener" href="https://www.intel.cn/content/dam/develop/external/us/en/documents/cgo2013-256675.pdf">来源</a></p>
+<p><img src="/2023/10/13/%E5%8A%A8%E6%80%81%E4%BA%8C%E8%BF%9B%E5%88%B6%E6%8F%92%E6%A1%A9pin%E5%92%8Cpintools/2.png" srcset="/img/loading.gif" lazyload alt="2"></p>
+<h2 id="编写自己的Pintools"><a href="#编写自己的Pintools" class="headerlink" title="编写自己的Pintools"></a>编写自己的Pintools</h2><p>阅读不同版本Pin对应的用户手册，其中有详细的API及示例，如<a target="_blank" rel="noopener" href="https://software.intel.com/sites/landingpage/pintool/docs/98749/Pin/doc/html/index.html">Pin 3.28 User Guide</a></p>
+<p>[<a target="_blank" rel="noopener" href="https://www.v4ler1an.com/">V4ler1an的博客</a>]，主要是官方文档的相关内容的整理总结，博主是看雪二进制漏洞板块小版主。</p>
+<h2 id="intel-sde"><a href="#intel-sde" class="headerlink" title="intel sde"></a>intel sde</h2><p><a target="_blank" rel="noopener" href="https://www.intel.cn/content/www/cn/zh/developer/articles/tool/software-development-emulator.html?_x_tr_sl=auto&_x_tr_tl=zh-CN&_x_tr_hl=zh-CN">官方下载及文档</a></p>
+<p>sde基于pin和xed，sde在pin插桩分析的基础上多了仿真的功能，可以在特定指令集架构上运行给定程序并捕获各种性能详细信息，可以供开发人员提前熟悉和探索即将推出的新指令集，为在软件中使用新指令集做准备。</p>
+<p>Intel X86 Encoder Decoder (XED) 是一个软件库，用于编码和解码 X86（IA32 和 Intel64）指令。解码器采用 1-15 字节的序列以及机器模式信息，并生成描述操作码、操作数和标志的数据结构。编码器采用类似的数据结构并生成 1 到 15 个字节的序列。反汇编本质上是对数据结构的打印。</p>
+<p>即XED可以对x86&#x2F;64代码进行反汇编以及将汇编转化为机器码,可执行程序xed可以反汇编PE和ELF可执行文件。</p>
+<p><strong>sde基本使用</strong></p>
+<p>中括号表示可选参数</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">path-to-kit/sde [sde args] -- user-application [app args]<br></code></pre></td></tr></table></figure>
+
+<p>用sde运行cmd或shell可以使所有在cmd&#x2F;shell中运行的程序都在sde的控制之下，sde可以收集并分析所有该命令行中的内容。</p>
+<p>例如：</p>
+<figure class="highlight arcade"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs arcade">sde -icount -- <span class="hljs-regexp">/bin/</span>sh<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">查看帮助</span><br>-help   <br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看更多更详细的帮助，可查看支持仿真的cpu和指令集以及其对应的命令行参数<span class="hljs-built_in">id</span>，可查看分析工具更详细的参数</span><br>-help-long<br><span class="hljs-meta prompt_">#</span><span class="language-bash">查看运行到的不同函数中不同指令的数量统计，输出在文件中</span><br>-mix<br><span class="hljs-meta prompt_">#</span><span class="language-bash">统计运行的指令数量，有终端输出和文件输出</span><br>-icount<br><span class="hljs-meta prompt_">#</span><span class="language-bash">更多功能及参数请看文档</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="Pin-in-CTF"><a href="#Pin-in-CTF" class="headerlink" title="Pin in CTF"></a>Pin in CTF</h2><p>因为Pin能够直接对可执行程序动态插桩进行信息收集，所以求解部分ctf题有奇效。</p>
+<p>主要用于程序复杂（如复杂的vm逆向以及混淆题）但是对flag(input)的检测是逐位的情况下，每一位的对错都会导致执行流的改变，执行时间或执行指令数量相差巨大，这样就能进行侧信道逐位爆破。</p>
+<p><a target="_blank" rel="noopener" href="https://ctf-wiki.github.io/ctf-tools/binary-core-tools/instrumentation/intel_pin/">[ctf-wiki]intel pin</a>上有两道例题</p>
+<h5 id="2023香山杯nesting"><a href="#2023香山杯nesting" class="headerlink" title="2023香山杯nesting"></a>2023香山杯nesting</h5><p>一道vm题，但这里可以不用ida分析</p>
+<p>程序运行后会让你输入flag并检测flag是否正确</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs css"><span class="hljs-selector-tag">Input</span> your flag:<br></code></pre></td></tr></table></figure>
+
+<p>用sde来统计程序运行到的指令数量，结果会在命令行以ICOUNT: 3421916的形式输出，这也方便爆破脚本的编写</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">sde -icount -- ./nesting<br></code></pre></td></tr></table></figure>
+
+<p>可以发现每多输入一位，总指令数都会增加20万左右</p>
+<p>flag的前4位必定是”flag”，分别输入”1111”,”f111”，”fl11”，”fla1”，”flag”可以发现在位数相同的情况下，flag每正确一位总指令数会增加55000左右，说明flag是逐位check的，并且不同结果的执行流长度相差较大，可以通过这一点来爆破flag</p>
+<p>爆破脚本，来自Re神</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span>*<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">run</span>(<span class="hljs-params"><span class="hljs-built_in">str</span></span>):<br>	p = process([<span class="hljs-string">&#x27;sde64&#x27;</span>,<span class="hljs-string">&#x27;-icount&#x27;</span>,<span class="hljs-string">&#x27;--&#x27;</span>,<span class="hljs-string">&#x27;./nesting&#x27;</span>])<br>	p.recvuntil(<span class="hljs-string">&#x27;Input your flag:&#x27;</span>)<br>	p.sendline(<span class="hljs-built_in">str</span>)<br>	p.recvuntil(<span class="hljs-string">&#x27;ICOUNT:&#x27;</span>)<br>	icount = <span class="hljs-built_in">int</span>(p.recvline())<br>	p.close()<br>	<span class="hljs-keyword">return</span> icount<br><br>table = <span class="hljs-string">&#x27;0123456789abcdef-&#125;&#x27;</span><br><span class="hljs-comment">#table = string.printable</span><br>flag = <span class="hljs-string">&#x27;flag&#123;&#x27;</span><br><br><span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>	t1 = run(flag+<span class="hljs-string">&#x27;#&#x27;</span>)<br>	ok = <span class="hljs-number">0</span><br>	<span class="hljs-keyword">for</span> ch <span class="hljs-keyword">in</span> table:<br>		t2 = run(flag+ch)<br>		<span class="hljs-keyword">if</span>(t2-t1&gt;<span class="hljs-number">50000</span>):<br>			flag = flag + ch<br>			ok = <span class="hljs-number">1</span><br>			<span class="hljs-built_in">print</span>(flag)<br>			<span class="hljs-keyword">break</span><br>	<span class="hljs-keyword">if</span>(ok==<span class="hljs-number">0</span>):<br>		<span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;result : &#x27;</span>+flag)<br>		exit()<br><span class="hljs-comment">#flag&#123;2c7c093b-f648-11ed-a716-701ab8caaafe</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="参考资料"><a href="#参考资料" class="headerlink" title="参考资料"></a>参考资料</h2><p><a target="_blank" rel="noopener" href="https://www.intel.cn/content/www/cn/zh/developer/articles/tool/pin-a-dynamic-binary-instrumentation-tool.html">Intel官方文档 Pin</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/T2777/article/details/121282703#Pin%20%E6%80%BB%E7%BB%93%F0%9F%93%98">[csdn]Pin介绍，翻译了用户手册的一部分</a></p>
+<p><a target="_blank" rel="noopener" href="https://ctf-wiki.github.io/ctf-tools/binary-core-tools/instrumentation/intel_pin/">[ctf-wiki]intel pin</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.v4ler1an.com/">V4ler1an的博客</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.intel.cn/content/www/cn/zh/developer/articles/tool/software-development-emulator.html?_x_tr_sl=auto&_x_tr_tl=zh-CN&_x_tr_hl=zh-CN">Intel sde官方文档&amp;&amp;下载</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="../../../../categories/%E8%BD%AF%E4%BB%B6%E6%B5%8B%E8%AF%95-%E6%BC%8F%E6%B4%9E%E6%8C%96%E6%8E%98/" class="category-chain-item">软件测试&amp;漏洞挖掘</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="../../../../tags/Pintools/">#Pintools</a>
+      
+        <a href="../../../../tags/%E6%8F%92%E6%A1%A9/">#插桩</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>动态二进制插桩工具Pin和pintools</div>
+      <div>https://lkliki.github.io/2023/10/13/动态二进制插桩pin和pintools/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>0P1N</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年10月13日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="../../18/2023%E9%A6%99%E5%B1%B1%E6%9D%AFwp/" title="2023香山杯RE&amp;PWN writeup">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">2023香山杯RE&amp;PWN writeup</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="../../../05/18/unlink/" title="unlink">
+                        <span class="hidden-mobile">unlink</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href=""><span>fffer</span></a> <i class="iconfont icon-bug"></i> <a href="" target="_blank" rel="nofollow noopener"><span>0p1n</span></a> <br /> <a href=""><span>富强 民主 文明 和谐 自由 平等 公正 法治 爱国 敬业 诚信 友善</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="../../../../js/events.js" ></script>
+<script  src="../../../../js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="../../../../js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="../../../../js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="../../../../js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
