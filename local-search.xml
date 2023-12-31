@@ -120,6 +120,29 @@
   
   
   <entry>
+    <title>ida插件-d810安装和使用</title>
+    <link href="/2023/09/28/ida%E6%8F%92%E4%BB%B6-d810%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/"/>
+    <url>/2023/09/28/ida%E6%8F%92%E4%BB%B6-d810%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/</url>
+    
+    <content type="html"><![CDATA[<p>一把梭！</p><span id="more"></span><h1 id="ida插件-d810安装和使用"><a href="#ida插件-d810安装和使用" class="headerlink" title="ida插件 - d810安装和使用"></a>ida插件 - d810安装和使用</h1><p>D-810是一个基于IDA Microcode实现的可拓展的ida去混淆插件，尤其是在CTF中碰到控制流平坦化时可以使用默认的脚本F5一键去平坦化。</p><p>网上关于d810的资料很少，翻来翻去只有<a href="https://github.com/zhkl0228/d810">该文章</a>和<a href="https://github.com/zhkl0228/d810">github</a>能看，所以本文浅浅记录d810的安装和使用</p><h2 id="安装"><a href="#安装" class="headerlink" title="安装"></a>安装</h2><p>支持ida7.5及以上版本</p><p>使用ida目录下的idapyswitch.exe选择适合的python环境，本文使用python3.10</p><p>需要的依赖有PyQt5和z3-solver</p><figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmake">python -m pip <span class="hljs-keyword">install</span> PyQt5<br>python -m pip <span class="hljs-keyword">install</span> z3-solver<br></code></pre></td></tr></table></figure><p>另外，PyQt5和python-qt5会冲突，如果报错，可以检查是不是同时安装了这俩依赖</p><figure class="highlight mel"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mel"><span class="hljs-keyword">python</span> -m pip list   <span class="hljs-comment">//查看已经安装的依赖</span><br><span class="hljs-keyword">python</span> -m pip uninstall <span class="hljs-keyword">python</span>-qt5   <br></code></pre></td></tr></table></figure><p>安装插件只需要从github上下载并解压，将d810文件夹和D810.py拖到ida目录下的plugins文件夹中。</p><p>完成后打开ida，工具栏可以看到有Edit - Plugins - D810选项</p><h2 id="使用"><a href="#使用" class="headerlink" title="使用"></a>使用</h2><p>快捷键ctrl + shift + D调出d810配置面板</p><p>在Current file loaded中可以选择要载入的去混淆规则，如去平坦化</p><p><img src="/2023/09/28/ida%E6%8F%92%E4%BB%B6-d810%E5%AE%89%E8%A3%85%E5%92%8C%E4%BD%BF%E7%94%A8/1.png" alt="1"></p><p>载入好规则后点击start，看到输出D-810 ready to deobfuscate…后f5反编译时会自动进行去混淆。</p><p>同理，点击stop关闭去混淆。</p>]]></content>
+    
+    
+    
+    <tags>
+      
+      <tag>ida插件</tag>
+      
+      <tag>逆向</tag>
+      
+      <tag>去混淆</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>unlink</title>
     <link href="/2023/05/18/unlink/"/>
     <url>/2023/05/18/unlink/</url>
