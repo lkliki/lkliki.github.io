@@ -1,0 +1,893 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="../../../../img/touxiang.png">
+  <link rel="icon" href="../../../../img/touxiang.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="0P1N">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="TL-WR886N路由器uart调试及VxWorks固件提取和分析咸鱼买的二手路由器，用来练习。这篇文章对该路由器的拆解以及元器件有简单的介绍，外壳只有两颗螺丝能卸下，剩下的只能暴力拆解。另外，这类网络设备的螺丝很多会藏在贴纸下面，比如下图右侧那颗。  拆解后找到闪存和uart口，笔者最近接触到的两个老路由器和一个无线ap的flash都是8脚的，uart一般是3-5个孔。  背面  用到的工具和软">
+<meta property="og:type" content="article">
+<meta property="og:title" content="TL-WR886N路由器uart调试及VxWorks固件提取和分析">
+<meta property="og:url" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/index.html">
+<meta property="og:site_name" content="0P1N">
+<meta property="og:description" content="TL-WR886N路由器uart调试及VxWorks固件提取和分析咸鱼买的二手路由器，用来练习。这篇文章对该路由器的拆解以及元器件有简单的介绍，外壳只有两颗螺丝能卸下，剩下的只能暴力拆解。另外，这类网络设备的螺丝很多会藏在贴纸下面，比如下图右侧那颗。  拆解后找到闪存和uart口，笔者最近接触到的两个老路由器和一个无线ap的flash都是8脚的，uart一般是3-5个孔。  背面  用到的工具和软">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/IMG_20240220_143542.jpg">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/IMG_20240220_172342.jpg">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/IMG_20240220_182643-1708424937197.jpg">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/IMG_20240221_230213(1).jpg">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/IMG_20240221_230232(1).jpg">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240221235522.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/IMG_20240220_182522-1708425211873.jpg">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/IMG_20240220_213131(1).jpg">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/IMG_20240220_213123(1)(1).jpg">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/IMG_20240220_213103(1).jpg">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240220215204.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240220215527.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ截图20240220211242.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ截图20240221130511.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ截图20240220224905.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240221134700.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240221150236.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240222115620.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240227193321.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240228105914.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240226124618.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240226125708.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ截图20240224173704.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240228114550.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240228120851.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240229000137.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240229000742.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240229161428.png">
+<meta property="article:published_time" content="2024-02-25T04:00:00.000Z">
+<meta property="article:modified_time" content="2024-02-29T11:39:53.207Z">
+<meta property="article:author" content="0P1N">
+<meta property="article:tag" content="IOT">
+<meta property="article:tag" content="固件提取">
+<meta property="article:tag" content="TL-WR886N">
+<meta property="article:tag" content="VxWorks">
+<meta property="article:tag" content="uart调试">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://lkliki.github.io/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/IMG_20240220_143542.jpg">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>TL-WR886N路由器uart调试及VxWorks固件提取和分析 - 0P1N</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="../../../../css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="../../../../css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="../../../../css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"lkliki.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="../../../../js/utils.js" ></script>
+  <script  src="../../../../js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="../../../../index.html">
+      <strong>Welcome To 0P1N&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../index.html">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('../../../../img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="TL-WR886N路由器uart调试及VxWorks固件提取和分析"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-02-25 12:00" pubdate>
+          2024年2月25日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          13k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          109 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">TL-WR886N路由器uart调试及VxWorks固件提取和分析</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="TL-WR886N路由器uart调试及VxWorks固件提取和分析"><a href="#TL-WR886N路由器uart调试及VxWorks固件提取和分析" class="headerlink" title="TL-WR886N路由器uart调试及VxWorks固件提取和分析"></a>TL-WR886N路由器uart调试及VxWorks固件提取和分析</h1><p>咸鱼买的二手路由器，用来练习。<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/502926882?utm_id=0">这篇文章</a>对该路由器的拆解以及元器件有简单的介绍，外壳只有两颗螺丝能卸下，剩下的只能暴力拆解。另外，这类网络设备的螺丝很多会藏在贴纸下面，比如下图右侧那颗。</p>
+<p><img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/IMG_20240220_143542.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>拆解后找到闪存和uart口，笔者最近接触到的两个老路由器和一个无线ap的flash都是8脚的，uart一般是3-5个孔。</p>
+<p><img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/IMG_20240220_172342.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>背面</p>
+<p><img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/IMG_20240220_182643-1708424937197.jpg" srcset="/img/loading.gif" lazyload></p>
+<p>用到的工具和软件</p>
+<figure class="highlight armasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs armasm"><span class="hljs-symbol">ch341A</span>编程器<br><span class="hljs-symbol">SOP8</span>测试夹+转接板<br>好易通测试夹<br><span class="hljs-symbol">ch340</span> usb转<span class="hljs-meta">ttl</span>模块<br><span class="hljs-symbol">Asprogrammer</span><br><span class="hljs-symbol">SecureCRT</span><br>螺丝刀<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="编程器提取固件"><a href="#编程器提取固件" class="headerlink" title="编程器提取固件"></a>编程器提取固件</h2><p>参考z1r0大佬写的<a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-276700.htm">文章</a></p>
+<p>路由器不接电源，flash上最靠近圆圈的一角引脚编号为1，逆时针分别为2，3，4，5，6，7，8。测试夹的红线对应编号1的引脚。</p>
+<p><img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/IMG_20240221_230213(1).jpg" srcset="/img/loading.gif" lazyload></p>
+<p>连接正确时，路由器的电源灯和ch340模块的电源灯都会亮。</p>
+<p><img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/IMG_20240221_230232(1).jpg" srcset="/img/loading.gif" lazyload></p>
+<p>然后就是安装ch340驱动，照着参考文章做就行，需要注意的是在<code>点击设置，windows更新，点击查看所有可选更新，找到驱动程序更新里的wch.cn</code>这一步如果找不到该更新，可以重启电脑。</p>
+<p>安装完驱动和软件后插入ch340，read id，选择型号，read ic，save file即可</p>
+<p><img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240221235522.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="uart调试-固件转储"><a href="#uart调试-固件转储" class="headerlink" title="uart调试+固件转储"></a>uart调试+固件转储</h2><p><a target="_blank" rel="noopener" href="https://www.secpulse.com/archives/157847.html">参考文章</a></p>
+<h3 id="分辨引脚"><a href="#分辨引脚" class="headerlink" title="分辨引脚"></a>分辨引脚</h3><p>辨别方法参考，顺序：GND-&gt;Vcc-&gt;TXD-&gt;RXD</p>
+<p>从背面看，自左往右分别编号为1，2，3，4，由于这里是垂直翻转的，从正面看和从背面看孔的顺序相同</p>
+<ul>
+<li>GND</li>
+</ul>
+<p>孔2是GND。万用表调至蜂鸣档，黑表笔接电源引脚，红表笔依次尝试接4个uart孔，有蜂鸣红灯亮的就是GND。</p>
+<p><img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/IMG_20240220_182522-1708425211873.jpg" srcset="/img/loading.gif" lazyload></p>
+<ul>
+<li>Vcc</li>
+</ul>
+<p>路由器接电源，万用表调整至测电压20v档。黑表笔接GND，红表笔分别接其它孔，电压为3.3V或5V的为Vcc，如果有多个孔符合，则分别和GND短接，观察是否电源灯灭，短接后电源灯灭的是Vcc。</p>
+<p>笔者测出来1号孔3.3V，3号孔0V，4号孔2.59V，那么显然1号孔是Vcc，短接1和2GND后确实发现电源灯灭。</p>
+<ul>
+<li>TXD</li>
+</ul>
+<p>电源和万用表同Vcc，黑笔接GND，红笔分别尝试剩下的两个孔，连接后按重启按钮(有的需要长按)，重启时电压发生跳动的是TXD。这里显然4号孔是TXD。</p>
+<ul>
+<li>RXD</li>
+</ul>
+<p>剩下的3号孔就是RXD。如果是5孔的板子，剩下的两个孔需要分别尝试接入usb转ttl设备。</p>
+<h3 id="连接USB转TTL设备"><a href="#连接USB转TTL设备" class="headerlink" title="连接USB转TTL设备"></a>连接USB转TTL设备</h3><p>分辨完引脚，需要链接usb转ttl设备和uart接口，可以焊一排引脚或使用测试夹，测试夹更方便，这里使用测试夹。</p>
+<p>连接时按照文章中的对应关系，GND接TTL设备GND，TXD接TTL设备RXD，RXD接TTL设备TXD，Vcc不用接。</p>
+<p>本文设备的对应关系：灰-1-Vcc、紫-2-GND、蓝-3-RXD、绿-4-TXD</p>
+<p>正确连接后应如下图所示，POW灯亮，TXD和RXD灯灭。</p>
+<p><img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/IMG_20240220_213131(1).jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/IMG_20240220_213123(1)(1).jpg" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/IMG_20240220_213103(1).jpg" srcset="/img/loading.gif" lazyload></p>
+<p>完成接线后就是使用终端软件来接收终端，终端软件有很多，这里使用SecureCRT，使用PuTTY或者在linux上使用Picocom也可以。</p>
+<h3 id="SecureCRT下载和破解"><a href="#SecureCRT下载和破解" class="headerlink" title="SecureCRT下载和破解"></a>SecureCRT下载和破解</h3><p>可以在<a target="_blank" rel="noopener" href="https://gitee.com/liu_chaos/doc-lib/blob/master/SecureCRT+keygen_x64.zip">这里</a>下载软件和keygen，官网下很麻烦。</p>
+<p>软件的具体安装和破解可以参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_64039239/article/details/132577564">该博客</a></p>
+<p>如果不想安装到c盘，可以在以下步骤选择custom，点next后只修改存放路径继续next</p>
+<p><img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240220215204.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="SecureCRT使用"><a href="#SecureCRT使用" class="headerlink" title="SecureCRT使用"></a>SecureCRT使用</h3><p>USB转TTL设备插入后Port中会出现ch340的选项。波特率因设备而异，9600-115200居多，设置不正确会导致和设备交互时出现乱码，本设备通过<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_30245867/article/details/95395420">该文章</a>得知波特率为117500，一般来说如果常见波特率尝试后无效，可能需要在官方手册中查找串口参数并计算。</p>
+<p><a target="_blank" rel="noopener" href="https://www.secpulse.com/archives/157847.html">参考文章</a>中有一些该步骤常见问题排查及波特率标准。</p>
+<p>需要注意的是，<strong>有时断电重新接通路由器电源后，再使用117500波特率连接会乱码，需要短接一次Vcc和GND后才恢复正常</strong></p>
+<p>如下图设置连接后可获取路由器的shell </p>
+<p><img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240220215527.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="GetShell之后-flash转储"><a href="#GetShell之后-flash转储" class="headerlink" title="GetShell之后 - flash转储"></a>GetShell之后 - flash转储</h3><p><a target="_blank" rel="noopener" href="https://www.secpulse.com/archives/150363.html">uart转储固件参考文章1</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_58278472/article/details/127449335">uart转储固件参考文章2</a></p>
+<p>可使用的命令如下，能dump内存、读写闪存、通过tftp协议上传和下载文件、查看文件系统信息、连接云服务端等。</p>
+<img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ截图20240220211242.png" srcset="/img/loading.gif" lazyload alt="QQ截图20240220211242" style="zoom:50%;">
+
+<p>flash命令</p>
+<img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ截图20240221130511.png" srcset="/img/loading.gif" lazyload alt="QQ截图20240221130511" style="zoom:50%;">
+
+<p><code>flash -layout</code>查看flash布局，<code>FIRMWARE</code>就是固件，偏移是0x32000，大小为1848k</p>
+<img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ截图20240220224905.png" srcset="/img/loading.gif" lazyload alt="QQ截图20240220224905" style="zoom:50%;">
+
+<p>使用flash -read时，系统奔溃了，询问gpt可以了解每条报错的含义，这里大概是因为虚拟内存中0x00000000地址不可写。用flash命令提取固件不太方便。</p>
+<p><img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240221134700.png" srcset="/img/loading.gif" lazyload></p>
+<p><code>fs -stat</code>发现内存中rom的基址是BF000000，mem命令可以dump内存，那么或许可以从内存中dump闪存</p>
+<p><img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240221150236.png" srcset="/img/loading.gif" lazyload></p>
+<p>使用<code>mem -dump</code>查看BF000000-BF200000的内存的16进制，和编程器提取的flash比较，发现是一致的，那么通过该命令即可转储闪存。</p>
+<p>但是一次最多dump 16k的数据也就是0x1000，那么需要dump两百次，写脚本进行dump。</p>
+<p><img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240222115620.png" srcset="/img/loading.gif" lazyload></p>
+<p>两篇参考文章中都使用了python的<code>serial</code>库，这是一个用于串口(serial)通信的库，可以用来和uart串口交互提取固件。参考1中使用JTagulator连接uart转储闪存的脚本放在了<a target="_blank" rel="noopener" href="https://github.com/waldo-irc/IOTToolkit/blob/master/FlashDumpScript/DumpFirmware.py">github</a>可以参考。搜索引擎能找到一些教程，也有<a target="_blank" rel="noopener" href="https://pythonhosted.org/pyserial/">pySerial官方文档</a>。下面是基于该库写的闪存dump脚本。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> serial<br><span class="hljs-keyword">import</span> serial.tools.list_ports<br><span class="hljs-keyword">import</span> os<br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">ser_readall</span>():                   <span class="hljs-comment">#读取并打印所有数据，去除回车并转义输出</span><br>    c = ser.read().decode(<span class="hljs-string">&#x27;utf-8&#x27;</span>)<br>    <span class="hljs-keyword">while</span> (c):<br>        <span class="hljs-keyword">if</span> (c == <span class="hljs-string">&#x27;\r&#x27;</span>):<br>            c = <span class="hljs-string">&#x27;&#x27;</span><br>        <span class="hljs-built_in">print</span>(c, end=<span class="hljs-string">&#x27;&#x27;</span>)<br>        c = ser.read(<span class="hljs-number">1</span>).decode(<span class="hljs-string">&#x27;utf-8&#x27;</span>)<br><br>port_list = <span class="hljs-built_in">list</span>(serial.tools.list_ports.comports())  <span class="hljs-comment">#搜索可用串口</span><br><span class="hljs-built_in">print</span>(port_list)<br><span class="hljs-keyword">if</span> <span class="hljs-built_in">len</span>(port_list) == <span class="hljs-number">0</span>:<br>   <span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;无可用串口&#x27;</span>)<br><span class="hljs-keyword">else</span>:<br>    <span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>,<span class="hljs-built_in">len</span>(port_list)):<br>        <span class="hljs-built_in">print</span>(port_list[i])<br><br>ser = serial.Serial()<br>ser.port = <span class="hljs-string">&#x27;COM9&#x27;</span><br>ser.baudrate = <span class="hljs-number">117500</span><br>ser.timeout = <span class="hljs-number">0.5</span><br>ser.<span class="hljs-built_in">open</span>()<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&#x27;Port &#x27;</span> + ser.port + <span class="hljs-string">&#x27; open state: &#x27;</span> + <span class="hljs-built_in">str</span>(ser.isOpen()))<br>start = <span class="hljs-number">0xbf000000</span><br><span class="hljs-built_in">len</span> = <span class="hljs-number">0x1000</span><br>f = <span class="hljs-built_in">open</span>(<span class="hljs-string">&#x27;TL-WR886N.bin&#x27;</span>,<span class="hljs-string">&#x27;wb&#x27;</span>)<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0x200</span>):<br>    ser.write(<span class="hljs-string">b&#x27;mem -dump &#x27;</span>  + <span class="hljs-built_in">hex</span>(start).encode(<span class="hljs-string">&#x27;utf-8&#x27;</span>) + <span class="hljs-string">b&#x27; &#x27;</span> + <span class="hljs-built_in">hex</span>(<span class="hljs-built_in">len</span>).encode(<span class="hljs-string">&#x27;utf-8&#x27;</span>) + <span class="hljs-string">b&#x27;\r&#x27;</span>)<br>    start += <span class="hljs-built_in">len</span><br>    line = ser.readline().decode(<span class="hljs-string">&#x27;utf-8&#x27;</span>).replace(<span class="hljs-string">&#x27;\r&#x27;</span>,<span class="hljs-string">&#x27;&#x27;</span>).replace(<span class="hljs-string">&#x27;\n&#x27;</span>,<span class="hljs-string">&#x27;&#x27;</span>)<br><br>    <span class="hljs-keyword">while</span>(line):<br>        <span class="hljs-keyword">if</span> (line[<span class="hljs-number">0</span>:<span class="hljs-number">2</span>] == <span class="hljs-string">&#x27;BF&#x27;</span>):<br>            <span class="hljs-comment">#print(line)</span><br>            data = line.split(<span class="hljs-string">&#x27;  &#x27;</span>)[<span class="hljs-number">1</span>].replace(<span class="hljs-string">&#x27; -&#x27;</span>,<span class="hljs-string">&#x27;&#x27;</span>)<br>            <span class="hljs-comment">#print(data)</span><br>            byte = data.split(<span class="hljs-string">&#x27; &#x27;</span>)<br>            <span class="hljs-comment">#print(byte)</span><br>            <span class="hljs-keyword">for</span> c <span class="hljs-keyword">in</span> byte:<br>                word = <span class="hljs-built_in">bytes</span>.fromhex(c)<br>                f.write(word)<br>        line = ser.readline().decode(<span class="hljs-string">&#x27;utf-8&#x27;</span>).replace(<span class="hljs-string">&#x27;\r&#x27;</span>,<span class="hljs-string">&#x27;&#x27;</span>).replace(<span class="hljs-string">&#x27;\n&#x27;</span>,<span class="hljs-string">&#x27;&#x27;</span>)<br>    <span class="hljs-built_in">print</span>(<span class="hljs-built_in">str</span>(i) + <span class="hljs-string">&#x27;/512&#x27;</span>)<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="固件分析"><a href="#固件分析" class="headerlink" title="固件分析"></a>固件分析</h2><p>直接<code>binwalk -Me</code>解包出一堆压缩包、图片、网站源码和资源文件，但是没有文件系统，通过查资料发现该固件并非linux系统，而是VxWorks系统，属于RTOS系统的一种。VxWorks系统的固件和Linux系统的固件有较大差异。分析VxWorks固件的关键是正确反编译固件中的VxWorks系统映像，查看其中的函数，一般步骤为： 获取设备CPU架构和端序 -&gt; 获取flash中的uboot、固件和系统映像 -&gt; 获取固件在内存中的加载地址 -&gt; 恢复系统映像符号表 -&gt; 反编译系统映像进行代码审计。</p>
+<h3 id="VxWorks固件初步判断依据"><a href="#VxWorks固件初步判断依据" class="headerlink" title="VxWorks固件初步判断依据"></a>VxWorks固件初步判断依据</h3><p><a target="_blank" rel="noopener" href="https://www.ctfiot.com/86294.html">参考文章 - VxWorks固件加载地址分析方法研究</a></p>
+<p>1.MyFirmware字符串</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash">hexdump -C TL-WR886N.bin | grep MyFirmware</span><br>00031ec0  4d 79 46 69 72 6d 77 61  72 65 00 00 00 00 00 01  |MyFirmware......|<br></code></pre></td></tr></table></figure>
+
+<p>2.MINIFS文件系统 </p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash">hexdump -C TL-WR886N.bin | grep MINIFS</span><br>00021000  4d 49 4e 49 46 53 00 00  00 00 00 00 00 00 00 00  |MINIFS..........|<br>000e7000  4d 49 4e 49 46 53 00 00  00 00 00 00 00 00 00 00  |MINIFS..........|<br>00178000  4d 49 4e 49 46 53 00 00  00 00 00 00 00 00 00 00  |MINIFS..........|<br>001c3000  4d 49 4e 49 46 53 00 00  00 00 00 00 00 00 00 00  |MINIFS..........|<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="确定架构及端序"><a href="#确定架构及端序" class="headerlink" title="确定架构及端序"></a>确定架构及端序</h3><p><code>binwalk -Y</code>得知为CPU架构为32位，MIPS，端序为大端序</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash">binwalk -Y TL-WR886N.bin</span> <br><br>DECIMAL       HEXADECIMAL     DESCRIPTION<br>--------------------------------------------------------------------------------<br>60            0x3C            MIPS executable code, 32/64-bit, big endian, at least 1250 valid instructions<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="VxWorks系统映像概述及引导启动过程"><a href="#VxWorks系统映像概述及引导启动过程" class="headerlink" title="VxWorks系统映像概述及引导启动过程"></a>VxWorks系统映像概述及引导启动过程</h3><p>补充一些基础知识</p>
+<p><a target="_blank" rel="noopener" href="http://www.360doc.com/content/12/1007/09/7775902_239886044.shtml">参考文章1</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/jackixzj/article/details/37756481">参考文章2</a></p>
+<p>VxWorks大致启动流程：</p>
+<p>上电 </p>
+<p>-&gt; 执行rom首地址的<code>bootstrap</code>进行系统的基本初始化、寄存器设置、存储器映射等</p>
+<p>-&gt; bootstrap将<code>u-bootimage</code>加载(并解压)到RAM(内存)的<code>RAM_HIGH_ADRS</code>地址并跳转到该地址执行 </p>
+<p>-&gt; ubootimage构建最小可运行系统 </p>
+<p>-&gt; ubootimage将rom中的<code>VxWork映像</code>加载(并解压)到RAM的<code>RAM_LOW_ADRS</code>地址，跳转至该地址执行 </p>
+<p>-&gt; 硬件环境重新初始化，VxWorks启动</p>
+<ul>
+<li><p>bootloader由<code>bootstrap</code>和<code>bootimg</code>组成。bootstrap是最初级的引导，旨在初始化CPU、内存控制器、时钟、堆栈，目标是让CPU正常运作起来。boot image往往初始化最小OS内核，搭建网络下载通道，提供一个可以交互的命令行，以便自我更新（update boot）或下载更新系统映像（update vxWorks）。</p>
+</li>
+<li><p>CPU上电后，指令指针指向一个设定好的地址，ROM&#x2F;Flash被映射到该地址，CPU从该地址开始执行bootloader。因此<strong>bootloader的基址并不是0，而是CPU中预先设定的地址</strong>，本文中该地址可通过逆向bootstrap获得。</p>
+</li>
+<li><p>整个ROM(Flash)在bootstrap进行初始化时被映射到内存中。本设备该映射地址即flash转储步骤中用到的0xBF000000(在ram中物理地址为<code>0xBF000000 &amp; 0x1FFFFFFF = 0x1F000000</code>)。</p>
+</li>
+<li><p><code>Boot Rom</code>即存放bootloader和系统映像的ROM&#x2F;Flash芯片，其中还会存放应用程序资源、用户配置数据等信息。</p>
+</li>
+</ul>
+<h3 id="获取uboot、固件和Vxworks系统映像"><a href="#获取uboot、固件和Vxworks系统映像" class="headerlink" title="获取uboot、固件和Vxworks系统映像"></a>获取uboot、固件和Vxworks系统映像</h3><p>dump出的是整个flash，根据flash布局，使用dd命令进行提取出FACUBOOT、BOOTIMG和FIRMWARE，两份uboot和一份固件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">dd if=TL-WR886N.bin of=facuboot bs=1 skip=0 count=131072  #0x20000=131072<br>dd if=TL-WR886N.bin of=bootimg bs=1 skip=163840 count= 40448  #0x28000=163840   0x31e00-0x28000=40448<br>dd if=TL-WR886N.bin of=firmware bs=1 skip=204800 count=1892352 #0x32000=204800  0x200000-0x32000=1892352<br></code></pre></td></tr></table></figure>
+
+<p>提取出来后分别<code>binwalk</code>查看，发现如下对应关系</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash">binwalk TL-WR886N.bin</span><br>DECIMAL       HEXADECIMAL     DESCRIPTION<br>--------------------------------------------------------------------------------<br><span class="hljs-meta prompt_">#</span><span class="language-bash">FACUBOOT</span><br>13840         0x3610          U-Boot version string, &quot;U-Boot 1.1.4 (Apr  1 2016 - 17:30:08)&quot;<br>13888         0x3640          CRC32 polynomial table, big endian<br>15136         0x3B20          uImage header, header size: 64 bytes, header CRC: 0xDBBCB4A2, created: 2016-04-01 09:30:09, image size: 57104 bytes, Data Address: 0x80010000, Entry Point: 0x80010000, data CRC: 0xF4C2D0C3, OS: Linux, CPU: MIPS, image type: Firmware Image, compression type: lzma, image name: &quot;u-boot image&quot;<br>15200         0x3B60          LZMA compressed data, properties: 0x5D, dictionary size: 8388608 bytes, uncompressed size: 140620 bytes<br><span class="hljs-meta prompt_">#</span><span class="language-bash">BOOTIMG</span><br>176432        0x2B130         U-Boot version string, &quot;U-Boot 1.1.4 (Apr  1 2016 - 17:29:18)&quot;<br>176480        0x2B160         CRC32 polynomial table, big endian<br>177708        0x2B62C         uImage header, header size: 64 bytes, header CRC: 0x5FA1A7B0, created: 2016-04-01 09:29:19, image size: 20973 bytes, Data Address: 0x80010000, Entry Point: 0x80010000, data CRC: 0xF51A98FC, OS: Linux, CPU: MIPS, image type: Firmware Image, compression type: lzma, image name: &quot;u-boot image&quot;<br>177772        0x2B66C         LZMA compressed data, properties: 0x5D, dictionary size: 8388608 bytes, uncompressed size: 52596 bytes<br><span class="hljs-meta prompt_">#</span><span class="language-bash">FIRMWARE</span><br>204800        0x32000         LZMA compressed data, properties: 0x6E, dictionary size: 8388608 bytes, uncompressed size: 2354144 bytes<br>946240        0xE7040         LZMA compressed data, properties: 0x5A, dictiona ry size: 8388608 bytes, uncompressed size: 6020 bytes<br>......................<br>一堆LZMA compressed data<br></code></pre></td></tr></table></figure>
+
+<h4 id="uboot-bootstrap"><a href="#uboot-bootstrap" class="headerlink" title="uboot-bootstrap"></a>uboot-bootstrap</h4><p>对uboot的处理参考<a target="_blank" rel="noopener" href="https://blog.knownsec.com/index.html%3Fp=4971.html">该文章</a>，uboot分为三部分:bootstrap代码、0x40字节的uboot image的头部信息、lzma加密的ubootimage主体，通过binwalk信息就能大致分辨各部分的偏移和大小。 </p>
+<p>binwalk得到的uboot信息中，<code>Data  Address: 0x80010000, Entry Point: 0x80010000</code>表示设备启动后，会把后续ubootimg通过lzma解压出来的数据存入内存地址0x80010000，然后把$pc设置为: 0x80010000。</p>
+<p>这里只处理FACUBOOT，BOOTIMG同理</p>
+<p>使用dd命令提取出bootstrap，用ida打开，由于基址未知，这里暂时和ubootimg一样设定为0x80010000</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">dd if=facuboot of=facbootstrap bs=1 skip=0 count=15136 #15136=0x3B20<br></code></pre></td></tr></table></figure>
+
+<p>在第一个跳转地址0x80010400的下方找到<code>move $gp,$ra</code>，mips通过gp寄存器相对寻址GOT表，即gp会指向got表，所以可以通过gp指针的数值结合bootstrap的大小推测bootstrap的基址</p>
+<p><img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240227193321.png" srcset="/img/loading.gif" lazyload></p>
+<p>分析汇编,</p>
+<ul>
+<li><p><code>bal</code>,跳转指令，跳转到目标地址，同时将当前指令的返回地址保存到 RA 寄存器中。同时，mips CPU中还有分支延时槽机制，参考该<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/528601710">文章</a>，bal指令的下一条指令(此处是nop)为分支延时槽，跳转到目标地址前会先执行分支延时槽指令，所以这里保存到RA的返回地址为0x80010504。</p>
+</li>
+<li><p><code>lw $t1, 0($ra)</code>,相当于将<code>$ra+0</code>地址处的一个word(4字节)存入t1寄存器</p>
+</li>
+</ul>
+<p>这些代码最终把0x9F003A70存入了gp寄存器，然后通过offset($gp)寻址got表中的函数。结合bootstrap文件大小0x3B20可推测基址为0x9F000000，这也是一个比较常见的bootstrap基址。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs assembly">ROM:800104FC 04 11 00 02                   bal     sub_80010508<br>ROM:80010500 00 00 00 00                   nop<br>ROM:80010500<br>ROM:80010500                                # -----------------------------------<br>ROM:80010504 9F 00 3A 70                   .word 0x9F003A70<br>ROM:80010508<br>ROM:80010508                                # =============== S U B R O U T I N E <br>ROM:80010508<br>ROM:80010508<br>ROM:80010508                               sub_80010508:                            # CODE XREF: ROM:800104FC↑p<br>ROM:80010508 03 E0 E0 21                   move    $gp, $ra<br>ROM:8001050C 8F E9 00 00                   lw      $t1, 0($ra)<br>ROM:80010510 01 20 E0 21                   move    $gp, $t1<br></code></pre></td></tr></table></figure>
+
+<p>在<code>Edit -&gt; Segments -&gt; Rebase Program</code>重新设置基址为0x9f000000。</p>
+<p>将<code>Options -&gt; general -&gt; Processer specific analysis options -&gt;$gp value</code>设置为0x9F003A70</p>
+<p><code>Edit -&gt; Select All</code>重新反汇编，多分析出了很多函数，got表也恢复正常，处理完成。</p>
+<p><img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240228105914.png" srcset="/img/loading.gif" lazyload></p>
+<p>通过逆向ubootimage也能获取bootstrap基址，在下文确定固件加载地址-&gt;(通用)逆向ubootimage找加载地址中介绍.</p>
+<h4 id="uboot主体部分"><a href="#uboot主体部分" class="headerlink" title="uboot主体部分"></a>uboot主体部分</h4><p>提取facuboot的主体部分，偏移为0x3B60，尾部位于下图光标前(不包含0xFF)，因为需要对齐填充了很多0xFF，这些对齐字节并不属于压缩文件的一部分。</p>
+<p><img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240226124618.png" srcset="/img/loading.gif" lazyload></p>
+<p>使用dd命令提取出主体部分的lzma压缩文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">dd</span> <span class="hljs-keyword">if</span>=facuboot of=facbody bs=1 skip=15200 count=57104 <span class="hljs-comment">#0x3B60=15200   0x11A70-0x3B60=0xDF10=57104</span></span><br></code></pre></td></tr></table></figure>
+
+<p>更改后缀名为.xz并解压缩</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash"><span class="hljs-built_in">mv</span> facbody facbody.xz</span><br><span class="hljs-meta prompt_">$ </span><span class="language-bash">xz -k -d facbody.xz</span><br></code></pre></td></tr></table></figure>
+
+<p>前文由binwalk信息已知ubootimg基址为0x80010000。使用ida正确设置cpu、端序及加载地址后打开，简单处理后如下说明解压成功</p>
+<p><img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240226125708.png" srcset="/img/loading.gif" lazyload></p>
+<p>另一份名为为BOOTIMG的uboot同理，命令如下</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">dd if=bootimg of=bootbody bs=1 skip=13932 count=20973<br>mv bootbody bootbody.xz<br>xz -k -d bootbody.xz<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="FIRMWARE-提取系统映像"><a href="#FIRMWARE-提取系统映像" class="headerlink" title="FIRMWARE-提取系统映像"></a>FIRMWARE-提取系统映像</h4><p>FIRMWARE中几乎都是LZMA加密的数据，其中0地址的数据块大小为2354144，明显比其它数据块大很多。<code>binwalk -Me</code>得到解密后的数据，发现除了<code>0</code>,其它都是图片或文本文件。</p>
+<img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ截图20240224173704.png" srcset="/img/loading.gif" lazyload alt="QQ截图20240224173704" style="zoom:50%;">
+
+<p>binwalk查看<code>0</code>确认为VxWorks系统映像，其余都是文件系统中的文件</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash">binwalk 0</span><br><br>DECIMAL       HEXADECIMAL     DESCRIPTION<br>--------------------------------------------------------------------------------<br>1834812       0x1BFF3C        Certificate in DER format (x509 v3), header length: 4, sequence length: 4<br>1842100       0x1C1BB4        Certificate in DER format (x509 v3), header length: 4, sequence length: 4<br>1887200       0x1CCBE0        VxWorks operating system version &quot;5.5.1&quot; , compiled: &quot;Aug 23 2019, 11:35:29&quot;<br>1955356       0x1DD61C        Copyright string: &quot;Copyright(C) 2001-2011 by TP-LINK TECHNOLOGIES CO., LTD.&quot;<br>1985044       0x1E4A14        VxWorks WIND kernel version &quot;2.6&quot;<br>2028656       0x1EF470        HTML document header<br>2028721       0x1EF4B1        HTML document footer<br>2048248       0x1F40F8        PEM certificate<br>2048304       0x1F4130        PEM RSA private key<br>2062120       0x1F7728        Base64 standard index table<br>2097416       0x200108        CRC32 polynomial table, big endian<br>2098440       0x200508        CRC32 polynomial table, big endian<br>2099464       0x200908        CRC32 polynomial table, big endian<br>2100488       0x200D08        CRC32 polynomial table, big endian<br>2120928       0x205CE0        XML document, version: &quot;1.0&quot;<br>2140268       0x20A86C        SHA256 hash constants, big endian<br>2237001       0x222249        StuffIt Deluxe Segment (data): f<br>2237032       0x222268        StuffIt Deluxe Segment (data): fError<br>2237113       0x2222B9        StuffIt Deluxe Segment (data): f<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="确定固件加载地址"><a href="#确定固件加载地址" class="headerlink" title="确定固件加载地址"></a>确定固件加载地址</h3><h4 id="通过MyFirmware指纹找加载地址"><a href="#通过MyFirmware指纹找加载地址" class="headerlink" title="通过MyFirmware指纹找加载地址"></a>通过MyFirmware指纹找加载地址</h4><p>部分flash中存在“MyFirmware”字符串，定位到该字符串。</p>
+<p>往前找到上一个段的末尾，当前段开始的位置，一般上个段末尾会使用0xFF或0x00补齐。当前段开头偏移0x18处的两个4字节就是VxWorks系统映像的加载地址0x80001000。</p>
+<p><img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240228114550.png" srcset="/img/loading.gif" lazyload></p>
+<h4 id="逆向ubootimage找加载地址"><a href="#逆向ubootimage找加载地址" class="headerlink" title="逆向ubootimage找加载地址"></a>逆向ubootimage找加载地址</h4><p>找到可疑字符串<code>vxWorks.bin from =0x%x, len=0x%x\n</code>，查看引用它的函数.</p>
+<p>猜测sub_8001DA90函数的作用是将上电后映射到内存的rom中的firmware复制至<code>RAM_LOW_ADRS</code></p>
+<p>可得ubootimg基址为0x80001000,上电后bootstrap的加载基址0x9F000000.</p>
+<p><img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240228120851.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="恢复VxWorks系统映像符号表"><a href="#恢复VxWorks系统映像符号表" class="headerlink" title="恢复VxWorks系统映像符号表"></a>恢复VxWorks系统映像符号表</h3><p><a target="_blank" rel="noopener" href="https://cn-sec.com/archives/1529385.html">参考文章</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.uio.no/studier/emner/matnat/fys/FYS4220/h11/undervisningsmateriale/laboppgaver-rt/vxworks_bsp_developers_guide_6.0.pdf">VxWorks 6.0 BSP手册</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.uio.no/studier/emner/matnat/fys/FYS4220/h11/undervisningsmateriale/laboppgaver-rt/vxworks_architecture_supplement_6.2.pdf">VxWorks Architecture Supplement, 6.2</a></p>
+<p>ida中查看<code>imports</code>和<code>Exports</code>都是空的,说明文件没有符号表. </p>
+<p>VxWorks使用外部符号文件,只要能找到符号文件,导入符号表就能恢复原本的函数名,更方便逆向.</p>
+<h4 id="寻找外部符号文件"><a href="#寻找外部符号文件" class="headerlink" title="寻找外部符号文件"></a>寻找外部符号文件</h4><p>符号文件中包含各种函数名字符串,VxWorks BSP手册中可以看到一些必定出现的重要函数名如<code>usrInit</code>、<code>bzero</code>、<code>bfill</code>等，因此可以根据是否包含这些字符串查找符号文件。</p>
+<p><code>binwalk -Me</code>提取固件，在提取后的目录中搜索包含<code>usrInit</code>的文件，可以确定<code>B65E2</code>就是系统映像的外部符号文件。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash">grep -r usrInit .</span><br>Binary file ./B65E2 matches<br>Binary file ./_B65E2.extracted/1056C.sit matches<br></code></pre></td></tr></table></figure>
+
+<p>如果搜索包含<code>bzero</code>的文件，发现1481D0也符合要求，其为有符号表的ELF可执行文件，用ida进行简单逆向发现其包含Blowfish加密算法及网络相关函数。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash">grep -r bzero .</span><br>Binary file ./B65E2 matches<br>Binary file ./1481D0 matches<br></code></pre></td></tr></table></figure>
+
+<h4 id="符号文件格式"><a href="#符号文件格式" class="headerlink" title="符号文件格式"></a>符号文件格式</h4><p><img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240229000137.png" srcset="/img/loading.gif" lazyload></p>
+<p>每个外部符号文件的开头4字节表示当前符号文件大小，例如该符号文件大小为126801&#x3D;0x1EF51。</p>
+<p>紧跟的四字节表示符号条目数,每8字节一个条目，该条目数乘8再加8的偏移处开始为函数名字符串区块，例如该符号文件中0x1372*8+8&#x3D;0x9B98，如下图。</p>
+<p><img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240229000742.png" srcset="/img/loading.gif" lazyload></p>
+<p>开头8字节后每8字节表示一个条目信息，分为三部分：符号类型(1字节)、该函数名在函数名字符串区块中的偏移(3字节)、该函数在VxWorks系统映像中加载后的基址(4字节)，用结构体表示如下:</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">sym_info</span>&#123;</span><br>	<span class="hljs-type">char</span> type;<br>	<span class="hljs-type">char</span> offset[<span class="hljs-number">3</span>];<br>	<span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> address;<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+
+
+<h4 id="恢复符号表"><a href="#恢复符号表" class="headerlink" title="恢复符号表"></a>恢复符号表</h4><p>使用ida python编写脚本，类似的脚本网上有很多，改一改即可</p>
+<p><a target="_blank" rel="noopener" href="https://hex-rays.com//products/ida/support/idapython_docs/">ida python手册</a></p>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/2063716?areaSource=102001.18&traceId=GbrDTuebolNXHZNDqQXz6">python2参考</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42765117/article/details/132224013">python3参考</a></p>
+<p>这里使用python3</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-comment"># encoding:utf-8</span><br><span class="hljs-comment">#symfile_path: 刚刚搜索到的符号文件的路径</span><br><span class="hljs-comment">#symbols_table_start : 符号表起始偏移，从16进制编辑器看出来是8（前8字节作用不清楚，也不重要）</span><br><span class="hljs-comment">#strings_table_start : 字符串起始偏移，也是从16进制编辑器看出来</span><br><span class="hljs-keyword">import</span> binascii<br><span class="hljs-keyword">import</span> idautils<br><span class="hljs-keyword">import</span> idc<br><span class="hljs-keyword">import</span> idaapi<br><span class="hljs-keyword">import</span> ida_funcs<br> <br>symfile_path = <span class="hljs-string">r&quot;D:\系统默认\桌面\网安\笔记\iot\Firmwares\TL-WR886N/B65E2&quot;</span><br>symbols_table_start = <span class="hljs-number">8</span><br>strings_table_start = <span class="hljs-number">0x9B98</span><br> <br><span class="hljs-keyword">with</span> <span class="hljs-built_in">open</span>(symfile_path, <span class="hljs-string">&#x27;rb&#x27;</span>) <span class="hljs-keyword">as</span> f:<br>    symfile_contents = f.read()<br> <br>symbols_table = symfile_contents[symbols_table_start:strings_table_start]<br>strings_table = symfile_contents[strings_table_start:]<br> <br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_string_by_offset</span>(<span class="hljs-params">offset</span>):<br>    index = <span class="hljs-number">0</span><br>    <span class="hljs-keyword">while</span> <span class="hljs-literal">True</span>:<br>        <span class="hljs-keyword">if</span> strings_table[offset+index] != <span class="hljs-number">0</span>:<br>            index += <span class="hljs-number">1</span><br>        <span class="hljs-keyword">else</span>:<br>            <span class="hljs-keyword">break</span><br>    <span class="hljs-keyword">return</span> strings_table[offset:offset+index]<br> <br> <br><span class="hljs-keyword">def</span> <span class="hljs-title function_">get_symbols_metadata</span>():<br>    symbols = []<br>    <span class="hljs-keyword">for</span> offset <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">0</span>, <span class="hljs-built_in">len</span>(symbols_table),<span class="hljs-number">8</span>):<br>        symbol_item = symbols_table[offset:offset+<span class="hljs-number">8</span>]<br>        flag = symbol_item[<span class="hljs-number">0</span>]<br>        string_offset = <span class="hljs-built_in">int</span>(binascii.b2a_hex((symbol_item[<span class="hljs-number">1</span>:<span class="hljs-number">4</span>])).decode(<span class="hljs-string">&quot;ascii&quot;</span>), <span class="hljs-number">16</span>)<br>        string_name = get_string_by_offset(string_offset)<br>        target_address = <span class="hljs-built_in">int</span>(binascii.b2a_hex((symbol_item[-<span class="hljs-number">4</span>:])).decode(<span class="hljs-string">&quot;ascii&quot;</span>), <span class="hljs-number">16</span>)<br>        symbols.append((flag, string_name, target_address))<br>    <span class="hljs-keyword">return</span> symbols<br> <br> <br><span class="hljs-keyword">def</span> <span class="hljs-title function_">add_symbols</span>(<span class="hljs-params">symbols_meta_data</span>):<br>    <span class="hljs-keyword">for</span> flag, string_name, target_address <span class="hljs-keyword">in</span> symbols_meta_data:<br>        idc.set_name(target_address, string_name.decode(<span class="hljs-string">&quot;utf8&quot;</span>)) <span class="hljs-comment">#命令目标地址的数据，数据类型由flag而定</span><br>        <span class="hljs-keyword">if</span> flag == <span class="hljs-number">0x54</span>:                 <span class="hljs-comment">#类型T，表示是text段的符号，text段的符号一般是函数符号，所以在命名后还要将目标地址设置为函数</span><br>            idc.create_insn(target_address)   <span class="hljs-comment">#确保target_address有指令</span><br>            ida_funcs.add_func(target_address)  <span class="hljs-comment">#将target_address定义为函数并自动寻找边界</span><br> <br><span class="hljs-keyword">if</span> __name__ == <span class="hljs-string">&quot;__main__&quot;</span>:<br>    symbols_metadata = get_symbols_metadata()<br>    add_symbols(symbols_metadata)<br></code></pre></td></tr></table></figure>
+
+<p>修复成功</p>
+<p><img src="/2024/02/25/TL-WR886N%E8%B7%AF%E7%94%B1%E5%99%A8uart%E8%B0%83%E8%AF%95%E5%8F%8AVxWorks%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96%E5%92%8C%E5%88%86%E6%9E%90/QQ%E6%88%AA%E5%9B%BE20240229161428.png" srcset="/img/loading.gif" lazyload></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="../../../../categories/IOT/" class="category-chain-item">IOT</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="../../../../tags/IOT/">#IOT</a>
+      
+        <a href="../../../../tags/%E5%9B%BA%E4%BB%B6%E6%8F%90%E5%8F%96/">#固件提取</a>
+      
+        <a href="../../../../tags/TL-WR886N/">#TL-WR886N</a>
+      
+        <a href="../../../../tags/VxWorks/">#VxWorks</a>
+      
+        <a href="../../../../tags/uart%E8%B0%83%E8%AF%95/">#uart调试</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>TL-WR886N路由器uart调试及VxWorks固件提取和分析</div>
+      <div>https://lkliki.github.io/2024/02/25/TL-WR886N路由器uart调试及VxWorks固件提取和分析/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>0P1N</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年2月25日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="../../05/PwnCollege-Fundamentals-ProgramMisuse/" title="PwnCollege - Fundamentals - ProgramMisuse">
+                        <span class="hidden-mobile">PwnCollege - Fundamentals - ProgramMisuse</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href=""><span>fffer</span></a> <i class="iconfont icon-bug"></i> <a href="" target="_blank" rel="nofollow noopener"><span>0p1n</span></a> <br /> <a href=""><span>富强 民主 文明 和谐 自由 平等 公正 法治 爱国 敬业 诚信 友善</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="../../../../js/events.js" ></script>
+<script  src="../../../../js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="../../../../js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="../../../../js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="../../../../js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
