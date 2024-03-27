@@ -18,40 +18,40 @@
   <meta name="author" content="0P1N">
   <meta name="keywords" content="">
   
-    <meta name="description" content="PwnCollege-SystemSecurity-Kernel Security内核是操作系统的核心组件，是软件和硬件之间的桥梁。 内核运行在操作系统的最底层，其访问权限非常高，就像是冒充系统本身，甚至超越了root用户的最高权限。 内核安全至关重要，因为此级别的漏洞使攻击者可以像系统一样行事。 漏洞可能会导致未经授权的数据访问、系统崩溃或 rootkit 静默安装等情况。 Lecture an">
+    <meta name="description" content="PwnCollege - SystemSecurity - Kernel Security内核是操作系统的核心组件，是软件和硬件之间的桥梁。 内核运行在操作系统的最底层，其访问权限非常高，就像是冒充系统本身，甚至超越了root用户的最高权限。 内核安全至关重要，因为此级别的漏洞使攻击者可以像系统一样行事。 漏洞可能会导致未经授权的数据访问、系统崩溃或 rootkit 静默安装等情况。 Lectur">
 <meta property="og:type" content="article">
-<meta property="og:title" content="PwnCollege-SystemSecurity-Kernel Security">
-<meta property="og:url" content="https://lkliki.github.io/2024/03/02/PwnCollege-System%20Security-Kernel/index.html">
+<meta property="og:title" content="PwnCollege - SystemSecurity - KernelSecurity">
+<meta property="og:url" content="https://lkliki.github.io/2024/03/27/PwnCollege-SystemSecurity-Kernel/index.html">
 <meta property="og:site_name" content="0P1N">
-<meta property="og:description" content="PwnCollege-SystemSecurity-Kernel Security内核是操作系统的核心组件，是软件和硬件之间的桥梁。 内核运行在操作系统的最底层，其访问权限非常高，就像是冒充系统本身，甚至超越了root用户的最高权限。 内核安全至关重要，因为此级别的漏洞使攻击者可以像系统一样行事。 漏洞可能会导致未经授权的数据访问、系统崩溃或 rootkit 静默安装等情况。 Lecture an">
+<meta property="og:description" content="PwnCollege - SystemSecurity - Kernel Security内核是操作系统的核心组件，是软件和硬件之间的桥梁。 内核运行在操作系统的最底层，其访问权限非常高，就像是冒充系统本身，甚至超越了root用户的最高权限。 内核安全至关重要，因为此级别的漏洞使攻击者可以像系统一样行事。 漏洞可能会导致未经授权的数据访问、系统崩溃或 rootkit 静默安装等情况。 Lectur">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://lkliki.github.io/2024/03/02/PwnCollege-System%20Security-Kernel/1.png">
-<meta property="og:image" content="https://lkliki.github.io/2024/03/02/PwnCollege-System%20Security-Kernel/QQ%E6%88%AA%E5%9B%BE20240305205034.png">
-<meta property="og:image" content="https://lkliki.github.io/2024/03/02/PwnCollege-System%20Security-Kernel/QQ%E6%88%AA%E5%9B%BE20240305210302.png">
-<meta property="og:image" content="https://lkliki.github.io/2024/03/02/PwnCollege-System%20Security-Kernel/QQ%E6%88%AA%E5%9B%BE20240306192337.png">
-<meta property="og:image" content="https://lkliki.github.io/2024/03/02/PwnCollege-System%20Security-Kernel/QQ%E6%88%AA%E5%9B%BE20240306194632.png">
-<meta property="og:image" content="https://lkliki.github.io/2024/03/02/PwnCollege-System%20Security-Kernel/QQ%E6%88%AA%E5%9B%BE20240306202617.png">
-<meta property="og:image" content="https://lkliki.github.io/2024/03/02/PwnCollege-System%20Security-Kernel/QQ%E6%88%AA%E5%9B%BE20240306203800.png">
-<meta property="og:image" content="https://lkliki.github.io/2024/03/02/PwnCollege-System%20Security-Kernel/QQ%E6%88%AA%E5%9B%BE20240306204054.png">
-<meta property="og:image" content="https://lkliki.github.io/2024/03/02/PwnCollege-System%20Security-Kernel/QQ%E6%88%AA%E5%9B%BE20240309102937.png">
-<meta property="og:image" content="https://lkliki.github.io/2024/03/02/PwnCollege-System%20Security-Kernel/QQ%E6%88%AA%E5%9B%BE20240309124009.png">
-<meta property="og:image" content="https://lkliki.github.io/2024/03/02/PwnCollege-System%20Security-Kernel/QQ%E6%88%AA%E5%9B%BE20240310165300.png">
-<meta property="og:image" content="https://lkliki.github.io/2024/03/02/PwnCollege-System%20Security-Kernel/QQ%E6%88%AA%E5%9B%BE20240302193623.png">
-<meta property="og:image" content="https://lkliki.github.io/2024/03/02/PwnCollege-System%20Security-Kernel/QQ%E6%88%AA%E5%9B%BE20240302194227.png">
-<meta property="article:published_time" content="2024-03-02T04:00:00.000Z">
-<meta property="article:modified_time" content="2024-03-27T14:53:40.200Z">
+<meta property="og:image" content="https://lkliki.github.io/2024/03/27/PwnCollege-SystemSecurity-Kernel/1.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/03/27/PwnCollege-SystemSecurity-Kernel/QQ%E6%88%AA%E5%9B%BE20240305205034.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/03/27/PwnCollege-SystemSecurity-Kernel/QQ%E6%88%AA%E5%9B%BE20240305210302.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/03/27/PwnCollege-SystemSecurity-Kernel/QQ%E6%88%AA%E5%9B%BE20240306192337.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/03/27/PwnCollege-SystemSecurity-Kernel/QQ%E6%88%AA%E5%9B%BE20240306194632.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/03/27/PwnCollege-SystemSecurity-Kernel/QQ%E6%88%AA%E5%9B%BE20240306202617.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/03/27/PwnCollege-SystemSecurity-Kernel/QQ%E6%88%AA%E5%9B%BE20240306203800.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/03/27/PwnCollege-SystemSecurity-Kernel/QQ%E6%88%AA%E5%9B%BE20240306204054.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/03/27/PwnCollege-SystemSecurity-Kernel/QQ%E6%88%AA%E5%9B%BE20240309102937.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/03/27/PwnCollege-SystemSecurity-Kernel/QQ%E6%88%AA%E5%9B%BE20240309124009.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/03/27/PwnCollege-SystemSecurity-Kernel/QQ%E6%88%AA%E5%9B%BE20240310165300.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/03/27/PwnCollege-SystemSecurity-Kernel/QQ%E6%88%AA%E5%9B%BE20240302193623.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/03/27/PwnCollege-SystemSecurity-Kernel/QQ%E6%88%AA%E5%9B%BE20240302194227.png">
+<meta property="article:published_time" content="2024-03-27T04:00:00.000Z">
+<meta property="article:modified_time" content="2024-03-27T15:00:50.100Z">
 <meta property="article:author" content="0P1N">
 <meta property="article:tag" content="Pwn">
 <meta property="article:tag" content="PwnCollege">
 <meta property="article:tag" content="Linux kernel">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://lkliki.github.io/2024/03/02/PwnCollege-System%20Security-Kernel/1.png">
+<meta name="twitter:image" content="https://lkliki.github.io/2024/03/27/PwnCollege-SystemSecurity-Kernel/1.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
   
   
-  <title>PwnCollege-SystemSecurity-Kernel Security - 0P1N</title>
+  <title>PwnCollege - SystemSecurity - KernelSecurity - 0P1N</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -243,7 +243,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="PwnCollege-SystemSecurity-Kernel Security"></span>
+            <span id="subtitle" data-typed-text="PwnCollege - SystemSecurity - KernelSecurity"></span>
           
         </div>
 
@@ -254,8 +254,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-03-02 12:00" pubdate>
-          2024年3月2日 中午
+        <time datetime="2024-03-27 12:00" pubdate>
+          2024年3月27日 中午
         </time>
       </span>
     
@@ -323,12 +323,12 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">PwnCollege-SystemSecurity-Kernel Security</h1>
+            <h1 style="display: none">PwnCollege - SystemSecurity - KernelSecurity</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="PwnCollege-SystemSecurity-Kernel-Security"><a href="#PwnCollege-SystemSecurity-Kernel-Security" class="headerlink" title="PwnCollege-SystemSecurity-Kernel Security"></a>PwnCollege-SystemSecurity-Kernel Security</h1><p>内核是操作系统的核心组件，是软件和硬件之间的桥梁。 内核运行在操作系统的最底层，其访问权限非常高，就像是冒充系统本身，甚至超越了root用户的最高权限。 内核安全至关重要，因为此级别的漏洞使攻击者可以像系统一样行事。 漏洞可能会导致未经授权的数据访问、系统崩溃或 rootkit 静默安装等情况。</p>
+                <h1 id="PwnCollege-SystemSecurity-Kernel-Security"><a href="#PwnCollege-SystemSecurity-Kernel-Security" class="headerlink" title="PwnCollege - SystemSecurity - Kernel Security"></a>PwnCollege - SystemSecurity - Kernel Security</h1><p>内核是操作系统的核心组件，是软件和硬件之间的桥梁。 内核运行在操作系统的最底层，其访问权限非常高，就像是冒充系统本身，甚至超越了root用户的最高权限。 内核安全至关重要，因为此级别的漏洞使攻击者可以像系统一样行事。 漏洞可能会导致未经授权的数据访问、系统崩溃或 rootkit 静默安装等情况。</p>
 <h2 id="Lecture-and-Reading"><a href="#Lecture-and-Reading" class="headerlink" title="Lecture and Reading"></a>Lecture and Reading</h2><h3 id="Introductiom"><a href="#Introductiom" class="headerlink" title="Introductiom"></a>Introductiom</h3><p>仅限内核使用的资源的例子：</p>
 <ul>
 <li><code>hlt</code>指令,使CPU暂停</li>
@@ -394,7 +394,7 @@
 <p>注意，开启调试后在gdb中按<code>c</code>，仿真环境的内核才会继续运行；内核调试中<code>ni</code>失效了，只能使用<code>si</code>进行单步调试。</p>
 <p>要调试观察内核中用户态程序切换至内核态的过程，可以<code>objdump</code>反汇编查看程序的入口点，在入口点下断点后再在仿真环境中运行要调试的用户态程序。</p>
 <p>这里在qemu仿真时用到的内核文件是<code>bzImage</code>,内核调试时载入gdb的内核文件是<code>vmlinux</code>，他们的区别可以参考<a href>ctf-wiki中常见内核文件介绍</a>。</p>
-<p><img src="/2024/03/02/PwnCollege-System%20Security-Kernel/1.png" srcset="/img/loading.gif" lazyload alt="1"></p>
+<p><img src="/2024/03/27/PwnCollege-SystemSecurity-Kernel/1.png" srcset="/img/loading.gif" lazyload alt="1"></p>
 <p>进一步的阅读：</p>
 <ul>
 <li>内核利用环境搭建:<a target="_blank" rel="noopener" href="https://www.nullbyte.cat/post/linux-kernel-exploit-development-environment/#environment-setup">https://www.nullbyte.cat/post/linux-kernel-exploit-development-environment/#environment-setup</a></li>
@@ -562,12 +562,12 @@
 <figure class="highlight pgsql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs pgsql">- The consolidation <span class="hljs-keyword">work</span> <span class="hljs-keyword">to</span> reclaim TIF flags <span class="hljs-keyword">on</span> x86 <span class="hljs-keyword">and</span> <span class="hljs-keyword">also</span> <span class="hljs-keyword">for</span> non-x86    specific TIF flags which are solely relevant <span class="hljs-keyword">for</span> syscall related <span class="hljs-keyword">work</span>    <span class="hljs-keyword">and</span> have been moved <span class="hljs-keyword">into</span> their own <span class="hljs-keyword">storage</span> space. The x86 specific part    had <span class="hljs-keyword">to</span> be merged <span class="hljs-keyword">in</span> <span class="hljs-keyword">to</span> avoid a major <span class="hljs-keyword">conflict</span>.<br></code></pre></td></tr></table></figure>
 
 <p>但是<code>TIP_SECCOMP</code>位并不是<code>Thomas Gleixner</code>删除的，该工作由<code>Gabriel Krisman Bertazi</code>完成。事实上，Linux5.11版本的更新由多人共同完成，如下</p>
-<p><img src="/2024/03/02/PwnCollege-System%20Security-Kernel/QQ%E6%88%AA%E5%9B%BE20240305205034.png" srcset="/img/loading.gif" lazyload alt="2"></p>
+<p><img src="/2024/03/27/PwnCollege-SystemSecurity-Kernel/QQ%E6%88%AA%E5%9B%BE20240305205034.png" srcset="/img/loading.gif" lazyload alt="2"></p>
 <p>可以发现定义<code>seccomp</code>是否开启的比特位由<code>thread_info</code>的<code>flags</code>成员转移到了<code>syscall_work</code>成员。</p>
 <figure class="highlight fsharp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs fsharp">seccomp<span class="hljs-operator">:</span> Migrate <span class="hljs-keyword">to</span> <span class="hljs-keyword">use</span> SYSCALL_WORK flag  <br></code></pre></td></tr></table></figure>
 
 <p>在更新建议页面搜索<code>TIF_SECCOMP</code>字符串，根据<code>kernel/seccomp.c</code>的注释可知其被<code>SYSCALL_WORK_SECCOMP</code>取代。</p>
-<p><img src="/2024/03/02/PwnCollege-System%20Security-Kernel/QQ%E6%88%AA%E5%9B%BE20240305210302.png" srcset="/img/loading.gif" lazyload alt="3"></p>
+<p><img src="/2024/03/27/PwnCollege-SystemSecurity-Kernel/QQ%E6%88%AA%E5%9B%BE20240305210302.png" srcset="/img/loading.gif" lazyload alt="3"></p>
 <p>在<a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/v5.11-rc1/source/include/linux/thread_info.h#L48">v5.11-rc1的linux源码</a>中查找<code>SYSCALL_WORK_SECCOMP</code>,发现其在<code>include/linux/thread_info.h</code>被定义</p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">syscall_work_bit</span> &#123;</span><br>	SYSCALL_WORK_BIT_SECCOMP, <span class="hljs-comment">//0</span><br>	SYSCALL_WORK_BIT_SYSCALL_TRACEPOINT, <span class="hljs-comment">//1</span><br>	SYSCALL_WORK_BIT_SYSCALL_TRACE, <span class="hljs-comment">//2</span><br>	SYSCALL_WORK_BIT_SYSCALL_EMU, <span class="hljs-comment">//3</span><br>	SYSCALL_WORK_BIT_SYSCALL_AUDIT, <span class="hljs-comment">//4</span><br>	SYSCALL_WORK_BIT_SYSCALL_USER_DISPATCH, <span class="hljs-comment">//5</span><br>&#125;;<br><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> SYSCALL_WORK_SECCOMP		BIT(SYSCALL_WORK_BIT_SECCOMP) <span class="hljs-comment">//最右边第一位是seccomp位</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> SYSCALL_WORK_SYSCALL_TRACEPOINT	BIT(SYSCALL_WORK_BIT_SYSCALL_TRACEPOINT)</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> SYSCALL_WORK_SYSCALL_TRACE	BIT(SYSCALL_WORK_BIT_SYSCALL_TRACE)</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> SYSCALL_WORK_SYSCALL_EMU	BIT(SYSCALL_WORK_BIT_SYSCALL_EMU)</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> SYSCALL_WORK_SYSCALL_AUDIT	BIT(SYSCALL_WORK_BIT_SYSCALL_AUDIT)</span><br><span class="hljs-meta">#<span class="hljs-keyword">define</span> SYSCALL_WORK_SYSCALL_USER_DISPATCH BIT(SYSCALL_WORK_BIT_SYSCALL_USER_DISPATCH)</span><br></code></pre></td></tr></table></figure>
 
@@ -615,14 +615,14 @@
 <p>解决方案是由操作系统内核负责将维护虚拟内核和物理内存的映射。</p>
 <p><strong>虚拟内存和物理内存之间的映射</strong></p>
 <p>操作系统会以<code>4kb</code>大小的进程虚拟内存为一个整体映射到物理内存的某个地址，如图</p>
-<p><img src="/2024/03/02/PwnCollege-System%20Security-Kernel/QQ%E6%88%AA%E5%9B%BE20240306192337.png" srcset="/img/loading.gif" lazyload alt="4"></p>
+<p><img src="/2024/03/27/PwnCollege-SystemSecurity-Kernel/QQ%E6%88%AA%E5%9B%BE20240306192337.png" srcset="/img/loading.gif" lazyload alt="4"></p>
 <p>以这种方式分配，在虚拟内存中连续的内存块映射到物理内存时可能是不连续的。例如当p2需要更多内存但紧跟其后的内存已经被占据时，p2的下一个内存块就会映射到更高的非连续物理地址，否则需要转移紧跟的内存块，这将造成巨大的性能开支。</p>
 <p>这种方案在内核中的实现称为<code>内核页表</code>。</p>
 <p><strong>内核页表</strong></p>
 <p>历史上，内核页表(<code>Page Table,PT</code>)是从填满了页表项(<code>Page Table Entries,PTD</code>)的一级页表开始的。</p>
 <p>每个页表有512个页表项，一个页表项记录一块<code>4kb(0x1000)</code>大小的内存块的基址，一个4kb内存块就称为一页(<code>page</code>)。因此，一个一级页表最多映射<code>2MB</code>的内存，一个页表的大小在x64&#x2F;32平台上分别为4kb&#x2F;2kb。</p>
 <p>相邻页表项对应相邻的虚拟内存页。如图：</p>
-<p><img src="/2024/03/02/PwnCollege-System%20Security-Kernel/QQ%E6%88%AA%E5%9B%BE20240306194632.png" srcset="/img/loading.gif" lazyload alt="5"></p>
+<p><img src="/2024/03/27/PwnCollege-SystemSecurity-Kernel/QQ%E6%88%AA%E5%9B%BE20240306194632.png" srcset="/img/loading.gif" lazyload alt="5"></p>
 <p>只使用一级页表存在一些不方便解决的问题：</p>
 <ul>
 <li>如何映射非连续的虚拟内存</li>
@@ -631,13 +631,13 @@
 <p>解决方案是使用嵌套式的<code>多级页表结构(the multi-level paging struct)</code>,引入二级页表(<code>Page Directory,PD</code>).</p>
 <p>二级页表同样包含512个页表项(<code>Page Directory Entries,PDE</code>)，一个表项记录一个一级页表的物理地址，一个二级页表能够映射<code>2MB * 512 = 1GB</code>的内存</p>
 <p>通过设置一个特殊的flag位，可以使PDE指向一块2MB的物理内存，而不是指向PT</p>
-<p><img src="/2024/03/02/PwnCollege-System%20Security-Kernel/QQ%E6%88%AA%E5%9B%BE20240306202617.png" srcset="/img/loading.gif" lazyload alt="6"></p>
+<p><img src="/2024/03/27/PwnCollege-SystemSecurity-Kernel/QQ%E6%88%AA%E5%9B%BE20240306202617.png" srcset="/img/loading.gif" lazyload alt="6"></p>
 <p>如果物理内存大于1GB，就继续引入三级页表(<code>Page Directory Page Table,PDPT</code>)</p>
 <p>三级页表中也有512个页表项(<code>Page Directory Pointers,PDP</code>)，总共可以映射512G的内存。</p>
 <p>同样的，通过设置特殊的flag位，可以使页表项PDP指向1GB的物理内存，而不是指向PD。</p>
-<p><img src="/2024/03/02/PwnCollege-System%20Security-Kernel/QQ%E6%88%AA%E5%9B%BE20240306203800.png" srcset="/img/loading.gif" lazyload alt="7"></p>
+<p><img src="/2024/03/27/PwnCollege-SystemSecurity-Kernel/QQ%E6%88%AA%E5%9B%BE20240306203800.png" srcset="/img/loading.gif" lazyload alt="7"></p>
 <p>以此类推，我们可以建立四级页表(<code>Page Map Level 4,PML4</code>)，五级页表(<code>Page Map Level 5,PML5</code>)…..,它们可以映射的内存大小是指数增长的(每级x512)。</p>
-<p><img src="/2024/03/02/PwnCollege-System%20Security-Kernel/QQ%E6%88%AA%E5%9B%BE20240306204054.png" srcset="/img/loading.gif" lazyload alt="8"></p>
+<p><img src="/2024/03/27/PwnCollege-SystemSecurity-Kernel/QQ%E6%88%AA%E5%9B%BE20240306204054.png" srcset="/img/loading.gif" lazyload alt="8"></p>
 <p><strong>进程中的虚拟地址与页表中索引间的转换</strong></p>
 <p>进程虚拟地址和物理地址通过页表的索引进行转换。</p>
 <p>注意：可定位的内存地址只有前48比特(0-0x7FFFFFFFFFFF)，0x800000000000之后是内核空间</p>
@@ -676,7 +676,7 @@
 </ul>
 <p><code>EPT</code>是Intel为实现内存虚拟化专门增加的硬件特性。EPT技术的核心概念是在处理器硬件级别上增加了一组额外的页表、对应的内存管理器<code>EPT MMU</code>和对应的缓存<code>EPT TLB</code>，用于将<code>GVA</code>映射到<code>HPA</code>，而不用经过<code>GPA -&gt; HVA -&gt; HPA</code>三个阶段的地址转换。</p>
 <p>整体架构如下图，客户机由<code>VMM</code>管理，<code>VMM</code>或<code>EPT MMU</code>管理<code>EPT</code>实现<code>GPA</code>和<code>HPA</code>的转换从而模拟出所有<code>Guest CPU</code>需要访问的<code>GPA</code>。</p>
-<p><img src="/2024/03/02/PwnCollege-System%20Security-Kernel/QQ%E6%88%AA%E5%9B%BE20240309102937.png" srcset="/img/loading.gif" lazyload alt="9"></p>
+<p><img src="/2024/03/27/PwnCollege-SystemSecurity-Kernel/QQ%E6%88%AA%E5%9B%BE20240309102937.png" srcset="/img/loading.gif" lazyload alt="9"></p>
 <p>具体的转换过程如下。</p>
 <p><code>GPA</code> -&gt; <code>HPA</code></p>
 <p><code>GPA</code>转为<code>HPA</code>的过程和<code>HVA</code>转为<code>HPA</code>的过程十分类似。<code>EPT</code>也包含四级页表，其结构和其它内核页表相同。<code>GPA</code>也由4个索引(Index)和1个<code>Page Offset</code>构成，不同点在于<code>EPT PML4</code>的基址通过<code>VMCS</code>的<code>EPTP</code>字段获取，有了这些信息，就和<code>HVA</code>到<code>HPA</code>的转换一样由一级级页表索引到某个页表中的<code>HPA</code>。<code>EPT</code>页表和<code>VMCS</code>都存放在<code>Host</code>物理内存中。</p>
@@ -692,7 +692,7 @@
 <li><p>以此类推，得到<code>GVA</code>对应的<code>HPA</code>，如下图：</p>
 </li>
 </ol>
-<p><img src="/2024/03/02/PwnCollege-System%20Security-Kernel/QQ%E6%88%AA%E5%9B%BE20240309124009.png" srcset="/img/loading.gif" lazyload alt="10"></p>
+<p><img src="/2024/03/27/PwnCollege-SystemSecurity-Kernel/QQ%E6%88%AA%E5%9B%BE20240309124009.png" srcset="/img/loading.gif" lazyload alt="10"></p>
 <p><strong>性能优化 - 页表项缓存TLB和内存管理器MMU</strong></p>
 <p>以上过程涉及到很多转换，如果这些转换都由内核来完成，速度会很慢，因此需要TLB和MMU进行性能优化。TLB(EPT TLB)和MMU(EPT MMU)都是CPU内部的组件，拥有较高的运行性能。</p>
 <ul>
@@ -760,7 +760,7 @@
 <p>2.通过执行内核中对应的gadget来修改CR4寄存器为0x6f0 (011011110000b)使<code>SMEP</code>和<code>SMAP</code>失效。</p>
 <p><code>cr4</code>寄存器第20位用于标记是否开启<code>SMEP</code>。</p>
 <p><code>cr4</code>寄存器第21位用于标记是否开启<code>SMAP</code>。</p>
-<p><img src="/2024/03/02/PwnCollege-System%20Security-Kernel/QQ%E6%88%AA%E5%9B%BE20240310165300.png" srcset="/img/loading.gif" lazyload alt="11"></p>
+<p><img src="/2024/03/27/PwnCollege-SystemSecurity-Kernel/QQ%E6%88%AA%E5%9B%BE20240310165300.png" srcset="/img/loading.gif" lazyload alt="11"></p>
 <p>3.通过内核态函数<code>run_cmd(char *cmd)</code>可以以root权限执行用户态命令。</p>
 <p>源码：<a target="_blank" rel="noopener" href="https://elixir.bootlin.com/linux/latest/ident/run_cmd">https://elixir.bootlin.com/linux/latest/ident/run_cmd</a></p>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">run_cmd</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span> *cmd)</span><br>&#123;<br>	<span class="hljs-type">char</span> **argv;<br>	<span class="hljs-type">static</span> <span class="hljs-type">char</span> *envp[] = &#123;<br>		<span class="hljs-string">&quot;HOME=/&quot;</span>,<br>		<span class="hljs-string">&quot;PATH=/sbin:/bin:/usr/sbin:/usr/bin&quot;</span>,<br>		<span class="hljs-literal">NULL</span><br>	&#125;;<br>	<span class="hljs-type">int</span> ret;<br>	argv = argv_split(GFP_KERNEL, cmd, <span class="hljs-literal">NULL</span>);<br>	<span class="hljs-keyword">if</span> (argv) &#123;<br>		ret = call_usermodehelper(argv[<span class="hljs-number">0</span>], argv, envp, UMH_WAIT_EXEC); <br>        <span class="hljs-comment">//UMH_WAIT_EXEC表示等待命令执行完成后再返回</span><br>		argv_free(argv);<br>	&#125; <span class="hljs-keyword">else</span> &#123;<br>		ret = -ENOMEM;<br>	&#125;<br><br>	<span class="hljs-keyword">return</span> ret;<br>&#125;<br></code></pre></td></tr></table></figure>
@@ -1157,7 +1157,7 @@
 <li><code>cat /proc/kallsyms</code>，打印所有内核中的符号和地址。只在root权限下有效，否则地址显示为0。</li>
 </ul>
 <h3 id="自制linux实用工具"><a href="#自制linux实用工具" class="headerlink" title="自制linux实用工具"></a>自制linux实用工具</h3><h4 id="lookup-syscall"><a href="#lookup-syscall" class="headerlink" title="lookup_syscall"></a>lookup_syscall</h4><p>输入系统调用名输出系统调用号或输入系统调用号输出系统调用名</p>
-<p><img src="/2024/03/02/PwnCollege-System%20Security-Kernel/QQ%E6%88%AA%E5%9B%BE20240302193623.png" srcset="/img/loading.gif" lazyload alt="12"></p>
+<p><img src="/2024/03/27/PwnCollege-SystemSecurity-Kernel/QQ%E6%88%AA%E5%9B%BE20240302193623.png" srcset="/img/loading.gif" lazyload alt="12"></p>
 <h4 id="bin2shellcode"><a href="#bin2shellcode" class="headerlink" title="bin2shellcode"></a>bin2shellcode</h4><p>便于shellcode编写，将二进制文件转换成16进制shellcode</p>
 <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">#</span><span class="language-bash">!/bin/bash</span><br>for i in $(objdump -d $1 |grep &quot;^ &quot; |cut -f2); do echo -n &#x27;\x&#x27;$i; done;echo<br></code></pre></td></tr></table></figure>
 
@@ -1174,7 +1174,7 @@
 <li><p>输出strace命令跟踪系统调用的结果</p>
 </li>
 </ul>
-<p><img src="/2024/03/02/PwnCollege-System%20Security-Kernel/QQ%E6%88%AA%E5%9B%BE20240302194227.png" srcset="/img/loading.gif" lazyload alt="13"></p>
+<p><img src="/2024/03/27/PwnCollege-SystemSecurity-Kernel/QQ%E6%88%AA%E5%9B%BE20240302194227.png" srcset="/img/loading.gif" lazyload alt="13"></p>
 
                 
               </div>
@@ -1224,8 +1224,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>PwnCollege-SystemSecurity-Kernel Security</div>
-      <div>https://lkliki.github.io/2024/03/02/PwnCollege-System Security-Kernel/</div>
+      <div>PwnCollege - SystemSecurity - KernelSecurity</div>
+      <div>https://lkliki.github.io/2024/03/27/PwnCollege-SystemSecurity-Kernel/</div>
     </div>
     <div class="license-meta">
       
@@ -1237,7 +1237,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年3月2日</div>
+          <div>2024年3月27日</div>
         </div>
       
       
