@@ -1,0 +1,795 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="../../../../img/touxiang.png">
+  <link rel="icon" href="../../../../img/touxiang.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="0P1N">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="步入暗网 - 匿名网络使用指南众所周知，许多不为人知的交易都在telegram上进行，包括黄、赌、毒、间谍、黑客，甚至是军事交易。但是，2024年8月，telegram的创始人在法国被政府抓了，一个月后就宣布电报会根据法律要求为政府提供信息，暴力招安了属于是。这事一闹，telegram多半是不能用了，沦为了西方政府掌控的透明化通信软件。既然如此，来看看另一种匿名通信手段 - 暗网。本文介绍了四种匿">
+<meta property="og:type" content="article">
+<meta property="og:title" content="步入暗网-匿名网络使用指南">
+<meta property="og:url" content="https://lkliki.github.io/2024/10/13/%E6%AD%A5%E5%85%A5%E6%9A%97%E7%BD%91-%E5%8C%BF%E5%90%8D%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/index.html">
+<meta property="og:site_name" content="0P1N">
+<meta property="og:description" content="步入暗网 - 匿名网络使用指南众所周知，许多不为人知的交易都在telegram上进行，包括黄、赌、毒、间谍、黑客，甚至是军事交易。但是，2024年8月，telegram的创始人在法国被政府抓了，一个月后就宣布电报会根据法律要求为政府提供信息，暴力招安了属于是。这事一闹，telegram多半是不能用了，沦为了西方政府掌控的透明化通信软件。既然如此，来看看另一种匿名通信手段 - 暗网。本文介绍了四种匿">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lkliki.github.io/2024/10/13/%E6%AD%A5%E5%85%A5%E6%9A%97%E7%BD%91-%E5%8C%BF%E5%90%8D%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/1.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/10/13/%E6%AD%A5%E5%85%A5%E6%9A%97%E7%BD%91-%E5%8C%BF%E5%90%8D%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/2.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/10/13/%E6%AD%A5%E5%85%A5%E6%9A%97%E7%BD%91-%E5%8C%BF%E5%90%8D%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/3.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/10/13/%E6%AD%A5%E5%85%A5%E6%9A%97%E7%BD%91-%E5%8C%BF%E5%90%8D%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/4.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/10/13/%E6%AD%A5%E5%85%A5%E6%9A%97%E7%BD%91-%E5%8C%BF%E5%90%8D%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/5.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/10/13/%E6%AD%A5%E5%85%A5%E6%9A%97%E7%BD%91-%E5%8C%BF%E5%90%8D%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/6.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/10/13/%E6%AD%A5%E5%85%A5%E6%9A%97%E7%BD%91-%E5%8C%BF%E5%90%8D%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/7.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/10/13/%E6%AD%A5%E5%85%A5%E6%9A%97%E7%BD%91-%E5%8C%BF%E5%90%8D%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/8.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/10/13/%E6%AD%A5%E5%85%A5%E6%9A%97%E7%BD%91-%E5%8C%BF%E5%90%8D%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/9.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/10/13/%E6%AD%A5%E5%85%A5%E6%9A%97%E7%BD%91-%E5%8C%BF%E5%90%8D%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/10.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/10/13/%E6%AD%A5%E5%85%A5%E6%9A%97%E7%BD%91-%E5%8C%BF%E5%90%8D%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/11.png">
+<meta property="article:published_time" content="2024-10-13T01:50:46.000Z">
+<meta property="article:modified_time" content="2024-10-13T02:21:35.037Z">
+<meta property="article:author" content="0P1N">
+<meta property="article:tag" content="DarkNet">
+<meta property="article:tag" content="信息搜集">
+<meta property="article:tag" content="其它">
+<meta property="article:tag" content="不务正业">
+<meta property="article:tag" content="Tor">
+<meta property="article:tag" content="I2P">
+<meta property="article:tag" content="FreeNet">
+<meta property="article:tag" content="ZeroNet">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://lkliki.github.io/2024/10/13/%E6%AD%A5%E5%85%A5%E6%9A%97%E7%BD%91-%E5%8C%BF%E5%90%8D%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/1.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>步入暗网-匿名网络使用指南 - 0P1N</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="../../../../css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="../../../../css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="../../../../css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"lkliki.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="../../../../js/utils.js" ></script>
+  <script  src="../../../../js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="../../../../index.html">
+      <strong>Welcome To 0P1N&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../index.html">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('../../../../img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="步入暗网-匿名网络使用指南"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-10-13 09:50" pubdate>
+          2024年10月13日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          47 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">步入暗网-匿名网络使用指南</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="步入暗网-匿名网络使用指南"><a href="#步入暗网-匿名网络使用指南" class="headerlink" title="步入暗网 - 匿名网络使用指南"></a>步入暗网 - 匿名网络使用指南</h1><p>众所周知，许多不为人知的交易都在telegram上进行，包括黄、赌、毒、间谍、黑客，甚至是军事交易。但是，2024年8月，telegram的创始人在法国被政府抓了，一个月后就宣布电报会根据法律要求为政府提供信息，暴力招安了属于是。这事一闹，telegram多半是不能用了，沦为了西方政府掌控的透明化通信软件。既然如此，来看看另一种匿名通信手段 - 暗网。本文介绍了四种匿名通信网络(Tor&#x2F;I2P&#x2F;FreeNet&#x2F;ZeroNet)的基础使用。</p>
+<h2 id="什么是暗网"><a href="#什么是暗网" class="headerlink" title="什么是暗网"></a>什么是暗网</h2><p>深网指无法使用标准搜索引擎索引到的互联网内容，微信聊天记录、个人网盘、公司内网等都属于深网内容。</p>
+<p>暗网是深网的子集，在无法被标准搜索引擎索引的基础上，需要使用特定的软件、配置或授权才能登陆。</p>
+<p>暗网利用加密传输、P2P对等网络、多点中继混淆等技术为用户提供匿名的互联网信息访问。暗网中，数据包经过了多层加密转发和混淆，交易主要通过比特币，使用去中心化网络，因此难以溯源用户。</p>
+<p>具体的技术原理这里不深究，我们只需要知道暗网是一些P2P匿名通信系统的统称，常用于避开政府进行非法网络活动。</p>
+<p>属于暗网的匿名网络包括：Tor、I2P、freenet、zeronet等，其中Tor规模最大，知名度最高。</p>
+<p>Tor匿名网络起源于20世纪九十年代中期美国海军研究实验室（NRL）及国防高等研究计划署（DARPA）开发的洋葱路由技术，后来该项目被非盈利组织Tor Project接管。</p>
+<p>事实上，Tor的隐私性和安全性是存疑的：</p>
+<ul>
+<li>只要掌握Tor网络中一定数量的节点或监控大量的互联网流量，就能攻破Tor的匿名保护，很多政府有能力做到这一点。</li>
+<li>Tor网络的出口节点可以获取用户的位置和身份。</li>
+<li>Tor网络其中存在政府安排的”间谍”或钓鱼网站。</li>
+<li>Tor虽然表面上由非盈利组织运行，事实上一直在接收美国军方和CIA的资助，很难说是否存在py交易。结合Tor的发展历史，可以猜测美政府将Tor开源独立是为了掩护其中的情报人员，使Tor流量鱼龙混杂，以免作为美军特征被识别。</li>
+</ul>
+<p>总的来说，Tor的志愿者节点多，规模大，浏览速度快，安全性较弱；I2P及其它匿名网络规模小、速度慢但去中心化程度更高、安全性更强。</p>
+<p>Tor和I2P技术原理以及安全性分析：<a target="_blank" rel="noopener" href="https://shef.cc/2022/12/27/%E3%80%90%E7%BD%91%E7%BB%9C%E6%89%AB%E7%9B%B2%E3%80%91tor-%E5%92%8C-i2p/">【网络扫盲】Tor 和 I2P</a>、<a target="_blank" rel="noopener" href="https://www.infocomm-journal.com/cjnis/article/2019/2096-109x/2096-109x-5-1-00066.shtml">匿名网络Tor与I2P的比较研究</a></p>
+<p>Tor网络的独立性和安全性问题：<a target="_blank" rel="noopener" href="https://leagsoft.com/new-detail/290">深度揭密“洋葱路由”Tor网络</a></p>
+<h2 id="如何访问暗网"><a href="#如何访问暗网" class="headerlink" title="如何访问暗网"></a>如何访问暗网</h2><p>国内需要VPN或网桥来访问外网 环境：VMware win10虚拟机  </p>
+<h3 id="代理配置"><a href="#代理配置" class="headerlink" title="代理配置"></a>代理配置</h3><p>这里使用clash，开规则模式，系统代理，开启局域网连接，代理端口默认7890</p>
+<p><img src="/2024/10/13/%E6%AD%A5%E5%85%A5%E6%9A%97%E7%BD%91-%E5%8C%BF%E5%90%8D%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/1.png" srcset="/img/loading.gif" lazyload alt="1"></p>
+<p>虚拟机的网络配置选择使用NAT模式(仅主机模式将导致I2P无法使用)</p>
+<p><img src="/2024/10/13/%E6%AD%A5%E5%85%A5%E6%9A%97%E7%BD%91-%E5%8C%BF%E5%90%8D%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/2.png" srcset="/img/loading.gif" lazyload alt="2"></p>
+<p>宿主机配置VMnet8虚拟网卡的IP</p>
+<p><img src="/2024/10/13/%E6%AD%A5%E5%85%A5%E6%9A%97%E7%BD%91-%E5%8C%BF%E5%90%8D%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/3.png" srcset="/img/loading.gif" lazyload alt="3"></p>
+<p>在虚拟机的虚拟网络编辑器中配置VMnet8网卡，如下</p>
+<p><img src="/2024/10/13/%E6%AD%A5%E5%85%A5%E6%9A%97%E7%BD%91-%E5%8C%BF%E5%90%8D%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/4.png" srcset="/img/loading.gif" lazyload alt="4"></p>
+<p>虚拟机中网卡都设置为自动获取IP地址，并设置系统代理为主机VMnet8网卡IP的7890端口</p>
+<p><img src="/2024/10/13/%E6%AD%A5%E5%85%A5%E6%9A%97%E7%BD%91-%E5%8C%BF%E5%90%8D%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/5.png" srcset="/img/loading.gif" lazyload alt="5"></p>
+<p>配置成功后浏览器可访问<a target="_blank" rel="noopener" href="http://www.google.com且虚拟机eth0网卡可以ping通宿主机vmnet8网卡/">www.google.com且虚拟机Eth0网卡可以ping通宿主机VMnet8网卡</a></p>
+<h3 id="Tor"><a href="#Tor" class="headerlink" title="Tor"></a>Tor</h3><p><a target="_blank" rel="noopener" href="https://www.torproject.org/">Tor浏览器下载地址</a></p>
+<p>浏览器的代理配置如下，配置完点连接就可以了</p>
+<p><img src="/2024/10/13/%E6%AD%A5%E5%85%A5%E6%9A%97%E7%BD%91-%E5%8C%BF%E5%90%8D%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/6.png" srcset="/img/loading.gif" lazyload alt="6"></p>
+<p>Tor网站域名后缀为<code>.onion</code>。为了找到Tor网站，除了通过他人的分享，我们还可以使用专门检索Tor网站的搜索引擎。以下是几个获取Tor网址的渠道：</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs awk"><span class="hljs-regexp">//</span>DuckDuckGo,Tor浏览器默认搜索引擎，注重用户隐私，声称能搜索Tor网站,但实际上搜到的都是普通网站，不太好用<br>duckduckgogg42xjoc72x3sjasowoarfbgcmvfimaftt6twagswzczad.onion<br><span class="hljs-regexp">//</span>Ahimia<br>https:<span class="hljs-regexp">//</span>ahmia.fi/ 搜索引擎<br>juhanurmihxlp77nkq76byazcldy2hlmovfu2epvl5ankdibsot4csyd.onion<br><span class="hljs-regexp">//</span>Torch 搜索引擎<br>ifxxm4nubjdna5irh3p4uakcxuyij7w6z4yq7fpgbauihgvo7mhiemad.onion<br><span class="hljs-regexp">//</span>DEEPSEARCH 搜索引擎<br>search7tdrcvri22rieiwgi5g46qnwsesvnubqav2xakhezv4hjzkkad.onion<br><span class="hljs-regexp">//</span>Darkzone Listing 搜索引擎<br>darkobds5j7xpsncsexzwhzaotyc4sshuiby3wtxslq5jy2mhrulnzad.onion<br><span class="hljs-regexp">//</span>Hidden Wiki  导航站点/论坛，有很多电子市场、搜索引擎、邮件服务之类的推荐<br>torwikijwqskahohtn35pyfde2uqmgrxgr2fru4mn4rer5muj445dxyd.onion<br><span class="hljs-regexp">//</span>Torlinks  导航站点<br><span class="hljs-number">5</span>n4qdkw2wavc55peppyrelmb2rgsx7ohcb2tkxhub2gyfurxulfyd3id.onion<br></code></pre></td></tr></table></figure>
+
+<p>几个有趣的Tor网站，当然诸如黑市、论坛、搜索引擎之类的网站还有很多</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs stylus"><span class="hljs-comment">//z-library 电子图书馆</span><br>bookszlibb74ugqojhzhg2a63w5i2atv5bqarulgczawnbmsb6s6qead<span class="hljs-selector-class">.onion</span><br><span class="hljs-comment">//Tor Amazon 电子超市</span><br>amazonuzx7moazplksr5cqzihjse2fodsm67j3d5gu3azwzswifr5yad<span class="hljs-selector-class">.onion</span><br><span class="hljs-comment">//defcon 黑客文化</span><br>g7ejphhubv5idbbu3hb3wawrs5adw7tkx7yjabnf65xtzztgg4hcsqqd<span class="hljs-selector-class">.onion</span><br><span class="hljs-comment">//Breach Forum 黑客论坛</span><br>breached26tezcofqla4adzyn22notfqwcac7gpbrleg4usehljwkgqd<span class="hljs-selector-class">.onion</span><br>breachforums<span class="hljs-selector-class">.st</span><br><span class="hljs-comment">//Onni Forums 黑客论坛</span><br>onnii6niq53gv3rvjpi7z5axkasurk2x5w5lwliep4qyeb2azagxn4qd<span class="hljs-selector-class">.onion</span><br>onniforums.com/mirrors.txt<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="I2P"><a href="#I2P" class="headerlink" title="I2P"></a>I2P</h3><p><a target="_blank" rel="noopener" href="https://geti2p.net/en/">I2P官网</a></p>
+<p>I2P在windows上提供两种安装方式:<a target="_blank" rel="noopener" href="https://geti2p.net/en/download/windows">经典安装</a>和<a target="_blank" rel="noopener" href="https://geti2p.net/en/download/easyinstall">简易安装</a>。两种方式都需要安装浏览器，推荐<a target="_blank" rel="noopener" href="https://www.firefox.com.cn/download/#product-desktop-release">火狐浏览器</a>或Tor浏览器，经典安装需要额外安装JAVA(至少<a target="_blank" rel="noopener" href="https://www.java.com/zh-CN/download/">JAVA8</a>)。</p>
+<p>I2P程序在本地运行一个可自由配置的I2P Router，其包含了代理服务器、后台管理界面、身份验证、匹配附近端节点等功能。用户通过配置好的本地I2P代理访问I2P网络。</p>
+<p>下面是I2P Router的两个常用端口，更多端口功能位于<code>127.0.0.1:7657/help#reachabilityhelp</code></p>
+<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs accesslog"><span class="hljs-number">127.0.0.1:7657</span> //I2P路由控制台<br><span class="hljs-number">127.0.0.1:4444</span> //HTTP代理 <br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>简易安装</li>
+</ul>
+<p>一体化的安装包，目前还在BETA测试版本，内置了JAVA组件所以不需要手动安装JAVA。除了不用安装JAVA，其它步骤和经典安装相同。其中还包含了经典安装需要的火狐浏览器的I2P配置文件包，因此如果使用火狐浏览器，即使采用经典安装，也要先安装简易安装包。</p>
+<ul>
+<li>经典安装(以火狐浏览器为例)</li>
+</ul>
+<p>第一步：安装JAVA运行环境，Jre或Jdk都可以；安装火狐浏览器；安装简易I2P包</p>
+<p>第二部：在官网下载并安装i2p程序</p>
+<p>第三步：双击<code>Start I2P</code>快捷方式启动I2P Router</p>
+<p>第四步：补种。进入web端路由控制台，在<code>127.0.0.1:7657/configreseed</code>页面进行reseed。如图，通过VPN代理(这里用clash)进行reseed成功后切换回无代理</p>
+<p><img src="/2024/10/13/%E6%AD%A5%E5%85%A5%E6%9A%97%E7%BD%91-%E5%8C%BF%E5%90%8D%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/7.png" srcset="/img/loading.gif" lazyload alt="7"></p>
+<p>第五步：进入<code>127.0.0.1:7657/configclients</code>开启<code>Application tunnels</code>，然后进入<code>127.0.0.1:7657/i2ptunnelmgr</code>确保I2P HTTP代理已经开启。</p>
+<p><img src="/2024/10/13/%E6%AD%A5%E5%85%A5%E6%9A%97%E7%BD%91-%E5%8C%BF%E5%90%8D%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/8.png" srcset="/img/loading.gif" lazyload alt="8"></p>
+<p>第六步：设置浏览器的代理为I2P HTTP代理</p>
+<p><img src="/2024/10/13/%E6%AD%A5%E5%85%A5%E6%9A%97%E7%BD%91-%E5%8C%BF%E5%90%8D%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/9.png" srcset="/img/loading.gif" lazyload alt="9"></p>
+<p>第七步:如果active的节点一直为0且上下行的带宽一直为0，检查防火墙。在<code>127.0.0.1:7657/confignet</code>找到UDP&#x2F;TCP端口号，在网络防火墙中将I2P程序、java程序和该端口加入白名单。注意UDP&#x2F;TCP端口每次运行是随机的，但在手动设置一次后就会固定。</p>
+<p><img src="/2024/10/13/%E6%AD%A5%E5%85%A5%E6%9A%97%E7%BD%91-%E5%8C%BF%E5%90%8D%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/10.png" srcset="/img/loading.gif" lazyload alt="10"></p>
+<p>第八步：在<code>日期与时间</code>的<code>Internet时间</code>中更新系统时间</p>
+<p>第九步:找个I2P网站测试连接，比如<a target="_blank" rel="noopener" href="http://wiki.i2p-projekt.i2p/">I2P-wiki</a></p>
+<p>TIPS1:我们通过<code>127.0.0.1:7657/i2ptunnelmgr -&gt; I2P HTTP PROXY -&gt; (SSL)出口代理</code>可以访问I2P网络之外的普通网站，出口代理(Out Proxy)默认是<code>exit.stormycloud.i2p</code>，可以更换为其它更快速的代理</p>
+<p>TIPS2:除了官网上的两种安装方式，还可以使用类似<a target="_blank" rel="noopener" href="https://i2pd.readthedocs.io/en/latest/">i2pd</a>的其它I2P客户端</p>
+<ul>
+<li>使用</li>
+</ul>
+<p>第一次运行需要按照以上步骤进行安装和配置，之后只要开启I2P Router就能访问I2P网络了。I2P Router刚开启时网速非常慢，随着运行时间变长，搜集到的附近节点变多，网速会越来越快。同时每隔一段时间需要进行第四步:补种以防止种子失效。</p>
+<p>另外，I2P还有本地地址簿功能，类似于浏览器的收藏夹，可以保存有价值的I2P网址。访问不在地址簿中的网址需要通过地址助手的跳转服务，地址助手是提供地址跳转及相关服务的I2P站点，I2P Router会在你访问时自动推荐几个地址助手。</p>
+<p>I2P网站域名后缀为<code>.i2p</code>，其更替非常频繁。以下是几个资源站点：</p>
+<figure class="highlight dts"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs dts"><span class="hljs-symbol">http:</span><span class="hljs-comment">//identiguy.i2p/   //活跃I2P站点跟踪</span><br><span class="hljs-symbol">http:</span><span class="hljs-comment">//notbob.i2p/      //活跃I2P站点跟踪</span><br><span class="hljs-symbol">http:</span><span class="hljs-comment">//tracker2.postman.i2p  //音视频、文档资源共享</span><br><span class="hljs-symbol">http:</span><span class="hljs-comment">//shx5vqsw7usdaunyzr2qmes2fq37oumybpudrd4jjj4e4vk4uusa.b32.i2p/   //reg.i2p,提供域名注册、域名查询、活跃网站列表等功能</span><br></code></pre></td></tr></table></figure>
+
+
+
+
+
+<h3 id="freenet"><a href="#freenet" class="headerlink" title="freenet"></a>freenet</h3><p>新版的freenet正在开发中，目前没有安装包，只有<a target="_blank" rel="noopener" href="https://github.com/freenet/freenet-core">源码</a>；原始的freenet更名为Hyphanet，可以在官网下载使用。</p>
+<p><a target="_blank" rel="noopener" href="https://freenet.org/">freenet官网</a>   <a target="_blank" rel="noopener" href="https://www.hyphanet.org/pages/download.html">Hyphanet官网</a> <a href="Freenet/Hyphanet_wiki">Freenet&#x2F;Hyphanet_wiki</a></p>
+<p>与Tor不同，访问Hyphanet不需要VPN，这能防止将自己暴露给VPN代理商。Freenet在常规模式下自动连接陌生节点，如果连接到了恶意节点则可能带来风险；在高安全模式下可以添加好友节点，你只会连接并暴露给好友节点，只要好友节点绝对可信，你就是绝对隐蔽的。开启高安全模式最好添加5个以上的好友节点，否则网速很慢。</p>
+<p>Hyphanet更新至0.75版本，0.5版本曾因存在漏洞被GFW封锁过滤，0.7版本进行了巨大更新修补了漏洞，<a target="_blank" rel="noopener" href="https://github.com/hyphanet/wiki/wiki/Security-summary">Hyphanet安全摘要</a>。</p>
+<ul>
+<li>安装和使用Hyphanet</li>
+</ul>
+<p>官网下载安装包，安装后运行<code>FreenetTray.exe</code>，右下角任务栏会出现Hyphanet的图片，右键运行并<code>OPEN FREENET</code>。进入首页等几分钟就能访问了，首页有各种引导。</p>
+<p><img src="/2024/10/13/%E6%AD%A5%E5%85%A5%E6%9A%97%E7%BD%91-%E5%8C%BF%E5%90%8D%E7%BD%91%E7%BB%9C%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/11.png" srcset="/img/loading.gif" lazyload alt="11"></p>
+<p>访问论坛和商店等都需要安装插件，将<code>USK@</code>开头的Key输入Freenet浏览器<code>Plugin Manager</code>中的<code>Add an Unofficial Plugin from Freenet </code>即可，Plugin Manager地址如下:</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">http:<span class="hljs-regexp">//</span>localhost:<span class="hljs-number">8888</span><span class="hljs-regexp">/plugins/</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="zeronet"><a href="#zeronet" class="headerlink" title="zeronet"></a>zeronet</h3><p>zeronet提供了去中心化网络以避开政府机构的监管，但匿名性(ip隐藏)的实现需要借助Tor网络的多层加密转发实现。</p>
+<p><a target="_blank" rel="noopener" href="https://zeronet.io/">zeronet官网</a>  </p>
+<p>github地址1:<a target="_blank" rel="noopener" href="https://github.com/HelloZeroNet/ZeroNet">https://github.com/HelloZeroNet/ZeroNet</a></p>
+<p>github地址2:<a target="_blank" rel="noopener" href="https://github.com/ZeroNetX/ZeroNet">https://github.com/ZeroNetX/ZeroNet</a></p>
+<p>笔者使用github地址1和官网下载的安装包运行失败了，一直报错<code>TRACKER CONNECTION ERROR DETECT</code>。github地址2得到了更加积极的维护，笔者使用github地址2中的安装包成功访问了ZeroNet网络。</p>
+<ul>
+<li>安装和使用</li>
+</ul>
+<p>解压安装包后双击<code>ZeroNet.exe</code>即可进入<code>Hello ZeroNet</code>web界面，其中提供了几个官方站点。如果连接站点失败了，可以多等待一段时间并尝试几次，直到在左侧<code>最近下载的站点中</code>看到该站点。</p>
+<p>zeronet客户端需要从tracker服务器获取节点，所以需要添加足够多的tracker服务器来获取最新节点。我们可以从<a target="_blank" rel="noopener" href="https://github.com/ngosang/trackerslist">这里</a>获取有活跃的tracker服务器，复制<code>trackers_all</code>到<code>http://127.0.0.1:43110/Config</code>的<code>Trackers</code>中。</p>
+<p>如果需要和Tor一起使用以实现匿名，请参考<a target="_blank" rel="noopener" href="https://zeronet.readthedocs.io/en/latest/faq/#how-to-make-zeronet-work-with-tor-under-linux">ZeroNet常见问题</a></p>
+<p>顺带一提，ZeroNet使用Bitcoin加密算法及BitTorrent网络，其站点URL中<code>http://127.0.0.1:43110/</code>后的那串字符就是区块链的钱包地址，可以向其中转入区块链货币，私钥就放在data文件下的user.json文件中。</p>
+<p>ZeroNet社区还是挺活跃的，比freenet活跃，中文内容也很多，还带一个官方的实时聊天室，非常有趣。</p>
+<h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><ul>
+<li>不要从非官方渠道下载用于访问暗网的软件</li>
+<li>尽量在虚拟机中进行访问</li>
+<li>不要透露任何可能使你暴露现实身份的信息</li>
+<li>配合VPN使用可以加快访问速度并防止出口节点获取你的信息，但是你的IP会暴露给VPN供应商；不用VPN，而用自带的网桥也可以，但是速度会变慢</li>
+<li>访问和搭建暗网节点在大多数国家合法，但在中国是非法的</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="../../../../categories/%E5%85%B6%E5%AE%83/" class="category-chain-item">其它</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="../../../../tags/DarkNet/">#DarkNet</a>
+      
+        <a href="../../../../tags/%E4%BF%A1%E6%81%AF%E6%90%9C%E9%9B%86/">#信息搜集</a>
+      
+        <a href="../../../../tags/%E5%85%B6%E5%AE%83/">#其它</a>
+      
+        <a href="../../../../tags/%E4%B8%8D%E5%8A%A1%E6%AD%A3%E4%B8%9A/">#不务正业</a>
+      
+        <a href="../../../../tags/Tor/">#Tor</a>
+      
+        <a href="../../../../tags/I2P/">#I2P</a>
+      
+        <a href="../../../../tags/FreeNet/">#FreeNet</a>
+      
+        <a href="../../../../tags/ZeroNet/">#ZeroNet</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>步入暗网-匿名网络使用指南</div>
+      <div>https://lkliki.github.io/2024/10/13/步入暗网-匿名网络使用指南/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>0P1N</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年10月13日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="../../../09/11/2024%E9%95%BF%E5%9F%8E%E6%9D%AF-Kylin-Driver/" title="2024长城杯-Kylin_Driver">
+                        <span class="hidden-mobile">2024长城杯-Kylin_Driver</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href=""><span>fffer</span></a> <i class="iconfont icon-bug"></i> <a href="" target="_blank" rel="nofollow noopener"><span>0p1n</span></a> <br /> <a href=""><span>富强 民主 文明 和谐 自由 平等 公正 法治 爱国 敬业 诚信 友善</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="../../../../js/events.js" ></script>
+<script  src="../../../../js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="../../../../js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="../../../../js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="../../../../js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
