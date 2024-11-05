@@ -1,0 +1,1034 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="../../../../img/touxiang.png">
+  <link rel="icon" href="../../../../img/touxiang.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="0P1N">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="三道CTF题目学习h3c路由器&amp;stm32裸机&amp;Infineon车机固件逆向2024L3hCTF hhhc考点：h3c路由器固件逆向 题目描述 1Remember the &quot;hillst0ne&quot; challenge in L3HCTF2021?L3HSec also has an MSR3610 router deployed since 2021. Now w">
+<meta property="og:type" content="article">
+<meta property="og:title" content="三道CTF题目学习h3c路由器&amp;stm32裸机&amp;Infineon车机固件逆向">
+<meta property="og:url" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/index.html">
+<meta property="og:site_name" content="0P1N">
+<meta property="og:description" content="三道CTF题目学习h3c路由器&amp;stm32裸机&amp;Infineon车机固件逆向2024L3hCTF hhhc考点：h3c路由器固件逆向 题目描述 1Remember the &quot;hillst0ne&quot; challenge in L3HCTF2021?L3HSec also has an MSR3610 router deployed since 2021. Now w">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/1.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/2.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/3.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/4.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/5.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/6.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/7.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/8.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/9.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/10.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/11.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/12.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/13.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/14.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/15.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/16.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/17.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/18.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/19.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/20.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/21.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/22.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/23.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/24.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/25.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/26.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/27.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/28.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/29.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/30.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/31.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/32.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/33.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/34.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/35.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/36.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/37.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/38.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/39.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/40.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/41.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/42.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/43.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/PCBA.jpg">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/xcom.jpg">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/44.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/45.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/46.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/47.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/48.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/49.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/50.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/51.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/52.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/53.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/54.png">
+<meta property="article:published_time" content="2024-11-06T04:00:00.000Z">
+<meta property="article:modified_time" content="2024-11-05T17:22:56.978Z">
+<meta property="article:author" content="0P1N">
+<meta property="article:tag" content="固件逆向">
+<meta property="article:tag" content="H3C">
+<meta property="article:tag" content="PPPoE">
+<meta property="article:tag" content="STM32">
+<meta property="article:tag" content="裸机固件">
+<meta property="article:tag" content="UDS">
+<meta property="article:tag" content="Infineon车机固件">
+<meta property="article:tag" content="UART">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://lkliki.github.io/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/1.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>三道CTF题目学习h3c路由器&amp;stm32裸机&amp;Infineon车机固件逆向 - 0P1N</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="../../../../css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="../../../../css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="../../../../css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"lkliki.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="../../../../js/utils.js" ></script>
+  <script  src="../../../../js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="../../../../index.html">
+      <strong>Welcome To 0P1N&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../index.html">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('../../../../img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="三道CTF题目学习h3c路由器&amp;stm32裸机&amp;Infineon车机固件逆向"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-11-06 12:00" pubdate>
+          2024年11月6日 中午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          26k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          219 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">三道CTF题目学习h3c路由器&amp;stm32裸机&amp;Infineon车机固件逆向</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="三道CTF题目学习h3c路由器-amp-stm32裸机-amp-Infineon车机固件逆向"><a href="#三道CTF题目学习h3c路由器-amp-stm32裸机-amp-Infineon车机固件逆向" class="headerlink" title="三道CTF题目学习h3c路由器&amp;stm32裸机&amp;Infineon车机固件逆向"></a>三道CTF题目学习h3c路由器&amp;stm32裸机&amp;Infineon车机固件逆向</h1><h2 id="2024L3hCTF-hhhc"><a href="#2024L3hCTF-hhhc" class="headerlink" title="2024L3hCTF hhhc"></a>2024L3hCTF hhhc</h2><p>考点：h3c路由器固件逆向</p>
+<p>题目描述</p>
+<figure class="highlight basic"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs basic"><span class="hljs-comment">Remember the &quot;hillst0ne&quot; challenge in L3HCTF2021?L3HSec also has an MSR3610 router deployed since 2021. Now we have decided to upgrade to a newer model, but we couldn&#x27;t find the PPPoE password. Could you locate it in the existing configuration?</span><br></code></pre></td></tr></table></figure>
+
+<p>出题人把h3c路由器的pppoe密码忘了，将其通过路由器配置信息恢复密码的经历出成了题目，还挺有趣的。</p>
+<p>没有给固件，只给了<code>startup.cfg</code>文件，里面有路由器的配置信息，如下。要求还原PPPoE协议身份验证中admin用户的密码。</p>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br></pre></td><td class="code"><pre><code class="hljs routeros">[L3HSEC-ROUTER-1]show current-configuration<br><span class="hljs-comment">#</span><br> version 7.1.064, Release 0821P16 <br><span class="hljs-comment">#</span><br> sysname L3HSEC-ROUTER-1<br><span class="hljs-comment">#</span><br>wlan global-configuration<br><span class="hljs-comment">#</span><br> security-zone intra-zone<span class="hljs-built_in"> default </span>permit<br><span class="hljs-comment">#</span><br> dhcp <span class="hljs-built_in">enable</span><br> dhcp<span class="hljs-built_in"> server </span>always-broadcast<br><span class="hljs-comment">#</span><br><span class="hljs-built_in"> dns proxy </span><span class="hljs-built_in">enable</span><br><span class="hljs-comment">#</span><br> system-working-mode standard<br> password-recovery <span class="hljs-built_in">enable</span><br><span class="hljs-comment">#</span><span class="hljs-built_in"></span><br><span class="hljs-built_in">vlan </span>1<br><span class="hljs-comment">#</span><br>dhcp<span class="hljs-built_in"> server </span>ip-pool lan1<br> gateway-list 192.168.0.1<br><span class="hljs-built_in"> network </span>192.168.0.0 mask 255.255.254.0<br><span class="hljs-built_in"> address </span>range 192.168.1.2 192.168.1.254<br> dns-list 192.168.0.1<br><span class="hljs-comment">#</span><br>controller Cellular0/0<br><span class="hljs-comment">#</span><span class="hljs-built_in"></span><br><span class="hljs-built_in">interface </span>Dialer0<br><span class="hljs-built_in"> ppp </span>chap password cipher <span class="hljs-variable">$c</span><span class="hljs-variable">$3</span><span class="hljs-variable">$TKYJXT4RmMIvPHQX</span>+5Ehf9oD3kjskIur3PGJfR/<span class="hljs-attribute">7fEyqfbx0K0DAokR0pd3rsRbWR5t9Cr3xSbYoPdogCg</span>==<br><span class="hljs-built_in"> ppp </span>chap<span class="hljs-built_in"> user </span>hustpppoe114514<br><span class="hljs-built_in"> ppp </span>pap local-user hustpppoe114514 password cipher <span class="hljs-variable">$c</span><span class="hljs-variable">$3</span><span class="hljs-variable">$3PbDU2m2</span>/6Neiiz9iO+i641UKjafFMvrfphBc3fmrZ+9Q2TZu3g5l2Hlg1gJWO6ZQLJ4S+<span class="hljs-attribute">r85qU8EQpqQQ</span>==<br>dialer bundle <span class="hljs-built_in">enable</span><br> dialer-group 2<br> dialer timer idle 0<br> dialer timer autodial 5<br><span class="hljs-built_in"> ip address </span>ppp-negotiate<br><span class="hljs-built_in"> nat </span>outbound<br><span class="hljs-comment">#</span><span class="hljs-built_in"></span><br><span class="hljs-built_in">interface </span>NULL0<br><span class="hljs-comment">#</span><span class="hljs-built_in"></span><br><span class="hljs-built_in">interface </span>GigabitEthernet0/0<br><span class="hljs-built_in"> port </span>link-mode<span class="hljs-built_in"> route</span><br><span class="hljs-built_in"></span> description LAN-interface<br><span class="hljs-built_in"> ip address </span>192.168.0.1 255.255.254.0<br> tcp mss 1280<br><span class="hljs-comment">#</span><span class="hljs-built_in"></span><br><span class="hljs-built_in">interface </span>GigabitEthernet0/1<br><span class="hljs-built_in"> port </span>link-mode<span class="hljs-built_in"> route</span><br><span class="hljs-built_in"></span><span class="hljs-comment">#</span><span class="hljs-built_in"></span><br><span class="hljs-built_in">interface </span>GigabitEthernet0/1.3647<br> vlan-type dot1q vid 3647<br><span class="hljs-built_in"> pppoe-client </span>dial-bundle-number 0<br><span class="hljs-comment">#</span><span class="hljs-built_in"></span><br><span class="hljs-built_in">interface </span>GigabitEthernet0/2<br><span class="hljs-built_in"> port </span>link-mode<span class="hljs-built_in"> route</span><br><span class="hljs-built_in"></span> combo <span class="hljs-built_in">enable</span> copper<br><span class="hljs-comment">#</span><span class="hljs-built_in"></span><br><span class="hljs-built_in">interface </span>GigabitEthernet0/3<br><span class="hljs-built_in"> port </span>link-mode<span class="hljs-built_in"> route</span><br><span class="hljs-built_in"></span> combo <span class="hljs-built_in">enable</span> copper<br><span class="hljs-comment">#</span><span class="hljs-built_in"></span><br><span class="hljs-built_in">interface </span>GigabitEthernet0/4<br><span class="hljs-built_in"> port </span>link-mode<span class="hljs-built_in"> route</span><br><span class="hljs-built_in"></span><span class="hljs-comment">#</span><span class="hljs-built_in"></span><br><span class="hljs-built_in">interface </span>GigabitEthernet0/5<br><span class="hljs-built_in"> port </span>link-mode<span class="hljs-built_in"> route</span><br><span class="hljs-built_in"></span><span class="hljs-comment">#</span><br><span class="hljs-built_in"> scheduler </span>logfile size 16<br><span class="hljs-comment">#</span><br>line class<span class="hljs-built_in"> console</span><br><span class="hljs-built_in"></span> user-role network-admin<br><span class="hljs-comment">#</span><br>line class tty<br> user-role network-operator<br><span class="hljs-comment">#</span><br>line class vty<br> user-role network-operator<br><span class="hljs-comment">#</span><br>line con 0<br> user-role network-admin<br><span class="hljs-comment">#</span><br>line vty 0 63<br> authentication-mode scheme<br> user-role network-operator<br><span class="hljs-comment">#</span><br>performance-management<br><span class="hljs-comment">#</span><br> password-control <span class="hljs-built_in">enable</span><br> undo password-control aging <span class="hljs-built_in">enable</span><br> undo password-control history <span class="hljs-built_in">enable</span><br> password-control length 6<br> password-control login-attempt 3 exceed lock-time 10<br> password-control update-interval 0<br> password-control login idle-time 0<br><span class="hljs-comment">#</span><br>domain<span class="hljs-built_in"> system</span><br><span class="hljs-built_in"></span><span class="hljs-comment">#</span><br> domain<span class="hljs-built_in"> default </span><span class="hljs-built_in">enable</span><span class="hljs-built_in"> system</span><br><span class="hljs-built_in"></span><span class="hljs-comment">#</span><br>role name level-0<br> description Predefined level-0 role<br><span class="hljs-comment">#</span><br>role name level-1<br> description Predefined level-1 role<br><span class="hljs-comment">#</span><br>role name level-2<br> description Predefined level-2 role<br><span class="hljs-comment">#</span><br>role name level-3<br> description Predefined level-3 role<br><span class="hljs-comment">#</span><br>role name level-4<br> description Predefined level-4 role<br><span class="hljs-comment">#</span><br>role name level-5<br> description Predefined level-5 role<br><span class="hljs-comment">#</span><br>role name level-6<br> description Predefined level-6 role<br><span class="hljs-comment">#</span><br>role name level-7<br> description Predefined level-7 role<br><span class="hljs-comment">#</span><br>role name level-8<br> description Predefined level-8 role<br><span class="hljs-comment">#</span><br>role name level-9<br> description Predefined level-9 role<br><span class="hljs-comment">#</span><br>role name level-10<br> description Predefined level-10 role<br><span class="hljs-comment">#</span><br>role name level-11<br> description Predefined level-11 role<br><span class="hljs-comment">#</span><br>role name level-12<br> description Predefined level-12 role<br><span class="hljs-comment">#</span><br>role name level-13<br> description Predefined level-13 role<br><span class="hljs-comment">#</span><br>role name level-14<br> description Predefined level-14 role<br><span class="hljs-comment">#</span><br>user-group<span class="hljs-built_in"> system</span><br><span class="hljs-built_in"></span><span class="hljs-comment">#</span><br>local-user admin class manage<br> service-type telnet http<br> authorization-attribute user-role network-admin<br><span class="hljs-comment">#</span><br><span class="hljs-built_in"> ip </span>http <span class="hljs-built_in">enable</span><br> web new-style<br><span class="hljs-comment">#</span><br>wlan ap-group default-group<br><span class="hljs-built_in"> vlan </span>1<br><span class="hljs-comment">#</span><br>return<br>[L3HSEC-ROUTER-1]<br></code></pre></td></tr></table></figure>
+
+<p>关键信息</p>
+<ul>
+<li>设备型号</li>
+</ul>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs">MSR3610<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>固件版本</li>
+</ul>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">version</span> <span class="hljs-number">7</span>.<span class="hljs-number">1</span>.<span class="hljs-number">064</span>, Release <span class="hljs-number">0821</span>P16<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>PPPoE密码的密文，这里chap和pap对应同一个密码</li>
+</ul>
+<figure class="highlight routeros"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs routeros">ppp chap password cipher <span class="hljs-variable">$c</span><span class="hljs-variable">$3</span><span class="hljs-variable">$TKYJXT4RmMIvPHQX</span>+5Ehf9oD3kjskIur3PGJfR/<span class="hljs-attribute">7fEyqfbx0K0DAokR0pd3rsRbWR5t9Cr3xSbYoPdogCg</span>==<span class="hljs-built_in"></span><br><span class="hljs-built_in">ppp </span>chap<span class="hljs-built_in"> user </span>hustpppoe114514<span class="hljs-built_in"></span><br><span class="hljs-built_in">ppp </span>pap local-user hustpppoe114514 password cipher <span class="hljs-variable">$c</span><span class="hljs-variable">$3</span><span class="hljs-variable">$3PbDU2m2</span>/6Neiiz9iO+i641UKjafFMvrfphBc3fmrZ+9Q2TZu3g5l2Hlg1gJWO6ZQLJ4S+<span class="hljs-attribute">r85qU8EQpqQQ</span>==<br></code></pre></td></tr></table></figure>
+
+<p>两种解题思路</p>
+<ul>
+<li><p>由于PPPoE协议的密码明文传输，可以仿真运行任意h3c路由器后导入配置，抓包查看密码</p>
+</li>
+<li><p>获取该版本固件对加密进行逆向分析</p>
+</li>
+</ul>
+<h3 id="思路1-仿真抓包"><a href="#思路1-仿真抓包" class="headerlink" title="思路1 - 仿真抓包"></a>思路1 - 仿真抓包</h3><p>参考<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1898168">PPP 会话验证：PAP和CHAP有啥区别？两张神图总结完！</a>可知PPPoE采用CS架构，有PAP和CHAP两种身份验证方式，CHAP的用户名密码传输时使用md5加密，PAP的用户名密码在从client向server传输时是<strong>明文</strong>，因此可以仿真 -&gt; 导入PAP配置 -&gt; 抓包 -&gt; 获取密码。</p>
+<p><a target="_blank" rel="noopener" href="https://www.h3c.com/cn/Service/Document_Software/Software_Download/Other_Product/H3C_Cloud_Lab/Catalog/HCL/">下载H3C网络设备模拟器-HCL</a>   笔者的计网实验课程是H3C的讲师上的，所以课内用过这个工具</p>
+<p>放两个MSR3620路由器，开启并连接GE0&#x2F;0</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/1.png" srcset="/img/loading.gif" lazyload alt="1"></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_74341869/article/details/128879230">PPPoE客户端和服务端配置参考</a>   <a target="_blank" rel="noopener" href="https://www.h3c.com/cn/d_202406/2197414_30005_0.htm">H3C PPPoE配置手册</a></p>
+<p>这里不需要进行IP相关配置，将PPPoE服务绑定在GE0&#x2F;0物理接口直连即可。同时只采用PAP身份验证，所以CHAP的信息不用配置。</p>
+<p>配置client，每5秒自动拨号一次</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs shell">system-view<br>interface Dialer0  #配置一个拨号接口，通常用于 PPPoE 连接<br>ppp pap local-user hustpppoe114514 password cipher $c$3$3PbDU2m2/6Neiiz9iO+i641UKjafFMvrfphBc3fmrZ+9Q2TZu3g5l2Hlg1gJWO6ZQLJ4S+r85qU8EQpqQQ== #指定拨号的认证方式为PPP并设置用户名和密码<br>dialer bundle enable #开启共享DDR（Dial-on-Demand Routing，按需拨号路由）<br>dialer-group 2 #应用特定的拨号组（组号为2）进行流量过滤或控制，通常与特定的 ACL（访问控制列表）配合使用。<br>dialer timer idle 0 #将空闲断线计时器设置为 0，意味着接口不会因为没有流量而自动断开<br>dialer timer autodial 5  #如果连接断开或没有建立连接，每隔 5 秒自动尝试重新拨号<br>ip address ppp-negotiate #配置接口从 PPPoE 服务器动态协商获得 IP 地址<br>nat outbound #启用出站流量的 NAT 功能，使内部网络可以通过该接口访问公网<br>exit<br>interface GigabitEthernet0/0 #进入物理接口GigabitEthernet0/0的配置<br>port link-mode route #将端口模式设置为路由模式，表示该接口将进行数据包转发，而不是数据交换（常用于 WAN 接口）<br>pppoe-client dial-bundle-number 0  #将物理接口与拨号接口（dial bundle 0）关联，以启动 PPPoE 连接<br>exit<br></code></pre></td></tr></table></figure>
+
+<p>配置server</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs shell">system-view<br>interface virtual-template 1 #配置虚拟模板接口 1，用于 PPPoE 服务器端的接口模板<br>ppp authentication-mode pap domain dm1 #设置 PPP 的认证模式为 PAP，并指定认证域为 dm1<br>quit<br>interface gigabitethernet 0/0 #进入GE0/0物理接口配置<br>pppoe-server bind virtual-template 1 #将物理接口绑定到虚拟模板接口 1，使 GigabitEthernet 0/0 能够作为 PPPoE 服务器的服务接口<br>quit<br>local-user hustpppoe114514 class network     #配置一个本地用户，用户名为 hustpppoe114514，并将用户类型设为 network <br>password cipher $c$3$3PbDU2m2/6Neiiz9iO+i641UKjafFMvrfphBc3fmrZ+9Q2TZu3g5l2Hlg1gJWO6ZQLJ4S+r85qU8EQpqQQ== #配置用户的密码<br>service-type ppp #将用户的服务类型设置为ppp     <br>quit<br></code></pre></td></tr></table></figure>
+
+<p>右键连线开启抓包，开启wireshark得到密码</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/2.png" srcset="/img/loading.gif" lazyload alt="2"></p>
+<figure class="highlight smali"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs smali">L3HCTF&#123;pPp0e_mus7_s@v3_pla1ntex7_pswdDddD&#125;<br></code></pre></td></tr></table></figure>
+
+
+
+<h3 id="思路2-逆向固件"><a href="#思路2-逆向固件" class="headerlink" title="思路2 - 逆向固件"></a>思路2 - 逆向固件</h3><h4 id="获取固件"><a href="#获取固件" class="headerlink" title="获取固件"></a>获取固件</h4><p>华为&#x2F;h3c的固件需要授权账号才能下载，所以只能通过其它渠道获取固件。</p>
+<p>该版本固件似乎应用于一系列路由器，我们只要找到其中一种即可</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/3.png" srcset="/img/loading.gif" lazyload alt="3"></p>
+<p>找到MER8300的该版本固件</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/4.png" srcset="/img/loading.gif" lazyload alt="4"></p>
+<p>下载后解压得到固件<code>MER8300-CMW710-R0821P16.ipe</code></p>
+<h4 id="固件解包"><a href="#固件解包" class="headerlink" title="固件解包"></a>固件解包</h4><p>ipe是H3C自研的固件打包格式，如果不按照打包格式进行解包，直接binwalk只能获取一堆零散的文件</p>
+<p>如果有H3C设备，可以参考该<a target="_blank" rel="noopener" href="https://zhiliao.h3c.com/questions/dispcont/85586">文章</a>通过install命令解包ipe固件</p>
+<p>github上有ipe固件解包脚本 - <a target="_blank" rel="noopener" href="https://github.com/zzxzhuo/H3C-IPE-Unarchiver">H3C-IPE-Unarchiver</a>，但是只能提取出固件的各个分区文件，还要继续分析分区文件</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/5.png" srcset="/img/loading.gif" lazyload alt="5"></p>
+<p>除了system分区，其余分区内容都很少，包括PPPoE相关程序在内的大部分内容位于system分区文件中</p>
+<p>通过不断的对比分析，发现对于各个分区文件，有如下的通用格式</p>
+<p>其中有一些未知的数据，但是最关键的文件名、文件大小和文件本身都有了</p>
+<figure class="highlight asciidoc"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs asciidoc"><span class="hljs-section">0x188c 分区整体头部</span><br><span class="hljs-section">-------------------------</span><br>0x68 unknown<span class="hljs-emphasis">_struct</span><br><span class="hljs-emphasis">0xE0 filename</span><br><span class="hljs-emphasis">0x4 file_size</span><br><span class="hljs-emphasis">0x4 unknown_var</span><br><span class="hljs-emphasis">0x4 padding(FF FF FF FF)</span><br><span class="hljs-emphasis">文件本身,大小取决于file_size</span><br><span class="hljs-emphasis">-------------------------</span><br><span class="hljs-emphasis">0x68 unknown_struct</span><br><span class="hljs-emphasis">0xE0 filename</span><br><span class="hljs-emphasis">0x4 file_size</span><br><span class="hljs-emphasis">0x4 unknown</span><br><span class="hljs-emphasis">0x4 padding(FF FF FF FF)</span><br><span class="hljs-emphasis">文件本身,大小取决于file_size</span><br><span class="hljs-emphasis">-------------------------</span><br><span class="hljs-emphasis">0x68 unknown_struct</span><br><span class="hljs-emphasis">0xE0 filename</span><br><span class="hljs-emphasis">0x4 file_size</span><br><span class="hljs-emphasis">0x4 unknown</span><br><span class="hljs-emphasis">0x4 padding(FF FF FF FF)</span><br><span class="hljs-emphasis">文件本身,大小取决于file_</span>size<br><span class="hljs-code">-------------------------</span><br><span class="hljs-code">............</span><br></code></pre></td></tr></table></figure>
+
+<p>这里可以开发一个提取的脚本作为对原本项目的补充，但是笔者最近比较忙，先开个坑日后再填</p>
+<p>同样对比分析其它分区文件可知文件系统位于<code>mpu.cpio.xz</code>中，提取出该文件</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/6.png" srcset="/img/loading.gif" lazyload alt="6"></p>
+<p>另外，LianSecurity的IOT分析工具Shambles可以一键解包出该固件的文件系统并自动分析固件信息和潜在漏洞，非常好用，如图</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/7.png" srcset="/img/loading.gif" lazyload alt="7"></p>
+<h4 id="定位加解密代码"><a href="#定位加解密代码" class="headerlink" title="定位加解密代码"></a>定位加解密代码</h4><h5 id="逆向分析"><a href="#逆向分析" class="headerlink" title="逆向分析"></a>逆向分析</h5><p>密文是base64，我们搜索包含base64码表的文件，根据文件名判断加密可能存在于<code>/lib/libcrypto.so.1.1.1.185</code>、<code>/lib/liblauth.so.1.1.1.602</code>、<code>/lib/libencrypt.so.0.0.0.14</code></p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/8.png" srcset="/img/loading.gif" lazyload alt="8"></p>
+<p>最终在<code>/lib/libencrypt.so.0.0.0.14</code>找到了符合加解密特征的函数<code>PASSWORD_Encrypt</code>和<code>PASSWORD_Decrypt</code></p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/9.png" srcset="/img/loading.gif" lazyload alt="9"></p>
+<h5 id="正向分析"><a href="#正向分析" class="headerlink" title="正向分析"></a>正向分析</h5><p>在服务程序校验客户端传来的用户名密码的过程中必然存在解密操作，因此我们将pppoe相关的服务程序作为切入点。在目录搜索ppp，如下</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/10.png" srcset="/img/loading.gif" lazyload alt="10"></p>
+<p>pppoecd和pppoesd是pppoe服务程序，分别负责维护和管理PPPoE连接、发现和协商PPPoE会话，但是其中并没有用户认证相关代码。</p>
+<p>参考<a target="_blank" rel="noopener" href="https://blog.csdn.net/jzzjsy/article/details/14450057">PPPOE和pppd的流程详解</a>，PPPOE协议是基于PPP协议的协议，在PPPOE应用程序中并没有将PPP协议实现，PPP协议是由PPPD这个用户空间程序实现的。逆向分析图中的PPPD程序，我们可以发现PAP和CHAP两种身份认证的处理函数中都用到了<code>PASSWORD_Decrypt</code>函数。<img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/11.png" srcset="/img/loading.gif" lazyload alt="11"></p>
+<p>部分函数调用链如下:</p>
+<ul>
+<li>PAP</li>
+</ul>
+<p>main -&gt; PPP_Worker_DataInit -&gt; PPP_PACKET_Create -&gt; ppp_packet_Create -&gt; sub_120067D10 -&gt; sub_120067BD8 -&gt; PPP_PROTO_ReceivePacket -&gt; PPP_NEGO_ProcPacket&#x2F;PPP_NEGO_ProcAAAMsg -&gt; PPP_PAP_ReceivePacket&#x2F;PPP_PAP_ReceiveEvent -&gt; sub_1200A6700 -&gt; PASSWORD_Decrypt</p>
+<ul>
+<li>CHAP</li>
+</ul>
+<p> main -&gt; PPP_Worker_DataInit -&gt; PPP_PACKET_Create -&gt; ppp_packet_Create -&gt; sub_120067D10 -&gt; sub_120067BD8 -&gt; PPP_PROTO_ReceivePacket -&gt; PPP_NEGO_ProcPacket -&gt; PPP_CHAP_ReceivePacket -&gt; sub_120085B60 -&gt; PASSWORD_Decrypt</p>
+<p>以及pppd中的<code>LAUTH_GetUserPassword</code>也调用了<code>PASSWORD_Decrypt</code>函数，该函数来自<code>/lib/liblauth.so.1.1.1.602</code>库文件</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/12.png" srcset="/img/loading.gif" lazyload alt="Q12"></p>
+<p><code>readelf -d</code>查看pppd程序链接了哪些库</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash">readelf -d pppd</span><br><br>Dynamic section at offset 0xce0 contains 56 entries:<br>  Tag        Type                         Name/Value<br> 0x0000000000000001 (NEEDED)             Shared library: [libdl.so.0]<br> 0x0000000000000001 (NEEDED)             Shared library: [libpthread.so.0]<br> 0x0000000000000001 (NEEDED)             Shared library: [libsystem.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libipbase.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libcioctl.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libdns.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libcryptoex.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libcrypto.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libencrypt.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libkevent.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libpam.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libdombasic.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libl3vpn.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libppp.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [liblauth.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libbitmap.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libcli.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libddr.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libmor.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libvlan.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libaclmgr.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libif.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libtcmalloc.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libtrange.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libdhcpsr.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [librtstatic.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libvsrp.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libsync.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libchannel.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libeth.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libancp.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libip6addr.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libmemalert.so]<br> 0x0000000000000001 (NEEDED)             Shared library: [libgcc_s.so.1]<br> 0x0000000000000001 (NEEDED)             Shared library: [libc.so.0]<br></code></pre></td></tr></table></figure>
+
+<p><code>nm -D</code> + <code>grep</code>查看哪个库中定义了<code>PASSWORD_Decrypt</code>函数</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell"><span class="hljs-meta prompt_">$ </span><span class="language-bash">nm -D libencrypt.so.0.0.0.14  | grep PASSWORD_Decrypt</span><br>0000000000003728 T PASSWORD_Decrypt<br>0000000000003358 T PASSWORD_DecryptBin<br></code></pre></td></tr></table></figure>
+
+<p>最终定位到<code>libencrypt.so.0.0.0.14</code></p>
+<h4 id="分析加密算法"><a href="#分析加密算法" class="headerlink" title="分析加密算法"></a>分析加密算法</h4><p>将16字节随机数(IV)和password传入加密函数sub_2FC8</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/13.png" srcset="/img/loading.gif" lazyload alt="13"></p>
+<p>sub_2FC8中操作如下</p>
+<ul>
+<li>KEY_GetKey生成AES初始密钥</li>
+<li>拼接16字节IV和password，存在data</li>
+<li>由初始密钥enc_key生成加密密钥AES_key</li>
+<li>使用IV和密钥AES_key加密data中0x10偏移处的password</li>
+<li>对data进行base64编码后在开头拼接<code>$c$3$</code>，加密完成并返回</li>
+</ul>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/14.png" srcset="/img/loading.gif" lazyload alt="14"></p>
+<p>分析KEY_GetKey函数生成AES初始密钥的过程</p>
+<p> 读取了<code>/etc/key-data</code>文件，并且从0x102偏移开始解析数据</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/15.png" srcset="/img/loading.gif" lazyload alt="15"></p>
+<p>解析了每个区块并将ID和CT_SIZE存入全局缓冲区</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/16.png" srcset="/img/loading.gif" lazyload alt="16"></p>
+<p>进入KEY_GetKeyData继续解析</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/17.png" srcset="/img/loading.gif" lazyload alt="17"></p>
+<p>对密钥数据也进行AES-CTR解密</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/18.png" srcset="/img/loading.gif" lazyload alt="18"></p>
+<p>解密密钥数据用的初始密钥是由Key_data[2:102]数据以如下方式生成的哈希</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/19.png" srcset="/img/loading.gif" lazyload alt="19"></p>
+<p>总结：key_data的0x2-0x102是用于生成初始密钥的数据，0x102偏移开始数据分为一个个区块，每个区块结构如下</p>
+<ul>
+<li>1-2字节为区块ID</li>
+<li>3-4字节为加密后AES密钥的密文长度</li>
+<li>5-20字节是IV</li>
+<li>AES密钥的密文(CT)</li>
+</ul>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/20.png" srcset="/img/loading.gif" lazyload alt="20"></p>
+<h4 id="解密密码"><a href="#解密密码" class="headerlink" title="解密密码"></a>解密密码</h4><p>先获取这里的初始密钥</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/21.png" srcset="/img/loading.gif" lazyload alt="21"></p>
+<p>如图，用的是第4区块的数据，结构如下</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">ID</span><br><span class="hljs-attribute">00</span> <span class="hljs-number">04</span> <br><span class="hljs-attribute">CT_SIZE</span><br><span class="hljs-attribute">00</span> <span class="hljs-number">34</span> <br><span class="hljs-attribute">IV</span><br><span class="hljs-attribute">9B</span> <span class="hljs-number">33</span> AE DE <span class="hljs-number">8</span>E <span class="hljs-number">29</span> B2 <span class="hljs-number">2</span>A <span class="hljs-number">9</span>E D1 <span class="hljs-number">8</span>C <span class="hljs-number">1</span>D CD A7 <span class="hljs-number">32</span> <span class="hljs-number">58</span> <br><span class="hljs-attribute">CT</span><br><span class="hljs-attribute">DF</span> BF <span class="hljs-number">4</span>E <span class="hljs-number">75</span> AD D5 <span class="hljs-number">29</span> <span class="hljs-number">2</span>B <span class="hljs-number">54</span> <span class="hljs-number">78</span> BE <span class="hljs-number">47</span> <span class="hljs-number">89</span> <span class="hljs-number">04</span> <span class="hljs-number">14</span> <span class="hljs-number">8</span>A <span class="hljs-number">34</span> <span class="hljs-number">7</span>B F4 FD EC FC <span class="hljs-number">7</span>A EE <span class="hljs-number">87</span> AF <span class="hljs-number">83</span> C6 <span class="hljs-number">2</span>E <span class="hljs-number">3</span>B <span class="hljs-number">0</span>B <span class="hljs-number">26</span> <span class="hljs-number">42</span> <span class="hljs-number">2</span>F <span class="hljs-number">13</span> <span class="hljs-number">48</span> <span class="hljs-number">07</span> <span class="hljs-number">0</span>B <span class="hljs-number">44</span> <span class="hljs-number">65</span> AD A8 CA <span class="hljs-number">0</span>F F4 <span class="hljs-number">8</span>D <span class="hljs-number">96</span> <span class="hljs-number">10</span> <span class="hljs-number">84</span> <span class="hljs-number">68</span> <span class="hljs-number">7</span>B <span class="hljs-number">6</span>A<br></code></pre></td></tr></table></figure>
+
+<p>生成解密密钥数据用的密钥</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> hashlib <span class="hljs-keyword">import</span> sha512<br><br>fp = <span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;key-data&quot;</span>,<span class="hljs-string">&#x27;rb&#x27;</span>)<br>data = fp.read()[<span class="hljs-number">0x2</span>:<span class="hljs-number">0x102</span>]<br>a = sha512()<br>a.update(data[<span class="hljs-number">0x40</span>:<span class="hljs-number">0x80</span>])<br>a.update(data[<span class="hljs-number">0x0</span>:<span class="hljs-number">0x40</span>])<br>a.update(data[<span class="hljs-number">0x80</span>:])<br><span class="hljs-built_in">print</span>(a.digest()[:<span class="hljs-number">0x20</span>].<span class="hljs-built_in">hex</span>())<br><span class="hljs-comment">#ecc679703bb2daf7c09a941cb992dcdd03150e0f67ed9b32a548d8624add9c07</span><br></code></pre></td></tr></table></figure>
+
+<p>获得解密PASSWORD用的密钥数据</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/22.png" srcset="/img/loading.gif" lazyload alt="22"></p>
+<p>密钥数据格式如下</p>
+<figure class="highlight llvm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs llvm">IV_SIZE<br><span class="hljs-number">0010</span><br>KEY_SIZE<br><span class="hljs-number">0020</span><br>IV<br><span class="hljs-keyword">c</span><span class="hljs-number">695</span><span class="hljs-keyword">c</span><span class="hljs-number">466</span>f<span class="hljs-number">32e90</span>d<span class="hljs-number">0</span>fb<span class="hljs-number">12</span>ed<span class="hljs-number">31</span><span class="hljs-keyword">c</span><span class="hljs-number">5</span><span class="hljs-keyword">c</span><span class="hljs-number">72265</span><br>KEY<br>a<span class="hljs-number">2e6658865746</span>b<span class="hljs-number">4</span>b<span class="hljs-number">954</span>f<span class="hljs-number">0</span>bd<span class="hljs-number">37</span>fd<span class="hljs-number">1</span>ece<span class="hljs-number">03</span>b<span class="hljs-number">1</span>acb<span class="hljs-number">47</span>fbc<span class="hljs-number">543</span>ec<span class="hljs-number">32</span>d<span class="hljs-number">35987</span>b<span class="hljs-number">20</span>b<span class="hljs-number">6866</span><br></code></pre></td></tr></table></figure>
+
+<p>对CHAP的PASSWORD的密文解BSAE64(不知道为什么不能解密PAP的数据，可能因为PAP传输明文不需要解密?)</p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-comment">#CHAP</span><br><span class="hljs-attribute">IV</span><br><span class="hljs-attribute">4c</span> a6 <span class="hljs-number">09</span> <span class="hljs-number">5</span>d <span class="hljs-number">3</span>e <span class="hljs-number">11</span> <span class="hljs-number">98</span> c2 <span class="hljs-number">2</span>f <span class="hljs-number">3</span>c <span class="hljs-number">74</span> <span class="hljs-number">17</span> fb <span class="hljs-number">91</span> <span class="hljs-number">21</span> <span class="hljs-number">7</span>f <br><span class="hljs-attribute">CT</span><br><span class="hljs-attribute">da</span> <span class="hljs-number">03</span> de <span class="hljs-number">48</span> ec <span class="hljs-number">90</span> <span class="hljs-number">8</span>b ab dc f1 <span class="hljs-number">89</span> <span class="hljs-number">7</span>d <span class="hljs-number">1</span>f fb <span class="hljs-number">7</span>c <span class="hljs-number">4</span>c aa <span class="hljs-number">7</span>d bc <span class="hljs-number">74</span> <span class="hljs-number">2</span>b <span class="hljs-number">40</span> c0 a2 <span class="hljs-number">44</span> <span class="hljs-number">74</span> a5 dd eb b1 <span class="hljs-number">16</span> d6 <span class="hljs-number">47</span> <span class="hljs-number">9</span>b <span class="hljs-number">7</span>d <span class="hljs-number">0</span>a bd f1 <span class="hljs-number">49</span> b6 <span class="hljs-number">28</span> <span class="hljs-number">3</span>d da <span class="hljs-number">20</span> <span class="hljs-number">0</span>a<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/23.png" srcset="/img/loading.gif" lazyload alt="23"></p>
+<h2 id="2024SCTF-uds"><a href="#2024SCTF-uds" class="headerlink" title="2024SCTF uds"></a>2024SCTF uds</h2><p>考点：STM32单片机裸机固件逆向、uds诊断服务</p>
+<p>题目描述</p>
+<figure class="highlight applescript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs applescript">能告诉我汽车的VIN码吗？<br>Can you <span class="hljs-keyword">tell</span> <span class="hljs-keyword">me</span> <span class="hljs-keyword">the</span> VIN <span class="hljs-built_in">number</span> <span class="hljs-keyword">of</span> <span class="hljs-keyword">the</span> car?<br></code></pre></td></tr></table></figure>
+
+<p>给了32位arm小端裸机固件<code>uds.hex</code>，内含uds诊断服务代码，程序源码修改自<a target="_blank" rel="noopener" href="https://github.com/driftregion/iso14229">iso14229</a>仓库，要求逆向固件得到汽车的VIN码</p>
+<h3 id="Intel-Hex文件格式"><a href="#Intel-Hex文件格式" class="headerlink" title="Intel Hex文件格式"></a>Intel Hex文件格式</h3><p>关于hex文件</p>
+<figure class="highlight autoit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs autoit">以*.<span class="hljs-built_in">hex</span>为后缀的文件我们称之为<span class="hljs-built_in">HEX</span>文件。<span class="hljs-built_in">hex</span>是intel规定的标准，<span class="hljs-built_in">hex</span>的全称是Intel <span class="hljs-built_in">HEX</span>，此类文件通常用于传输将被存于ROM或EEPROM中的程序和数据。是由一行行符合Intel <span class="hljs-built_in">HEX</span>文件格式的文本所构成的ASCII文本文件。<br>这种文件格式主要用于保存单片机固件。<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/Intel_HEX">Intel HEX wikipedia</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.cnblogs.com/aqing1987/p/4185362.html">读懂 Intel Hex 文件</a></li>
+</ul>
+<p>以本题的<code>uds.hex</code>为例</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs shell">:020000040800F2   <br>:10000000B0490020AD020008A7241008BD03000875<br>......<br>:104EE000D1421052015890D0030090D00302180113<br>:020000040810E2<br>:10000000202A04DB203A00FA02F1002070479140D8<br>......<br>:104EB00061206C6172676572206275666665720A50<br>:044EC00000000000EE<br>:040000050800029954<br>:00000001FF<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><code>:020000040800F2</code>是拓展线性地址记录，指定了地址空间的高16位为<code>0x0800</code></li>
+<li><code>:020000040810E2</code>也是拓展线性地址记录，指定从此地址空间的高16位为<code>0x0810</code></li>
+<li><code>:104EB00061206C6172676572206275666665720A50</code>表示将0x10字节的数据<code>00 61 20 6C 61 72 67 65 72 20 62 75 66 66 65 72 0A 50</code>存放在(线性拓展地址 &lt;&lt; 4 + 0x4EB0)地址的存储空间</li>
+<li><code>:040000050800029954</code>是启动线性地址记录，表示程序起始执行地址为<code>0x08000298+1</code>，根据arm规范，这里的末位的1是thumb指示位，所以实际起始地址为<code>0x08000298</code>，采用16位的thumb指令集。</li>
+<li>其余语句都是类似<code>:104EB00061206C6172676572206275666665720A50</code>的数据长度 + 地址 + 数据</li>
+</ul>
+<p>hex和bin文件转换有如下几种方式</p>
+<ul>
+<li>objcopy工具(gnulinux自带无需安装)</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">objcopy -I ihex -O binary input.hex output.bin  #hex -&gt; bin<br>objcopy -I binary -O ihex input.bin output.hex  #bin -&gt; hex<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><a target="_blank" rel="noopener" href="https://srecord.sourceforge.net/">SRecord软件包</a>中的srec_cat工具</li>
+</ul>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs shell">sudo apt install srecord #安装srecord包<br>srec_cat uds.hex -intel -offset -0x08000000 -o uds.bin -binary #hex -&gt; bin<br>srec_cat uds.bin -binary -offset -0x08000000 -o uds.hex -intel #bin -&gt; hex<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li><p>Hexview</p>
+<p>Vector公司的产品CANape中的一个小工具，官方渠道是到<a target="_blank" rel="noopener" href="https://www.vector.com/at/en/support-downloads/download-center">官网</a>下载CANape包找出Hexview。有好人单独分享了<a target="_blank" rel="noopener" href="https://gitcode.com/open-source-toolkit/6b787">Hexview工具</a>。</p>
+</li>
+</ul>
+<p>srec工具转换得到的bin文件很大，ida打开直接卡死，所以建议用objcopy和HexView </p>
+<h3 id="如何正确反编译"><a href="#如何正确反编译" class="headerlink" title="如何正确反编译"></a>如何正确反编译</h3><p>rom基址是0x08000000，程序入口在0x08000298，使用16位的thumb指令集，ram基址根据代码判断为0x20000000</p>
+<p>包括VIN密文在内的很多变量存储在ram中，需要进行设置，否则会如图所示爆红</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/24.png" srcset="/img/loading.gif" lazyload alt="24"></p>
+<p>还有一些爆红的变量，并不影响关键代码的逆向，不处理也没关系。对0x58024410这个地址进行信息搜集可以判断这是AHB总线的地址，猜测出题人用的设备应该是STM32，CPU型号是Cortex-M系列，指令集为ARMv7-M兼容16位thumb</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/25.png" srcset="/img/loading.gif" lazyload alt="25"></p>
+<h4 id="反编译intel-hex格式"><a href="#反编译intel-hex格式" class="headerlink" title="反编译intel hex格式"></a>反编译intel hex格式</h4><p>ida能自动解析Intel hex格式，这意味着hex文件中包含的信息都不需要再手动设置，但是hex中没有ram信息，所以ram段要我们自己创建，ram基址需要自己判断。</p>
+<p>拖进32位ida选择<code>arm Little Endian</code>打开<code>uds.hex</code></p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/26.png" srcset="/img/loading.gif" lazyload alt="26"></p>
+<p>Edit -&gt; Segments -&gt; Create segment，添加ram段</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/27.png" srcset="/img/loading.gif" lazyload alt="27"></p>
+<p>创建ram段后其它变量正常了，vin变量还是地址形式，右键set call type转换参数类型</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/28.png" srcset="/img/loading.gif" lazyload alt="28"></p>
+<p>重命名为vin</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/29.png" srcset="/img/loading.gif" lazyload alt="29"></p>
+<h4 id="反编译bin格式"><a href="#反编译bin格式" class="headerlink" title="反编译bin格式"></a>反编译bin格式</h4><p>对于bin格式，参考该<a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-1732800-1-1.html">文章</a>，ROM段、RAM段都要手动创建，还需要手动到程序入口点或<code>reset handler</code>切换至16位thumb。</p>
+<p>hex.bin拖进32位ida，处理器选<code>arm Little-endian</code>打开，跳出memory映射结构设置界面，按下图设置，然后OK</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/30.png" srcset="/img/loading.gif" lazyload alt="30"></p>
+<p>打开后先看到ROM的首地址，对于STM32固件，这里存放了中断向量表(也可以设置到ram中)，CPU上电后就靠中断向量表来完成初始化工作，如图：</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/31.png" srcset="/img/loading.gif" lazyload alt="31"></p>
+<p>stm32手册中可以看到中断向量表中各个项的含义，这里只展示部分，第一项是复位后栈顶sp的初始值，第二项是reset handler，后面都是不同中断服务的函数地址，用于触发对应中断时查表跳转执行。</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/32.png" srcset="/img/loading.gif" lazyload alt="32"></p>
+<p>关于reset handler：CPU上电后先设置SP，再将PC设置为reset handler跳转执行。然后先执行SystemInit设置系统时钟，再调用__main函数，也就是上文从hex文件解析出来的程序入口点。</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/33.png" srcset="/img/loading.gif" lazyload alt="33"></p>
+<p>这里reset handler的值是0x80002AD(0x80002AC+1)，最后一位按照arm规范，是thumb指示位，1表示目标地址采用thumb16指令集。</p>
+<p>所以我们按G跳转到<code>0x80002AC</code>，再按<code>Alt+G</code>，把段寄存器T的值设置为1，表示使用16位的thumb指令集，再按c就可以反编译了</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/34.png" srcset="/img/loading.gif" lazyload alt="34"></p>
+<p>反编译reset handler后大量函数也被自动分析出来了，但是并不全，有大量函数被遗漏了。我们大片选中ROM中的数据(图中箭头指的部分)直接按c全部反编译即可</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/35.png" srcset="/img/loading.gif" lazyload alt="35"></p>
+<h3 id="分析代码，获取VIN"><a href="#分析代码，获取VIN" class="headerlink" title="分析代码，获取VIN"></a>分析代码，获取VIN</h3><p>从CTF做题的角度看，思路是Findcrypt找到tea特征，查看交叉引用追溯到<code>sub_80043E8</code>函数，找到如下解密VIN的逻辑</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/36.png" srcset="/img/loading.gif" lazyload alt="36"></p>
+<p>但既然是复现，为了加深理解，我们对照<a target="_blank" rel="noopener" href="https://github.com/driftregion/iso14229/tree/v0.7.1">源码</a>梳理程序的逻辑，以下是从源码提取出的相关代码</p>
+<p>&#x2F;src&#x2F;server.c</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">static</span> <span class="hljs-type">uint8_t</span> <span class="hljs-title function_">EmitEvent</span><span class="hljs-params">(UDSServer_t *srv, UDSServerEvent_t evt, <span class="hljs-type">void</span> *data)</span> &#123;<br>    <span class="hljs-keyword">if</span> (srv-&gt;fn) &#123;<br>        <span class="hljs-keyword">return</span> srv-&gt;fn(srv, evt, data);<br>    &#125; <span class="hljs-keyword">else</span> &#123;<br>        UDS_DBG_PRINT(<span class="hljs-string">&quot;Unhandled UDSServerEvent %d, srv.fn not installed!\n&quot;</span>, evt);<br>        <span class="hljs-keyword">return</span> kGeneralReject;<br>    &#125;<br>&#125;<br><span class="hljs-type">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-type">uint8_t</span> <span class="hljs-title function_">NegativeResponse</span><span class="hljs-params">(UDSReq_t *r, <span class="hljs-type">uint8_t</span> response_code)</span> &#123;<br>    r-&gt;send_buf[<span class="hljs-number">0</span>] = <span class="hljs-number">0x7F</span>;<br>    r-&gt;send_buf[<span class="hljs-number">1</span>] = r-&gt;recv_buf[<span class="hljs-number">0</span>];<br>    r-&gt;send_buf[<span class="hljs-number">2</span>] = response_code;<br>    r-&gt;send_len = UDS_NEG_RESP_LEN;<br>    <span class="hljs-keyword">return</span> response_code;<br>&#125;<br><br><span class="hljs-type">static</span> <span class="hljs-type">uint8_t</span> _0x27_SecurityAccess(UDSServer_t *srv, UDSReq_t *r) &#123;<br>    <span class="hljs-type">uint8_t</span> subFunction = r-&gt;recv_buf[<span class="hljs-number">1</span>];<br>    <span class="hljs-type">uint8_t</span> response = kPositiveResponse;<br><br>    <span class="hljs-keyword">if</span> (UDSSecurityAccessLevelIsReserved(subFunction)) &#123;<br>        <span class="hljs-keyword">return</span> NegativeResponse(r, kIncorrectMessageLengthOrInvalidFormat);<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (!UDSTimeAfter(UDSMillis(), srv-&gt;sec_access_boot_delay_timer)) &#123;<br>        <span class="hljs-keyword">return</span> NegativeResponse(r, kRequiredTimeDelayNotExpired);<br>    &#125;<br><br>    <span class="hljs-keyword">if</span> (!(UDSTimeAfter(UDSMillis(), srv-&gt;sec_access_auth_fail_timer))) &#123;<br>        <span class="hljs-keyword">return</span> NegativeResponse(r, kExceedNumberOfAttempts);<br>    &#125;<br><br>    r-&gt;send_buf[<span class="hljs-number">0</span>] = UDS_RESPONSE_SID_OF(kSID_SECURITY_ACCESS);<br>    r-&gt;send_buf[<span class="hljs-number">1</span>] = subFunction;<br>    r-&gt;send_len = UDS_0X27_RESP_BASE_LEN;<br><br>    <span class="hljs-comment">// Even: sendKey</span><br>    <span class="hljs-keyword">if</span> (<span class="hljs-number">0</span> == subFunction % <span class="hljs-number">2</span>) &#123;<br>        <span class="hljs-type">uint8_t</span> requestedLevel = subFunction - <span class="hljs-number">1</span>;<br>        UDSSecAccessValidateKeyArgs_t args = &#123;<br>            .level = requestedLevel,<br>            .key = &amp;r-&gt;recv_buf[UDS_0X27_REQ_BASE_LEN],<br>            .len = r-&gt;recv_len - UDS_0X27_REQ_BASE_LEN,<br>        &#125;;<br><br>        response = EmitEvent(srv, UDS_SRV_EVT_SecAccessValidateKey, &amp;args);<br><br>        <span class="hljs-keyword">if</span> (kPositiveResponse != response) &#123;<br>            srv-&gt;sec_access_auth_fail_timer =<br>                UDSMillis() + UDS_SERVER_0x27_BRUTE_FORCE_MITIGATION_AUTH_FAIL_DELAY_MS;<br>            <span class="hljs-keyword">return</span> NegativeResponse(r, response);<br>        &#125;<br><br>        <span class="hljs-comment">// &quot;requestSeed = 0x01&quot; identifies a fixed relationship between</span><br>        <span class="hljs-comment">// &quot;requestSeed = 0x01&quot; and &quot;sendKey = 0x02&quot;</span><br>        <span class="hljs-comment">// &quot;requestSeed = 0x03&quot; identifies a fixed relationship between</span><br>        <span class="hljs-comment">// &quot;requestSeed = 0x03&quot; and &quot;sendKey = 0x04&quot;</span><br>        srv-&gt;securityLevel = requestedLevel;<br>        r-&gt;send_len = UDS_0X27_RESP_BASE_LEN;<br>        <span class="hljs-keyword">return</span> kPositiveResponse;<br>    &#125;<br><br>    <span class="hljs-comment">// Odd: requestSeed</span><br>    <span class="hljs-keyword">else</span> &#123;<br>        <span class="hljs-comment">/* If a server supports security, but the requested security level is already unlocked when</span><br><span class="hljs-comment">        a SecurityAccess ‘requestSeed’ message is received, that server shall respond with a</span><br><span class="hljs-comment">        SecurityAccess ‘requestSeed’ positive response message service with a seed value equal to</span><br><span class="hljs-comment">        zero (0). The server shall never send an all zero seed for a given security level that is</span><br><span class="hljs-comment">        currently locked. The client shall use this method to determine if a server is locked for a</span><br><span class="hljs-comment">        particular security level by checking for a non-zero seed.</span><br><span class="hljs-comment">        */</span><br>        <span class="hljs-keyword">if</span> (subFunction == srv-&gt;securityLevel) &#123;<br>            <span class="hljs-comment">// Table 52 sends a response of length 2. Use a preprocessor define if this needs</span><br>            <span class="hljs-comment">// customizing by the user.</span><br>            <span class="hljs-type">const</span> <span class="hljs-type">uint8_t</span> already_unlocked[] = &#123;<span class="hljs-number">0x00</span>, <span class="hljs-number">0x00</span>&#125;;<br>            <span class="hljs-keyword">return</span> safe_copy(srv, already_unlocked, <span class="hljs-keyword">sizeof</span>(already_unlocked));<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            UDSSecAccessRequestSeedArgs_t args = &#123;<br>                .level = subFunction,<br>                .dataRecord = &amp;r-&gt;recv_buf[UDS_0X27_REQ_BASE_LEN],<br>                .len = r-&gt;recv_len - UDS_0X27_REQ_BASE_LEN,<br>                .copySeed = safe_copy,<br>            &#125;;<br><br>            response = EmitEvent(srv, UDS_SRV_EVT_SecAccessRequestSeed, &amp;args);<br><br>            <span class="hljs-keyword">if</span> (kPositiveResponse != response) &#123;<br>                <span class="hljs-keyword">return</span> NegativeResponse(r, response);<br>            &#125;<br><br>            <span class="hljs-keyword">if</span> (r-&gt;send_len &lt;= UDS_0X27_RESP_BASE_LEN) &#123; <span class="hljs-comment">// no data was copied</span><br>                <span class="hljs-keyword">return</span> NegativeResponse(r, kGeneralProgrammingFailure);<br>            &#125;<br>            <span class="hljs-keyword">return</span> kPositiveResponse;<br>        &#125;<br>    &#125;<br>    <span class="hljs-keyword">return</span> NegativeResponse(r, kGeneralProgrammingFailure);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>&#x2F;src&#x2F;uds.h</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">UDSServerEvent</span> &#123;</span><br>    UDS_SRV_EVT_DiagSessCtrl,         <span class="hljs-comment">// UDSDiagSessCtrlArgs_t *</span><br>    UDS_SRV_EVT_EcuReset,             <span class="hljs-comment">// UDSECUResetArgs_t *</span><br>    UDS_SRV_EVT_ReadDataByIdent,      <span class="hljs-comment">// UDSRDBIArgs_t *</span><br>    UDS_SRV_EVT_ReadMemByAddr,        <span class="hljs-comment">// UDSReadMemByAddrArgs_t *</span><br>    UDS_SRV_EVT_CommCtrl,             <span class="hljs-comment">// UDSCommCtrlArgs_t *</span><br>    UDS_SRV_EVT_SecAccessRequestSeed, <span class="hljs-comment">// UDSSecAccessRequestSeedArgs_t *</span><br>    UDS_SRV_EVT_SecAccessValidateKey, <span class="hljs-comment">// UDSSecAccessValidateKeyArgs_t *</span><br>    UDS_SRV_EVT_WriteDataByIdent,     <span class="hljs-comment">// UDSWDBIArgs_t *</span><br>    UDS_SRV_EVT_RoutineCtrl,          <span class="hljs-comment">// UDSRoutineCtrlArgs_t*</span><br>    UDS_SRV_EVT_RequestDownload,      <span class="hljs-comment">// UDSRequestDownloadArgs_t*</span><br>    UDS_SRV_EVT_RequestUpload,        <span class="hljs-comment">// UDSRequestUploadArgs_t *</span><br>    UDS_SRV_EVT_TransferData,         <span class="hljs-comment">// UDSTransferDataArgs_t *</span><br>    UDS_SRV_EVT_RequestTransferExit,  <span class="hljs-comment">// UDSRequestTransferExitArgs_t *</span><br>    UDS_SRV_EVT_SessionTimeout,       <span class="hljs-comment">// NULL</span><br>    UDS_SRV_EVT_DoScheduledReset,     <span class="hljs-comment">// enum UDSEcuResetType *</span><br>    UDS_SRV_EVT_Err,                  <span class="hljs-comment">// UDSErr_t *</span><br>    UDS_EVT_IDLE,<br>    UDS_EVT_RESP_RECV,<br>&#125;;<br><br><span class="hljs-class"><span class="hljs-keyword">enum</span> <span class="hljs-title">UDSSecurityAccessType</span> &#123;</span><br>    kRequestSeed = <span class="hljs-number">0x01</span>,<br>    kSendKey = <span class="hljs-number">0x02</span>,<br>&#125;;<br></code></pre></td></tr></table></figure>
+
+<p>&#x2F;src&#x2F;server.h</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">UDSServer</span> &#123;</span><br>    UDSTpHandle_t *tp;<br>    <span class="hljs-type">uint8_t</span> (*fn)(<span class="hljs-keyword">struct</span> UDSServer *srv, UDSServerEvent_t event, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *arg);<br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * @brief \~chinese 服务器时间参数（毫秒） \~ Server time constants (milliseconds) \~</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-type">uint16_t</span> p2_ms;      <span class="hljs-comment">// Default P2_server_max timing supported by the server for</span><br>                         <span class="hljs-comment">// the activated diagnostic session.</span><br>    <span class="hljs-type">uint32_t</span> p2_star_ms; <span class="hljs-comment">// Enhanced (NRC 0x78) P2_server_max supported by the</span><br>                         <span class="hljs-comment">// server for the activated diagnostic session.</span><br>    <span class="hljs-type">uint16_t</span> s3_ms;      <span class="hljs-comment">// Session timeout</span><br><br>    <span class="hljs-type">uint8_t</span> ecuResetScheduled;            <span class="hljs-comment">// nonzero indicates that an ECUReset has been scheduled</span><br>    <span class="hljs-type">uint32_t</span> ecuResetTimer;               <span class="hljs-comment">// for delaying resetting until a response</span><br>                                          <span class="hljs-comment">// has been sent to the client</span><br>    <span class="hljs-type">uint32_t</span> p2_timer;                    <span class="hljs-comment">// for rate limiting server responses</span><br>    <span class="hljs-type">uint32_t</span> s3_session_timeout_timer;    <span class="hljs-comment">// indicates that diagnostic session has timed out</span><br>    <span class="hljs-type">uint32_t</span> sec_access_auth_fail_timer;  <span class="hljs-comment">// brute-force hardening: rate limit security access</span><br>                                          <span class="hljs-comment">// requests</span><br>    <span class="hljs-type">uint32_t</span> sec_access_boot_delay_timer; <span class="hljs-comment">// brute-force hardening: restrict security access until</span><br>                                          <span class="hljs-comment">// timer expires</span><br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * @brief UDS-1-2013: Table 407 - 0x36 TransferData Supported negative</span><br><span class="hljs-comment">     * response codes requires that the server keep track of whether the</span><br><span class="hljs-comment">     * transfer is active</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-type">bool</span> xferIsActive;<br>    <span class="hljs-comment">// UDS-1-2013: 14.4.2.3, Table 404: The blockSequenceCounter parameter</span><br>    <span class="hljs-comment">// value starts at 0x01</span><br>    <span class="hljs-type">uint8_t</span> xferBlockSequenceCounter;<br>    <span class="hljs-type">size_t</span> xferTotalBytes;  <span class="hljs-comment">// total transfer size in bytes requested by the client</span><br>    <span class="hljs-type">size_t</span> xferByteCounter; <span class="hljs-comment">// total number of bytes transferred</span><br>    <span class="hljs-type">size_t</span> xferBlockLength; <span class="hljs-comment">// block length (convenience for the TransferData API)</span><br><br>    <span class="hljs-type">uint8_t</span> sessionType;   <span class="hljs-comment">// diagnostic session type (0x10)</span><br>    <span class="hljs-type">uint8_t</span> securityLevel; <span class="hljs-comment">// SecurityAccess (0x27) level</span><br><br>    <span class="hljs-type">bool</span> RCRRP;             <span class="hljs-comment">// set to true when user fn returns 0x78 and false otherwise</span><br>    <span class="hljs-type">bool</span> requestInProgress; <span class="hljs-comment">// set to true when a request has been processed but the response has</span><br>                            <span class="hljs-comment">// not yet been sent</span><br><br>    <span class="hljs-comment">// UDS-1 2013 defines the following conditions under which the server does not</span><br>    <span class="hljs-comment">// process incoming requests:</span><br>    <span class="hljs-comment">// - not ready to receive (Table A.1 0x78)</span><br>    <span class="hljs-comment">// - not accepting request messages and not sending responses (9.3.1)</span><br>    <span class="hljs-comment">//</span><br>    <span class="hljs-comment">// when this variable is set to true, incoming ISO-TP data will not be processed.</span><br>    <span class="hljs-type">bool</span> notReadyToReceive;<br><br>    UDSReq_t r;<br>&#125; UDSServer_t;<br></code></pre></td></tr></table></figure>
+
+<p>&#x2F;test&#x2F;test_server_0x27_security_access.c</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-type">uint8_t</span> <span class="hljs-title function_">fn</span><span class="hljs-params">(UDSServer_t *srv, UDSServerEvent_t ev, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *arg)</span> &#123;<br>    <span class="hljs-keyword">switch</span> (ev) &#123;<br>    <span class="hljs-keyword">case</span> UDS_SRV_EVT_SecAccessRequestSeed: &#123;<br>        UDSSecAccessRequestSeedArgs_t *r = (UDSSecAccessRequestSeedArgs_t *)arg;<br>        <span class="hljs-type">const</span> <span class="hljs-type">uint8_t</span> seed[] = &#123;<span class="hljs-number">0x36</span>, <span class="hljs-number">0x57</span>&#125;;<br>        TEST_INT_NE(r-&gt;level, srv-&gt;securityLevel);<br>        <span class="hljs-keyword">return</span> r-&gt;copySeed(srv, seed, <span class="hljs-keyword">sizeof</span>(seed));<br>        <span class="hljs-keyword">break</span>;<br>    &#125;<br>    <span class="hljs-keyword">case</span> UDS_SRV_EVT_SecAccessValidateKey: &#123;<br>        UDSSecAccessValidateKeyArgs_t *r = (UDSSecAccessValidateKeyArgs_t *)arg;<br>        <span class="hljs-type">const</span> <span class="hljs-type">uint8_t</span> expected_key[] = &#123;<span class="hljs-number">0xC9</span>, <span class="hljs-number">0xA9</span>&#125;;<br>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">memcmp</span>(r-&gt;key, expected_key, <span class="hljs-keyword">sizeof</span>(expected_key))) &#123;<br>            <span class="hljs-keyword">return</span> kSecurityAccessDenied;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">return</span> kPositiveResponse;<br>        &#125;<br>        <span class="hljs-keyword">break</span>;<br>    &#125;<br>    <span class="hljs-keyword">default</span>:<br>        assert(<span class="hljs-number">0</span>);<br>    &#125;<br>    <span class="hljs-keyword">return</span> kPositiveResponse;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>调用链如下，最后的fn函数就是上文通过FindCrypt找到的VIN加密逻辑所在函数，作者自定义了该函数，<code>uds.h</code>中可以看到case6对应case UDS_SRV_EVT_SecAccessRequestSeed</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs c">_0x27_SecurityAccess -&gt; Odd: requestSeed -&gt; EmitEvent(srv, UDS_SRV_EVT_SecAccessRequestSeed, &amp;args); -&gt; <br>EmitEvent -&gt;  srv-&gt;fn(srv, evt, data) -&gt; <br><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">UDSServer</span> &#123;</span>... <span class="hljs-type">uint8_t</span> (*fn)(<span class="hljs-keyword">struct</span> UDSServer *srv, UDSServerEvent_t event, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *arg); ...&#125;<br>-&gt; <span class="hljs-type">uint8_t</span> <span class="hljs-title function_">fn</span><span class="hljs-params">(UDSServer_t *srv, UDSServerEvent_t ev, <span class="hljs-type">const</span> <span class="hljs-type">void</span> *arg)</span>  <br></code></pre></td></tr></table></figure>
+
+<p>同时，由于fn函数不是直接被调用，而是通过结构体传入_0x27_SecurityAccess进行调用，我们很难通过静态分析定位到加密逻辑所在的fn函数，如图</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/37.png" srcset="/img/loading.gif" lazyload alt="37"></p>
+<p>定位到fn的加密逻辑后就好办了，都是标准加密</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/38.png" srcset="/img/loading.gif" lazyload alt="38"></p>
+<p>先转换端序，再对(a1+3)进行标准tea解密，最后校验解密后的(a1+3)等于seed，那么tea加密seed就能得到(a1+3)</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/39.png" srcset="/img/loading.gif" lazyload alt="39"></p>
+<p>VIN在内存中是加密的状态，rc4函数以(a3+1)为key，采用标准rc4解密VIN</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/40.png" srcset="/img/loading.gif" lazyload alt="40"></p>
+<p>找到可疑数据</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/41.png" srcset="/img/loading.gif" lazyload alt="41"></p>
+<p>查看交叉引用发现在start函数的下一个函数(这里设置为main)中调用0x810004c处理0x8004EC8的数据生成了VIN密文</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/42.png" srcset="/img/loading.gif" lazyload alt="42"></p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/43.png" srcset="/img/loading.gif" lazyload alt="43"></p>
+<p>直接复制密文生成函数，填入参数运行得到VIN密文<code>14 a6 91 fe b9 d7 41 af 82 cc 4e e9 47 47 28 4f d1</code></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs c"><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;stdio.h&gt;</span></span><br><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;defs.h&quot;</span></span><br><span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> data[<span class="hljs-number">1000</span>] = &#123; <span class="hljs-number">0x1</span>,<span class="hljs-number">0x13</span>,<span class="hljs-number">0x2</span>,<span class="hljs-number">0x96</span>,<span class="hljs-number">0x88</span>,<span class="hljs-number">0x0</span>,<span class="hljs-number">0x12</span>,<span class="hljs-number">0xb0</span>,<span class="hljs-number">0x14</span>,<span class="hljs-number">0xa6</span>,<span class="hljs-number">0x91</span>,<span class="hljs-number">0xfe</span>,<span class="hljs-number">0xb9</span>,<span class="hljs-number">0xd7</span>,<span class="hljs-number">0x41</span>,<span class="hljs-number">0xaf</span>,<span class="hljs-number">0x82</span>,<span class="hljs-number">0xcc</span>,<span class="hljs-number">0x4e</span>,<span class="hljs-number">0xe9</span>,<span class="hljs-number">0x47</span>,<span class="hljs-number">0x47</span>,<span class="hljs-number">0x28</span>,<span class="hljs-number">0x4f</span>,<span class="hljs-number">0xd1</span>,<span class="hljs-number">0x42</span>,<span class="hljs-number">0x10</span>,<span class="hljs-number">0x52</span>,<span class="hljs-number">0x1</span>,<span class="hljs-number">0x58</span>,<span class="hljs-number">0x90</span>,<span class="hljs-number">0xd0</span>,<span class="hljs-number">0x3</span>,<span class="hljs-number">0x0</span>,<span class="hljs-number">0x90</span>,<span class="hljs-number">0xd0</span>,<span class="hljs-number">0x3</span>,<span class="hljs-number">0x2</span>,<span class="hljs-number">0x18</span>,<span class="hljs-number">0x1</span> &#125;;<br><br><span class="hljs-type">unsigned</span> <span class="hljs-type">char</span> encvin[<span class="hljs-number">1000</span>] = &#123; <span class="hljs-number">0</span> &#125;;<br><span class="hljs-type">int</span> __fastcall <span class="hljs-title function_">initfunc</span><span class="hljs-params">(<span class="hljs-type">char</span>* from_addr, _BYTE* to_addr, <span class="hljs-type">int</span> start_index)</span><br>&#123;<br>    _BYTE* v3; <span class="hljs-comment">// r4</span><br>    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> v4; <span class="hljs-comment">// r2</span><br>    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> v5; <span class="hljs-comment">// t1</span><br>    <span class="hljs-type">int</span> v6; <span class="hljs-comment">// r3</span><br>    <span class="hljs-type">int</span> v7; <span class="hljs-comment">// t1</span><br>    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> v8; <span class="hljs-comment">// r2</span><br>    <span class="hljs-type">unsigned</span> <span class="hljs-type">int</span> v9; <span class="hljs-comment">// t1</span><br>    <span class="hljs-type">char</span> v10; <span class="hljs-comment">// t1</span><br><br>    v3 = &amp;to_addr[start_index];<br>    <span class="hljs-keyword">do</span><br>    &#123;<br>        v5 = *from_addr++;<br>        v4 = v5;<br>        v6 = v5 &amp; <span class="hljs-number">0xF</span>;<br>        <span class="hljs-keyword">if</span> ((v5 &amp; <span class="hljs-number">0xF</span>) == <span class="hljs-number">0</span>)<br>        &#123;<br>            v7 = (<span class="hljs-type">unsigned</span> __int8)*from_addr++;<br>            v6 = v7;<br>        &#125;<br>        v8 = v4 &gt;&gt; <span class="hljs-number">4</span>;<br>        <span class="hljs-keyword">if</span> (!v8)<br>        &#123;<br>            v9 = (<span class="hljs-type">unsigned</span> __int8)*from_addr++;<br>            v8 = v9;<br>        &#125;<br>        <span class="hljs-keyword">while</span> (--v6)<br>        &#123;<br>            v10 = (<span class="hljs-type">unsigned</span> __int8)*from_addr++;<br>            *to_addr++ = v10;<br>        &#125;<br>        <span class="hljs-keyword">while</span> (--v8)<br>            *to_addr++ = <span class="hljs-number">0</span>;<br>    &#125; <span class="hljs-keyword">while</span> (to_addr &lt; v3);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br><br><span class="hljs-type">int</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span> &#123;<br><br>    initfunc(data, encvin, <span class="hljs-number">0x194</span>);<br>    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>最后seed转换端序，tea加密seed后再次转换端序得到Key，使用Key对密文rc4解密</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> struct<br><span class="hljs-keyword">from</span> Crypto.Cipher <span class="hljs-keyword">import</span> ARC4<br><br>key = [<span class="hljs-number">0x00000123</span>, <span class="hljs-number">0x00004567</span>, <span class="hljs-number">0x000089AB</span>, <span class="hljs-number">0x0000CDEF</span>]<br><br>DELTA = <span class="hljs-number">0x9E3779B9</span><br><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">tea_enc</span>(<span class="hljs-params">v0, v1, key</span>):<br>	_<span class="hljs-built_in">sum</span> = <span class="hljs-number">0</span><br>	<span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-number">32</span>):<br>		_<span class="hljs-built_in">sum</span> += <span class="hljs-number">0x9E3779B9</span><br>		_<span class="hljs-built_in">sum</span> &amp;= <span class="hljs-number">0xFFFFFFFF</span><br>	v0 += (key[<span class="hljs-number">0</span>] + <span class="hljs-number">16</span> * v1) ^ (v1 + _<span class="hljs-built_in">sum</span>) ^ (key[<span class="hljs-number">1</span>] + (v1 &gt;&gt; <span class="hljs-number">5</span>))<br>	v0 &amp;= <span class="hljs-number">0xFFFFFFFF</span><br>	v1 += (key[<span class="hljs-number">2</span>] + <span class="hljs-number">16</span> * v0) ^ (v0 + _<span class="hljs-built_in">sum</span>) ^ (key[<span class="hljs-number">3</span>] + (v0 &gt;&gt; <span class="hljs-number">5</span>))<br>	v1 &amp;= <span class="hljs-number">0xFFFFFFFF</span><br>	<span class="hljs-keyword">return</span> v0, v1<br><br><br>b = struct.pack(<span class="hljs-string">&#x27;&lt;2I&#x27;</span>, <span class="hljs-number">0x44332211</span>, <span class="hljs-number">0x88776655</span>)<br>v0, v1 = struct.unpack(<span class="hljs-string">&#x27;&gt;2I&#x27;</span>, b)<br><br>v0, v1 = tea_enc(v0, v1, key)<br>b = struct.pack(<span class="hljs-string">&#x27;&gt;2I&#x27;</span>, v0, v1)<br><br>arc4 = ARC4.new(b)<br>a = arc4.encrypt(<span class="hljs-built_in">bytes</span>([<span class="hljs-number">0x14</span>, <span class="hljs-number">0xA6</span>, <span class="hljs-number">0x91</span>, <span class="hljs-number">0xFE</span>, <span class="hljs-number">0xB9</span>, <span class="hljs-number">0xD7</span>, <span class="hljs-number">0x41</span>,<br><span class="hljs-number">0xAF</span>, <span class="hljs-number">0x82</span>, <span class="hljs-number">0xCC</span>, <span class="hljs-number">0x4E</span>, <span class="hljs-number">0xE9</span>, <span class="hljs-number">0x47</span>, <span class="hljs-number">0x47</span>, <span class="hljs-number">0x28</span>, <span class="hljs-number">0x4F</span>, <span class="hljs-number">0xD1</span>]))<br><span class="hljs-built_in">print</span>(a)<br><span class="hljs-comment">#W0L000043MB541337</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="2024SCTF-easymcu"><a href="#2024SCTF-easymcu" class="headerlink" title="2024SCTF easymcu"></a>2024SCTF easymcu</h2><p>题目描述</p>
+<figure class="highlight sqf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs sqf">小明从车机主控中提取出来固件 mcu.s19文件。车机主控的PCBA如图PCBA.jpg。用户使用串口助手xcom输入一串<span class="hljs-built_in">flag</span>后，在串口助手中返回了一些数据，如图xcom.jpg所示。求<span class="hljs-built_in">flag</span><br></code></pre></td></tr></table></figure>
+
+<p>PCBA.jpg</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/PCBA.jpg" srcset="/img/loading.gif" lazyload alt="PCBA"></p>
+<p>xcom.jpg</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/xcom.jpg" srcset="/img/loading.gif" lazyload alt="xcom"></p>
+<p>通过CPU的丝印得知该固件指令集是32位TriCore以及相关参数</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/44.png" srcset="/img/loading.gif" lazyload alt="44"></p>
+<h3 id="Motorola-Hex文件格式"><a href="#Motorola-Hex文件格式" class="headerlink" title="Motorola Hex文件格式"></a>Motorola Hex文件格式</h3><p>类似intel hex的烧录文件格式，由Motorola制定，也叫S-Record。该格式文件的后缀有**.s19, .s28, .s37, .s, .s1, .s2, .s3, .sx, .srec, .mot**等。这里直接用hexview查看和转换，比命令行工具直观且方便多了。</p>
+<p>如图，直接帮我们分析各个区块的基址和大小。</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/45.png" srcset="/img/loading.gif" lazyload alt="45"></p>
+<p>导出为bin文件或其它格式</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/46.png" srcset="/img/loading.gif" lazyload alt="46"></p>
+<p>其实不转换也没关系，ida和ghidra都能识别intel hex和motorola hex，转换成bin反而麻烦，需要手动设置rom基址。</p>
+<h3 id="反编译"><a href="#反编译" class="headerlink" title="反编译"></a>反编译</h3><p>tricore指令集的反编译需要使用ghidra，因为ida只能反汇编，无法反编译看伪c。</p>
+<p><code>mcu.19</code>用ghidra打开，设置好文件格式和指令集如下，然后用CodeBrower分析，打开后没有分析出函数，Ctrl + A再按D自动反编译所有机器码。</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/47.png" srcset="/img/loading.gif" lazyload alt="47"></p>
+<h3 id="分析代码，解密数据"><a href="#分析代码，解密数据" class="headerlink" title="分析代码，解密数据"></a>分析代码，解密数据</h3><p>官方wp给出了两种思路：</p>
+<p>1、从波特率入手。题目给的XCOM图片里显示波特率是115200，在串口初始化函数<code>UART init</code>的配置数据中包含了波特率。我们用ida或ghidra的search功能在固件中搜索波特率标量，追踪交叉引用可以找到UART串口初始化函数，继而找到该串口的通信加密逻辑。</p>
+<p>2.作者用了标准AES加密，可以通过加密特征定位到加密函数。</p>
+<p>显然第1种思路更科学，第2种思路偏”CTF”，我们采用第一种思路进行分析。</p>
+<p>ida搜索标量 ： Search-&gt;Immediate value或Sequence of bytes</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/48.png" srcset="/img/loading.gif" lazyload alt="48"></p>
+<p>ghidra搜索标量</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/49.png" srcset="/img/loading.gif" lazyload alt="49"></p>
+<p>由于ida不能看伪c，我们用ghidra分析，找到波特率常量位置</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/50.png" srcset="/img/loading.gif" lazyload alt="50"></p>
+<p>交叉引用到UART_init再到主函数，一般while里就是MCU循环处理的部分。</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/51.png" srcset="/img/loading.gif" lazyload alt="51"></p>
+<p>进入MCU循环函数</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/52.png" srcset="/img/loading.gif" lazyload alt="52"></p>
+<p>循环函数操作：获取串口输入 -&gt; AES加密 -&gt; 对加密后的每一位进行位运算(循环左移、异或下一位、取反) -&gt; 在串口输出加密数据</p>
+<p> <img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/53.png" srcset="/img/loading.gif" lazyload alt="53"></p>
+<p>AES_KEY</p>
+<p><img src="/2024/11/06/%E4%BB%8E2024L3hCTF&&SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&stm32%E8%A3%B8%E6%9C%BA&Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/54.png" srcset="/img/loading.gif" lazyload alt="54"></p>
+<p>算法分析完成，写脚本解密，这里直接贴官方脚本了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> Crypto.Cipher <span class="hljs-keyword">import</span> AES<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">ror</span>(<span class="hljs-params">val, shifts</span>):<br>    <span class="hljs-keyword">return</span> ((val &gt;&gt; shifts) &amp; <span class="hljs-number">0xff</span>) | ((val &lt;&lt; (<span class="hljs-number">8</span> - shifts)) &amp; <span class="hljs-number">0xFF</span>)<br><span class="hljs-keyword">def</span> <span class="hljs-title function_">decrypt_aes</span>(<span class="hljs-params">ciphertext, key</span>):<br>    cipher = AES.new(<span class="hljs-built_in">bytes</span>(key), AES.MODE_ECB)<br>    decrypted = cipher.decrypt(<span class="hljs-built_in">bytes</span>(ciphertext))<br>    <span class="hljs-keyword">return</span> decrypted<br>hex_array=[<span class="hljs-number">0x63</span>, <span class="hljs-number">0xd4</span>, <span class="hljs-number">0xdd</span>, <span class="hljs-number">0x72</span>, <span class="hljs-number">0xb0</span>, <span class="hljs-number">0x8c</span>, <span class="hljs-number">0xae</span>, <span class="hljs-number">0x31</span>, <span class="hljs-number">0x8c</span>, <span class="hljs-number">0x33</span>, <span class="hljs-number">0x03</span>, <span class="hljs-number">0x22</span>, <span class="hljs-number">0x03</span>, <span class="hljs-number">0x1c</span>, <span class="hljs-number">0xe4</span>, <span class="hljs-number">0xd3</span>, <span class="hljs-number">0xc3</span>, <span class="hljs-number">0xe3</span>, <span class="hljs-number">0x54</span>, <span class="hljs-number">0xb2</span>, <span class="hljs-number">0x1d</span>, <span class="hljs-number">0xeb</span>, <span class="hljs-number">0xeb</span>, <span class="hljs-number">0x9d</span>, <span class="hljs-number">0x45</span>, <span class="hljs-number">0xb1</span>, <span class="hljs-number">0xbe</span>, <span class="hljs-number">0x86</span>, <span class="hljs-number">0xcd</span>, <span class="hljs-number">0xe9</span>, <span class="hljs-number">0x93</span>, <span class="hljs-number">0xd8</span>]<br><span class="hljs-built_in">print</span>(<span class="hljs-built_in">len</span>(hex_array))<br><span class="hljs-keyword">for</span> i <span class="hljs-keyword">in</span> <span class="hljs-built_in">range</span>(<span class="hljs-built_in">len</span>(hex_array) - <span class="hljs-number">1</span>, -<span class="hljs-number">1</span>, -<span class="hljs-number">1</span>):<br>    val = (~hex_array[i]) &amp; <span class="hljs-number">0xff</span><br>    val ^= hex_array[(i + <span class="hljs-number">1</span>) % <span class="hljs-built_in">len</span>(hex_array)]<br>    val = ror(val, <span class="hljs-number">3</span>)<br>    hex_array[i] = val<br>key = [<span class="hljs-number">0x2e</span>,<span class="hljs-number">0x35</span>,<span class="hljs-number">0x7d</span>,<span class="hljs-number">0x6a</span>,<span class="hljs-number">0xed</span>,<span class="hljs-number">0x44</span>,<span class="hljs-number">0xf3</span>,<span class="hljs-number">0x4d</span>,<span class="hljs-number">0xad</span>,<span class="hljs-number">0xb9</span>,<span class="hljs-number">0x11</span>,<span class="hljs-number">0x34</span>,<span class="hljs-number">0x13</span>,<span class="hljs-number">0xea</span>,<span class="hljs-number">0x32</span>,<span class="hljs-number">0x4e</span>]<br>decrypted_data = decrypt_aes(hex_array, key)<br>decrypted_string = <span class="hljs-string">&#x27;&#x27;</span>.join(<span class="hljs-built_in">chr</span>(x) <span class="hljs-keyword">for</span> x <span class="hljs-keyword">in</span> decrypted_data)<br><span class="hljs-built_in">print</span>(<span class="hljs-string">&quot;解密后的数据：&quot;</span>)<br><span class="hljs-built_in">print</span>(decrypted_string)<br><span class="hljs-comment">#Flag: SCTF&#123;Wlc_t0_the_wd_oF_IOT_s3cur&#125;</span><br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ul>
+<li>一般来说异构程序的反编译用ghidra，但笔者感觉还是ida顺手，9.0的IDA已经支持MIPS等普通的异构了。当然更冷门的指令集架构比如英飞凌的TriCore还是得用ghidra</li>
+<li>逆向固件打包算法以及固件中的算法时，结合数据HEX对数据结构进行猜测非常重要，这些需要经验、直觉以及冷静的观察</li>
+<li>mcu裸机固件逆向思路:获取芯片型号查datasheet -&gt; 获取指令集架构 -&gt; 获取memory的映射结构，包括:rom基址、程序入口地址、ram基址、外设接口地址、各类总线地址等信息 -&gt; 在反汇编工具中创建正确的内存映射并反编译</li>
+<li>对于bin、hex、s19等mcu烧录文件的格式转换，可以使用objcopy、SRecord等命令行工具，但是更推荐使用专业工具<a target="_blank" rel="noopener" href="https://gitcode.com/open-source-toolkit/6b787">Hexview</a></li>
+<li>ida和ghidra具有强大的搜索功能，除了字符串，还能搜索指令、标量、字节序列等</li>
+</ul>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/f_jjL34MEaXKaNjAhqZ6YA">2024 L3HCTF writeup by Arr3stY0u</a></p>
+<p><a target="_blank" rel="noopener" href="https://xz.aliyun.com/t/13630?time__1311=GqmxuD9QD=iteGNDQiiQGkQbOkGQPHDc7oD">2024 L3HCTF Reverse WP by WM</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/BRC8-ufEowYkPmuF65iJpQ">SCTF 2024 writeup by Arr3stY0u</a></p>
+<p><a target="_blank" rel="noopener" href="https://quick-mascara-699.notion.site/2024SCTF-wp-d34600322f1141e680e837abce5795ef">2024SCTF 官方wp</a></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s?__biz=Mzg5OTUzNDY2Nw==&mid=2247484351&idx=1&sn=1a28c6baf473829b19bd2cc4992bd752&chksm=c1a154f6c9957c6f0ec29a9d139598afd6d56a31ae55c9d9deab543a8c810253586788cbb9e9&mpshare=1&scene=23&srcid=1001ghiPHORztFCWZYpppfOp&sharer_shareinfo=f76b8b69af4cfafe5da55fbff445acdc&sharer_shareinfo_first=f76b8b69af4cfafe5da55fbff445acdc#rd">Spirit战队 2024 SCTF wp</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.xmcve.com/2024/10/01/SCTF-2024-Writeup/#title-9">[星盟] SCTF 2024 Writeup</a></p>
+<p><a target="_blank" rel="noopener" href="https://xuanxuanblingbling.github.io/iot/2020/07/08/stm32/">[Clang裁缝店] SCTF 2020 Password Lock Plus 入门STM32逆向</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.52pojie.cn/thread-1732800-1-1.html">[吾爱破解] 采用IDA Pro 分析878UVII radio对讲机固件初步研究</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_51431342/article/details/125505941">芯片，SOC和MCU区别；裸机和带系统</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.hyun.tech/archives/mcu%E5%8D%95%E7%89%87%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91%E5%88%86%E6%9E%90%E5%85%A5%E9%97%A8">MCU 单片机固件逆向分析入门</a></p>
+<p><a target="_blank" rel="noopener" href="https://gorgias.me/2022/08/15/%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91%E7%9A%84%E9%80%9A%E7%94%A8%E6%8A%80%E5%B7%A7/">固件逆向的通用技巧</a></p>
+<p><a target="_blank" rel="noopener" href="https://github.com/driftregion/iso14229/tree/v0.7.1">ISO14229-uds源码</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="../../../../categories/IOT/" class="category-chain-item">IOT</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="../../../../tags/%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/">#固件逆向</a>
+      
+        <a href="../../../../tags/H3C/">#H3C</a>
+      
+        <a href="../../../../tags/PPPoE/">#PPPoE</a>
+      
+        <a href="../../../../tags/STM32/">#STM32</a>
+      
+        <a href="../../../../tags/%E8%A3%B8%E6%9C%BA%E5%9B%BA%E4%BB%B6/">#裸机固件</a>
+      
+        <a href="../../../../tags/UDS/">#UDS</a>
+      
+        <a href="../../../../tags/Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6/">#Infineon车机固件</a>
+      
+        <a href="../../../../tags/UART/">#UART</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>三道CTF题目学习h3c路由器&amp;stm32裸机&amp;Infineon车机固件逆向</div>
+      <div>https://lkliki.github.io/2024/11/06/从2024L3hCTF&amp;&amp;SCTF三道题学习h3c路由器&amp;stm32裸机&amp;Infineon车机固件逆向/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>0P1N</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年11月6日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="../../../10/13/IOT-cheat-sheet/" title="IOT_cheat_sheet">
+                        <span class="hidden-mobile">IOT_cheat_sheet</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href=""><span>fffer</span></a> <i class="iconfont icon-bug"></i> <a href="" target="_blank" rel="nofollow noopener"><span>0p1n</span></a> <br /> <a href=""><span>富强 民主 文明 和谐 自由 平等 公正 法治 爱国 敬业 诚信 友善</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="../../../../js/events.js" ></script>
+<script  src="../../../../js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="../../../../js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="../../../../js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="../../../../js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
