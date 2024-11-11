@@ -1,0 +1,944 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="../../../../img/touxiang.png">
+  <link rel="icon" href="../../../../img/touxiang.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="0P1N">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="嵌入式基础及STM32开发入门关于ARM商业模式ARM架构是由总部位于英国的ARM公司设计和授权的指令集和处理器架构。ARM公司只负责指令集和处理器架构的设计，然后授权给半导体厂商，由半导体厂商负责硬件的具体实现。 常见的ARM处理器厂商和生产产品：  ARM架构和微架构(处理器架构)ARM架构指的是一系列的功能规范，定义了处理器的行为方式，包括支持的指令集和处理器的基本功能。它是硬件和软件之间的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="嵌入式基础及STM32开发入门">
+<meta property="og:url" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/index.html">
+<meta property="og:site_name" content="0P1N">
+<meta property="og:description" content="嵌入式基础及STM32开发入门关于ARM商业模式ARM架构是由总部位于英国的ARM公司设计和授权的指令集和处理器架构。ARM公司只负责指令集和处理器架构的设计，然后授权给半导体厂商，由半导体厂商负责硬件的具体实现。 常见的ARM处理器厂商和生产产品：  ARM架构和微架构(处理器架构)ARM架构指的是一系列的功能规范，定义了处理器的行为方式，包括支持的指令集和处理器的基本功能。它是硬件和软件之间的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/1.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/2.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/3.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/4.jpg">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/5.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/6.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/7.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/8.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/9.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/407%E9%AB%98%E9%85%8D%E7%89%88V4.1%E5%A4%96%E8%AE%BE%E4%B8%8E%E6%8E%A5%E5%8F%A3%E4%BB%8B%E7%BB%8D.jpg">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/10.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/11.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/12.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/13.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/14.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/15.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/16.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/17.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/18.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/19.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/20.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/21.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/22.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/23.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/24.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/25.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/26.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/27.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/28.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/29.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/30.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/31.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/32.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/33.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/34.png">
+<meta property="article:published_time" content="2024-11-11T15:37:46.000Z">
+<meta property="article:modified_time" content="2024-11-11T16:58:29.869Z">
+<meta property="article:author" content="0P1N">
+<meta property="article:tag" content="IOT">
+<meta property="article:tag" content="STM32">
+<meta property="article:tag" content="开发">
+<meta property="article:tag" content="嵌入式">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://lkliki.github.io/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/1.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>嵌入式基础及STM32开发入门 - 0P1N</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="../../../../css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="../../../../css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="../../../../css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"lkliki.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="../../../../js/utils.js" ></script>
+  <script  src="../../../../js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="../../../../index.html">
+      <strong>Welcome To 0P1N&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../index.html">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('../../../../img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="嵌入式基础及STM32开发入门"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-11-11 23:37" pubdate>
+          2024年11月11日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          7.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          65 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">嵌入式基础及STM32开发入门</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="嵌入式基础及STM32开发入门"><a href="#嵌入式基础及STM32开发入门" class="headerlink" title="嵌入式基础及STM32开发入门"></a>嵌入式基础及STM32开发入门</h1><h2 id="关于ARM"><a href="#关于ARM" class="headerlink" title="关于ARM"></a>关于ARM</h2><h3 id="商业模式"><a href="#商业模式" class="headerlink" title="商业模式"></a>商业模式</h3><p>ARM架构是由总部位于英国的ARM公司设计和授权的指令集和处理器架构。ARM公司只负责指令集和处理器架构的设计，然后授权给半导体厂商，由半导体厂商负责硬件的具体实现。</p>
+<p>常见的ARM处理器厂商和生产产品：</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/1.png" srcset="/img/loading.gif" lazyload alt="1"></p>
+<h3 id="ARM架构和微架构-处理器架构"><a href="#ARM架构和微架构-处理器架构" class="headerlink" title="ARM架构和微架构(处理器架构)"></a>ARM架构和微架构(处理器架构)</h3><p>ARM架构指的是一系列的功能规范，定义了处理器的行为方式，包括支持的指令集和处理器的基本功能。它是硬件和软件之间的契约，描述了软件可以依赖硬件提供哪些功能‌。</p>
+<p>不同版本ARM架构的命名采用ARMvXX的形式，例如ARMv1、ARMv4T、ARMv2a、ARMv6-M、ARMv7-R、ARMv7-A。</p>
+<p>微架构是从ARM架构到处理器(也叫内核、CPU)的具体实现的设计。一种ARM架构可以对应多个微架构，一种微架构只对应一种处理器并且通常命名上不对微架构和处理器做区分。</p>
+<p>不同型号的微架构没有完全固定的命名格式，大部分基于所属的系列或具体应用来进行命名。</p>
+<p>微架构可以分为ARM公司自己研发的内核以及ARM公司授权第三方研发的内核：</p>
+<ul>
+<li><p>官方微架构：包括经典内核(ARM1-ARM11)、SecureCore内核(SC000、SC100、SC300)、Cortex-M&#x2F;R&#x2F;A内核(Cortex-M4、Cortex-R4、Cortex-A7)等。ARMv1-ARMv6主要是经典内核。在ARM11以后，从ARMv7开始，ARM公司停止了经典内核的版本迭代并改用Cortex命名。ARMv7架构定义了三大分工明确的系列：“A”系列面向尖端的基于虚拟内存的操作系统和用户应用(如智能手机、平板电脑、个人PC和服务器)；“R”系列针对实时系统(如汽车电子系统、工业控制器)；“M”系列对微控制器(如物联网设备、传感器、嵌入式控制器)。后来，从ARMv8开始，又改为了推出Neoverse系列内核。</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/2.png" srcset="/img/loading.gif" lazyload alt="2"></p>
+</li>
+<li><p>第三方微架构，例如苹果为A系列芯片定制的内核(Swift、Cyclone、Twister等)、苹果为M系列芯片定制的内核(Apple M3、Apple M4等)、三星为Exynos系列芯片定制的内核(M1、M2、M3等)、高通为Snapdragon系列芯片定制的内核(Scorpion、Krait、Kryo等)。</p>
+</li>
+</ul>
+<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/List_of_ARM_processors">[Wiki]List of ARM processors</a>中有官方微架构与ARM架构的对应 关系表、第三方产品系列与ARM架构和微架构对应关系表、官方微架构推出的时间线表。</p>
+<h3 id="指令集"><a href="#指令集" class="headerlink" title="指令集"></a>指令集</h3><p>ARM架构采用精简指令集(RISC)设计，其指令集有thumb、thumb-2、Arm、AArch64(Arm64)</p>
+<ul>
+<li>Arm:32位指令集。32位arm处理器的核心指令集，一般兼容thumb或thumb2。</li>
+<li>thumb:16位指令集。thumb是arm指令集的子集，没有完整的体系结构，无法单独使用。thumb使程序能够在16位和32位指令集之间切换，减少存储空间的占用并提高运行速度。</li>
+<li>thumb-2:16&#x2F;32位混合指令集。拓展后的thumb指令集，引入了新的指令和优化，加强了性能以及与32位arm指令集的兼容性。</li>
+<li>AArch64:64位指令集。64位arm处理器的核心指令集。Armv7处理器架构及以前只支持32位，从Armv8处理器架构开始支持AArch64同时兼容32位arm和thumb-2，目前最新的Armv9处理器架构开始只支持64位，不再兼容32位。</li>
+</ul>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/3.png" srcset="/img/loading.gif" lazyload alt="3"></p>
+<h2 id="常见嵌入式芯片分类及介绍"><a href="#常见嵌入式芯片分类及介绍" class="headerlink" title="常见嵌入式芯片分类及介绍"></a>常见嵌入式芯片分类及介绍</h2><h3 id="MCU"><a href="#MCU" class="headerlink" title="MCU"></a>MCU</h3><p>名称：Micro controller Unit(微控制单元)，又称为单片机。</p>
+<p>组成：集成了CPU、存储器(RAM、ROM)、I&#x2F;O接口、时钟电路、各种外设等部分的单芯片系统。</p>
+<p>特性：</p>
+<ul>
+<li>没有MMU(内存管理单元)，只能进行单一任务作业，多数只能运行裸机系统或小型的实时操作系统（RTOS），如FreeRTOS、RT-Thread等。</li>
+<li>资源有限，不能执行非常复杂的任务和运算。</li>
+<li>低功耗、低成本、体积小、集成度高、实时性强。</li>
+</ul>
+<p>应用场景：工业控制、汽车电子、消费电子等领域。实时性要求高，进行简单控制，不需要强大运算和处理能力的场景。</p>
+<p>典型产品：</p>
+<ul>
+<li><strong>51单片机</strong>：最早的8位MCU之一，用于简单控制任务。</li>
+<li><strong>AVR系列</strong>：如Atmel公司的ATmega，广泛用于Arduino等开源硬件项目。</li>
+<li><strong>STM32系列</strong>：由STMicroelectronics公司推出，具有丰富的资源和外设，是工业和消费电子常用的32位MCU。</li>
+<li><strong>ESP32系列</strong>：由Espressif公司生产，集成了WiFi和蓝牙功能，非常适合物联网（IoT）应用。</li>
+</ul>
+<h3 id="MPU"><a href="#MPU" class="headerlink" title="MPU"></a>MPU</h3><p>名称：Micro Processor Unit(微处理器单元)，通称微处理器。</p>
+<p>组成：主要包含CPU核心、缓存、基本I&#x2F;O接口和中断控制器，但与MCU不同，通常没有内建RAM和Flash，需外部配备存储器和其他必要外设。</p>
+<p>特性：</p>
+<ul>
+<li>通常包含MMU（内存管理单元），可以运行复杂操作系统，如Linux。</li>
+<li>相比MCU，处理性能更高，支持多任务操作，但功耗也较大。</li>
+<li>可执行更复杂的数据处理任务，适合高计算需求的场合。</li>
+</ul>
+<p>应用场景：需要多任务处理和较强运算能力的嵌入式系统中，如智能家居网关、网络设备和工业自动化。</p>
+<p>典型产品：</p>
+<ul>
+<li><strong>ARM Cortex-A系列</strong>：常见的高性能嵌入式处理器，用于智能终端、网关设备等。</li>
+<li><strong>i.MX系列</strong>：NXP公司推出，适用于汽车娱乐、医疗设备等。</li>
+<li><strong>Sitara系列</strong>：由德州仪器(TI)推出，适合工业自动化、嵌入式视觉等领域。</li>
+</ul>
+<h3 id="SoC"><a href="#SoC" class="headerlink" title="SoC"></a>SoC</h3><p>名称：System on Chip(片上系统)</p>
+<p>组成：将CPU、GPU、RAM、ROM、I&#x2F;O接口、模拟电路、通信模块等各种功能模块集成在一个芯片上。</p>
+<p>特性：</p>
+<ul>
+<li>高度集成，具备处理器、存储器、接口、外设等多种模块，减少外围电路需求。</li>
+<li>支持复杂操作系统，如Linux、Android，且多用于性能要求较高的应用场景。</li>
+<li>设计复杂，通常为定制芯片，适用于特定应用。</li>
+</ul>
+<p>应用场景：智能手机、物联网设备、智能家居等需要多功能和较高性能的场景。</p>
+<p>典型产品：</p>
+<ul>
+<li><strong>高通骁龙系列</strong>：广泛应用于智能手机和平板设备。</li>
+<li><strong>苹果A系列</strong>：用于苹果的iPhone、iPad等设备中。</li>
+<li><strong>ESP8266&#x2F;ESP32</strong>：Espressif公司推出的SoC，适合物联网和低功耗无线通信场景。</li>
+</ul>
+<h3 id="DSP"><a href="#DSP" class="headerlink" title="DSP"></a>DSP</h3><p>名称：Digital Signal Processor(数字信号处理器)</p>
+<p>组成：以处理数字信号为核心，包含快速乘法器、累加器、硬件回路等高效处理单元。</p>
+<p>特性：</p>
+<ul>
+<li>专门为信号处理而设计，能够执行快速的FFT、滤波、矩阵运算等。</li>
+<li>实时处理能力强，适合处理连续的大量数据流。</li>
+<li>多数DSP运行专用软件，不适合通用计算。</li>
+</ul>
+<p>应用场景：通信、音视频处理、图像处理、语音识别等需要实时信号处理的场景。</p>
+<p>典型产品：</p>
+<ul>
+<li><strong>TI的C6000系列</strong>：广泛应用于音视频信号处理、通信等领域。</li>
+<li><strong>Analog Devices的SHARC系列</strong>：用于高性能音频、图像处理应用。</li>
+<li><strong>Qualcomm Hexagon</strong>：集成于高通SoC中，用于音频、图像等加速处理。</li>
+</ul>
+<h3 id="FPGA"><a href="#FPGA" class="headerlink" title="FPGA"></a>FPGA</h3><p>名称：Field Programmable Gate Array(现场可编程门阵列)</p>
+<p>组成：由可编程逻辑单元、可配置I&#x2F;O接口、时钟管理模块等组成，可以根据设计需求配置逻辑功能。</p>
+<p>特性：</p>
+<ul>
+<li>用户可通过硬件描述语言(HDL)编程配置逻辑，实现特定的电路功能。</li>
+<li>并行处理能力强，适合高实时性、复杂逻辑的处理任务。</li>
+<li>相比ASIC，开发周期短、成本低，但功耗较高、集成度不如ASIC。</li>
+</ul>
+<p>应用场景：高速数据处理、视频图像处理、软件定义无线电、科学计算等对实时性、并行处理有高要求的场景。</p>
+<p>典型产品：</p>
+<ul>
+<li><strong>Xilinx的Zynq系列</strong>：集成ARM核心与FPGA逻辑，适用于嵌入式系统开发。</li>
+<li><strong>Intel（Altera）的Stratix系列</strong>：高性能FPGA，广泛应用于数据中心、通信等高性能计算场景。</li>
+</ul>
+<h3 id="ASIC"><a href="#ASIC" class="headerlink" title="ASIC"></a>ASIC</h3><p>名称：Application-Specific Integrated Circuit(应用专用集成电路)</p>
+<p>组成：根据特定应用设计的定制化电路，包含固定逻辑和处理单元。</p>
+<p>特性：</p>
+<ul>
+<li>完全为特定功能定制，性能高，功耗低，体积小。</li>
+<li>一旦设计完成不可更改，开发周期长、成本高，但单位成本低，适合大规模量产。</li>
+<li>集成度高，适合大规模商业产品。</li>
+</ul>
+<p>应用场景：矿机芯片、网络芯片、视频解码芯片等大批量生产的定制需求场景。</p>
+<p>典型产品：</p>
+<ul>
+<li><strong>比特币矿机芯片</strong>：如比特大陆的BM系列，专门用于加密货币挖矿。</li>
+<li><strong>苹果M系列芯片</strong>：苹果的自研芯片，适用于Mac产品中。</li>
+<li><strong>Google TPU</strong>：用于机器学习任务的专用芯片。</li>
+</ul>
+<h3 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h3><p>除了上述常见嵌入式芯片类型，还有一些专用或混合类型的芯片：</p>
+<ul>
+<li><strong>GPU</strong>（图形处理器）：用于加速图形和并行计算，在深度学习领域也应用广泛。</li>
+<li><strong>NPU</strong>（神经网络处理器）：专为AI和机器学习任务设计，加速神经网络推理和训练过程。</li>
+<li><strong>TPU</strong>（张量处理器）：Google推出的专用AI芯片，优化了张量计算，广泛用于深度学习。</li>
+</ul>
+<p>这些芯片类型丰富了嵌入式系统的应用领域，根据需求的不同可以选择相应的芯片来优化系统性能。</p>
+<h2 id="STM32简介"><a href="#STM32简介" class="headerlink" title="STM32简介"></a>STM32简介</h2><p>STM32是意法半导体(STMicroelectronics)公司推出的基于<code>32位ARM Cortex-M内核</code>的<code>微控制器(MCU)</code>产品系列。STM32有十几个不同的系列，几百个不同的型号，广泛应用于工业自动化、消费电子、医疗设备、通信、汽车电子等领域。</p>
+<p>如图就是一块STM32F103的MCU</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/4.jpg" srcset="/img/loading.gif" lazyload alt="4"></p>
+<h3 id="命名规范和产品系列"><a href="#命名规范和产品系列" class="headerlink" title="命名规范和产品系列"></a>命名规范和产品系列</h3><p><a target="_blank" rel="noopener" href="https://www.st.com.cn/resource/en/product_presentation/microcontrollers-stm32-family-overview.pdf">microcontrollers-stm32-family-overview</a></p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/5.png" srcset="/img/loading.gif" lazyload alt="5"></p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/6.png" srcset="/img/loading.gif" lazyload alt="6"></p>
+<h3 id="内部结构和存储映射"><a href="#内部结构和存储映射" class="headerlink" title="内部结构和存储映射"></a>内部结构和存储映射</h3><p>STM32 MCU内部通常包括处理器(内核)、ROM、RAM、片上外设、调试系统、时钟和复位模块、IO设备等部分。</p>
+<p>ROM掉电后数据不丢失，一般存放要运行的程序(固件)；ROM掉电后数据丢失，但是和CPU交互速度比ROM快很多，一般存储运行中的动态数据。</p>
+<p>具体的内部结构需要参考对应型号MCU的数据手册。这里以官方的<a target="_blank" rel="noopener" href="https://www.st.com.cn/resource/en/datasheet/stm32f405rg.pdf">STM32F40xxx参考手册</a>为例。</p>
+<p>不同引脚的名称，有64脚、100脚、144脚、176脚的，这里只贴了64脚的。</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/7.png" srcset="/img/loading.gif" lazyload alt="7"></p>
+<p>可以看到ROM使用的是FLASH，RAM使用SRAM，内核是Arm Cortex-M4，许多类似CAN、UART、I2C的外设接口连接至AHB&#x2F;APB总线</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/8.png" srcset="/img/loading.gif" lazyload alt="8"></p>
+<p>内存映射如图，可以看到最常用的ROM和RAM基址分别为0x08000000和0x20000000，还可以看到AHB&#x2F;APB总线的地址，我们可以通过AHB&#x2F;APB地址来访问外设。</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/9.png" srcset="/img/loading.gif" lazyload alt="9"></p>
+<h2 id="硬件配置"><a href="#硬件配置" class="headerlink" title="硬件配置"></a>硬件配置</h2><figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs gcode">MCU：ST<span class="hljs-name">M32</span>F<span class="hljs-number">407</span>ZGT<span class="hljs-number">6</span><span class="hljs-comment">(Cortex-M4内核)</span><br>开发板：启明欣欣ST<span class="hljs-name">M32</span>F<span class="hljs-number">407</span>高配版V<span class="hljs-number">5.1</span><span class="hljs-comment">(IMT407 V5.1)</span><br>调试器：CMSIS DAP<br>其它：杜邦线、面包板、显示屏、USB转各种串口的模块等，取决于具体应用<br></code></pre></td></tr></table></figure>
+
+<p>笔者的硬件配置如上，下面是一些相关细节</p>
+<h3 id="MCU-1"><a href="#MCU-1" class="headerlink" title="MCU"></a>MCU</h3><p><a target="_blank" rel="noopener" href="https://www.st.com.cn/resource/en/datasheet/stm32f405rg.pdf">官网STM32F40xxx参考手册</a></p>
+<p><a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1wUhkpD-3_2ZQ4H3bL9UfSg?pwd=9413">STM32F407ZGT6数据手册(datasheet)</a></p>
+<h3 id="开发板"><a href="#开发板" class="headerlink" title="开发板"></a>开发板</h3><p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/407%E9%AB%98%E9%85%8D%E7%89%88V4.1%E5%A4%96%E8%AE%BE%E4%B8%8E%E6%8E%A5%E5%8F%A3%E4%BB%8B%E7%BB%8D.jpg" srcset="/img/loading.gif" lazyload alt="407高配版V4.1外设与接口介绍"></p>
+<h3 id="关于仿真器和调试器"><a href="#关于仿真器和调试器" class="headerlink" title="关于仿真器和调试器"></a>关于仿真器和调试器</h3><p>仿真器和调试器是两个不同的概念</p>
+<p>仿真器的运行不需要MCU实物，通过硬件或软件的形式模拟MCU的运行并提供调试功能。仿真器的缺点是价格贵、不通用，往往某款仿真器只针对单一型号的MCU。所以开发中仿真器一般适用于不含硬件调试模块(不支持调试器)的MCU，比如51单片机。</p>
+<p>调试器需要MCU实物，配合软件，通过JTAG或SWD接口，可以<code>实时监测程序的执行状态、寄存器、内存</code>等，并支持<code>单步执行、断点调试、变量跟踪</code>等功能，还可以<code>烧录和下载程序</code>。使用什么调试器取决于内核的架构，STM32是ARM Cortex-M系列的内核，可以选择的调试器包括JLINK、STLINK、CMSIS DAP、ULINK2等，不同仿真器的兼容性、功能性和价格都不同，需要根据具体需求选择购买。</p>
+<ul>
+<li>JLINK：通用型的ARM内核芯片调试器，支持的芯片和软件开发环境多，兼容性和功能性最强，价格最高。</li>
+<li>STLINK：由意法半导体推出的针对STM8&#x2F;STM32芯片的调试器，不支持其它MCU，专门做STM32开发可以选择这款。</li>
+<li>CMSIS DAP：针对Cortex处理器的开源的标准调试协议，厂商和个人可以基于该协议开发调试器，产品统称CMSIS DAP。缺点是不被STM32CubeIDE和STM32CubeProg支持。价格介于JLINK和STLINK之间，性价比高。</li>
+<li>ULINK2：专注于Keil平台，支持ARM7&#x2F;9，Cortex-M0~M4以及8051系列芯片，综合性能不如JLINK。</li>
+</ul>
+<h2 id="开发环境"><a href="#开发环境" class="headerlink" title="开发环境"></a>开发环境</h2><p>开发环境的搭建主要参考<a target="_blank" rel="noopener" href="https://www.bilibili.com/opus/988041008693379072?jump_opus=1">Keil5安装+STM32CubeMX安装+VSCode辅助开发教程</a></p>
+<figure class="highlight gcode"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gcode">Keil MDK + ST<span class="hljs-name">M32</span>CubeMX + <span class="hljs-attr">VsCode辅助代码编辑</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="Keil-MDK"><a href="#Keil-MDK" class="headerlink" title="Keil MDK"></a>Keil MDK</h3><p>KEIL是一家德国的公司，于05年被ARM收购，主要的产品是针对嵌入式开发的IDE软件Keil µVision。</p>
+<p>Keil µVision是一系列Keil IDE的统称，主要有MDK、 C51、 C166、 C251四种IDE，分别针对不同内核架构的开发板，其中Keil MDK针对ARM内核，所以我们使用Keil MDK作为STM32开发的IDE。</p>
+<p>Keil µVision目前版本迭代到Keil µVision5，其中的每种IDE也有自己的版本迭代，不过由于被ARM收购，近几年Keil µVision的更新主要集中在Keil MDK，其它几种内核的IDE几乎没怎么更新。</p>
+<p>其实是可以让Keil µVision同时兼容多个内核的，后文安装完Keil MDK会介绍怎么兼容Keil C51。</p>
+<p>双击安装mdk540.exe，选择安装路径</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/10.png" srcset="/img/loading.gif" lazyload alt="10"></p>
+<p>用户信息可以随便输，不输中文就行</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/11.png" srcset="/img/loading.gif" lazyload alt="11"></p>
+<p>File选项卡-&gt;License Management打开证书管理，复制CID。打开Keygen，填入CID，Target选择ARM，其余不变，点击Generate生成License ID Code。</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/12.png" srcset="/img/loading.gif" lazyload alt="12"></p>
+<p>以管理员身份运行Keil MDK，填入LIC后点击Add LIC添加证书</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/13.png" srcset="/img/loading.gif" lazyload alt="13"></p>
+<p>双击安装STM32F4X和STM32F1X的芯片支持包<code>Keil.STM32F4xx_DFP.2.12.0.pack</code>和<code>Keil.STM32F1xx_DFP.2.1.0.pack</code>。芯片支持包可以从Keil官网下载，参考该<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_59413709/article/details/135582773">文章</a>。</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/14.png" srcset="/img/loading.gif" lazyload alt="14"></p>
+<p>在联网的情况下，也可以通过UV4目录中的Pack包管理工具<code>PackInstaller.exe</code>安装和管理芯片包。Keil也会自动识别工程对应的芯片包，如果没有安装，打开工程时会提醒是否要安装，选择直接安装即可。如图，左侧选择芯片型号，右侧显示所选型号对应的芯片包以及一些通用包，可以安装、更新和删除。</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/15.png" srcset="/img/loading.gif" lazyload alt="15"></p>
+<h4 id="Compiler-Version5编译器"><a href="#Compiler-Version5编译器" class="headerlink" title="Compiler Version5编译器"></a>Compiler Version5编译器</h4><p>从Keil MDK5.37开始，编译器由Compiler Version5更新为Compiler Version6，这导致高版本Keil MDK不兼容旧版本的工程文件。所以需要手动安装Compiler Version5编译器。</p>
+<p>将<code>ARMCC</code>文件夹复制到MDK安装目录的Arm文件夹中</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/16.png" srcset="/img/loading.gif" lazyload alt="16"></p>
+<p>打开测试工程</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/17.png" srcset="/img/loading.gif" lazyload alt="17"></p>
+<p>添加新编译器，路径是刚刚复制的ARMCC</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/18.png" srcset="/img/loading.gif" lazyload alt="18"></p>
+<p>点击魔术棒切换至Compiler Version5编译器</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/19.png" srcset="/img/loading.gif" lazyload alt="19"></p>
+<p>编译测试工程进行测试</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/20.png" srcset="/img/loading.gif" lazyload alt="20"></p>
+<h4 id="兼容C51-非必要"><a href="#兼容C51-非必要" class="headerlink" title="兼容C51(非必要)"></a>兼容C51(非必要)</h4><p>双击<code>兼容C51</code>文件夹中的KeilC51安装包<code>c51v959.exe</code>。KeilMDK位于F盘，KeilC51也安装到F盘</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/21.png" srcset="/img/loading.gif" lazyload alt="21"></p>
+<p>用户信息和KeilMDK安装的时候相同</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/22.png" srcset="/img/loading.gif" lazyload alt="22"></p>
+<p>将C51文件夹复制到Keil5 MDK的安装目录中</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/23.png" srcset="/img/loading.gif" lazyload alt="23"></p>
+<p>将KeilC51的UV4目录中所有文件<code>Ctrl+A</code>全选后复制到KeilMDK的UV4目录中，对于同名文件选择跳过</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/24.png" srcset="/img/loading.gif" lazyload alt="24"></p>
+<p>将KeilC51中TOOLS.INI的内容全部复制到KeilMDK的TOOLS.INI末尾，将PATH修改为KeilMDK中C51文件夹的路径</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/25.png" srcset="/img/loading.gif" lazyload alt="25"></p>
+<p>打开Keil5MDK的License Management，复制CID到Keygen中，Target选择C51，生成LIC</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/26.png" srcset="/img/loading.gif" lazyload alt="26"></p>
+<p>以管理员身份打开KeilMDK，打开License Management，复制粘贴后ADD LIC</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/27.png" srcset="/img/loading.gif" lazyload alt="27"></p>
+<p>兼容C51成功</p>
+<h3 id="STM32CubeMX"><a href="#STM32CubeMX" class="headerlink" title="STM32CubeMX"></a>STM32CubeMX</h3><p><a target="_blank" rel="noopener" href="https://www.stmcu.com.cn/ecosystem/Cube/STM32cubemx">STM32CubeMX介绍</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.yahboom.com/public/upload/upload-html/1701740148/HAL%E5%BA%93%E5%92%8CLL%E5%BA%93%E4%BB%8B%E7%BB%8D.html">HAL库和LL库介绍</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/ybhuangfugui/article/details/109759358">STM32四种库对比：寄存器、标准外设库、HAL、LL</a></p>
+<p>STM32开发有四种可选的库，STM32CubeMX工具基于HAL和LL库，具体介绍参考上面的链接</p>
+<ul>
+<li>STM32Snippets(寄存器)</li>
+<li>Standard Peripheral Library(SPL，标准外设库)</li>
+<li>STM32Cube LL</li>
+<li>STM32Cube HAL</li>
+</ul>
+<p>简单来说，STM32CubeMX是一个官方的用于帮助确定STM32 MCU&amp;MPU以及外设的信息并基于STM32Cube LL和HAL库进行初始化C代码、驱动程序、中间件、设备树等代码生成的图形化工具，可以大大缩短开发时间。</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/28.png" srcset="/img/loading.gif" lazyload alt="28"></p>
+<p>安装需要jre环境，这里不多介绍。</p>
+<p>配置完java环境后双击STM32CubeMX后更改安装目录，一路NEXT即可。</p>
+<p>安装完成后点击<code>Manage embedded software packages</code>打开软件包管理界面</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/29.png" srcset="/img/loading.gif" lazyload alt="29"></p>
+<p>安装STM32F1x和STM32F4x的软件包</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/30.png" srcset="/img/loading.gif" lazyload alt="30"></p>
+<h3 id="VsCode辅助"><a href="#VsCode辅助" class="headerlink" title="VsCode辅助"></a>VsCode辅助</h3><p>Keil5的代码开发辅助功能不如Vscode强大，所以我们可以利用Vscode插件把代码编辑的场景从Keil迁移到Vscode，编译和调试依旧使用Keil5。</p>
+<p>先安装windows上的c语言编译器，把mingw64文件夹中bin目录的路径添加到系统环境变量，在cmd中输入gcc -v，显示mingw64版本说明安装成功</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/31.png" srcset="/img/loading.gif" lazyload alt="31"></p>
+<p>VsCode中安装以下插件</p>
+<ul>
+<li><p>c&#x2F;c++</p>
+</li>
+<li><p>C&#x2F;C++ Extension Pack</p>
+</li>
+<li><p>Keil Assistant</p>
+</li>
+</ul>
+<p>进入Keil Assistant的设置界面，填入Keil5MDK中的UV4.exe路径，如果完成了兼容C51的操作，可以把C51的也填了</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/32.png" srcset="/img/loading.gif" lazyload alt="32"></p>
+<p>安装完成后会出现<code>KEIL UVISION PROJECT</code>选项，选中后点击右侧的图标，选择keil工程文件打开</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/33.png" srcset="/img/loading.gif" lazyload alt="33"></p>
+<p>识别成功，左下角可以编译和烧录程序，但是使用的编译器和仿真器等具体的参数需要在Keil MDK中设置，所以只建议使用VsCode作为代码编辑器，编译和烧录依然通过Keil。</p>
+<p><img src="/2024/11/11/%E5%B5%8C%E5%85%A5%E5%BC%8F%E5%9F%BA%E7%A1%80%E5%8F%8ASTM32%E5%BC%80%E5%8F%91%E5%85%A5%E9%97%A8/34.png" srcset="/img/loading.gif" lazyload alt="34"></p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/zy2232652/article/details/142255983">STM32F407VET6单片机详解</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/Sharemaker/p/17616460.html">一文搞明白STM32芯片存储结构</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_56694518/article/details/131186806">STM32&amp;ARM体系结构（嵌入式学习）</a></p>
+<p><a target="_blank" rel="noopener" href="https://en.wikipedia.org/wiki/List_of_ARM_processors">List of ARM processors</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_63096487/article/details/132511384">JTAG、SWD、DAP、STLink、JLink、ULink这些东西的关系</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/454940732">你了解JLink、ST-Link、ULink、JTAG、SWD、SWIM的区别吗</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/xieliru/article/details/139876236">STM32三种调试工具CMSIS-DAP、J-Link和ST-Link</a></p>
+<p><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/367821312">单片机程序烧录的3种方式(ISP、ICP、IAP)是什么？ - 知乎</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/read/cv39423504/?jump_opus=1">Keil5安装+STM32CubeMX安装+VSCode辅助开发教程</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/weiqifa0/article/details/123436815">Keil的发展历史</a></p>
+<p>[[ST官网]STM32F407&#x2F;417: 相关PDF文档](STM32F407&#x2F;417: 相关PDF文档)</p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_42417071/article/details/137442226">Keil MDK 与 Keil C51 共存的方法</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/Landlord_BZ/article/details/107298033">STM32之CubeMX学习笔记（1）什么是CubeMX 什么是HAL库</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="../../../../categories/IOT/" class="category-chain-item">IOT</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="../../../../tags/IOT/">#IOT</a>
+      
+        <a href="../../../../tags/STM32/">#STM32</a>
+      
+        <a href="../../../../tags/%E5%BC%80%E5%8F%91/">#开发</a>
+      
+        <a href="../../../../tags/%E5%B5%8C%E5%85%A5%E5%BC%8F/">#嵌入式</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>嵌入式基础及STM32开发入门</div>
+      <div>https://lkliki.github.io/2024/11/11/嵌入式基础及STM32开发入门/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>0P1N</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年11月11日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="../chrome-v8-pwn%E5%85%A5%E9%97%A8/" title="chrome_v8_pwn入门">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">chrome_v8_pwn入门</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="../../06/%E4%BB%8E2024L3hCTF&amp;&amp;SCTF%E4%B8%89%E9%81%93%E9%A2%98%E5%AD%A6%E4%B9%A0h3c%E8%B7%AF%E7%94%B1%E5%99%A8&amp;stm32%E8%A3%B8%E6%9C%BA&amp;Infineon%E8%BD%A6%E6%9C%BA%E5%9B%BA%E4%BB%B6%E9%80%86%E5%90%91/" title="三道CTF题目学习h3c路由器&amp;stm32裸机&amp;Infineon车机固件逆向">
+                        <span class="hidden-mobile">三道CTF题目学习h3c路由器&amp;stm32裸机&amp;Infineon车机固件逆向</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href=""><span>fffer</span></a> <i class="iconfont icon-bug"></i> <a href="" target="_blank" rel="nofollow noopener"><span>0p1n</span></a> <br /> <a href=""><span>富强 民主 文明 和谐 自由 平等 公正 法治 爱国 敬业 诚信 友善</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="../../../../js/events.js" ></script>
+<script  src="../../../../js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="../../../../js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="../../../../js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="../../../../js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
