@@ -566,5 +566,34 @@
   
   
   
+  <entry>
+    <title>BadUsb-hid攻击初探</title>
+    <link href="/2023/03/01/badusb%E5%88%9D%E6%8E%A2/"/>
+    <url>/2023/03/01/badusb%E5%88%9D%E6%8E%A2/</url>
+    
+    <content type="html"><![CDATA[<h1 id="BadUsb-hid攻击初探"><a href="#BadUsb-hid攻击初探" class="headerlink" title="BadUsb - hid攻击初探"></a>BadUsb - hid攻击初探</h1><p>原理：usb伪装成键盘，模拟键盘进行输入</p><p><strong>一.淘宝上买个ATTINY85 Digispark kickstarter usb开发板。</strong></p><p><strong>二.下载Arduino IDE、Automator、hfs</strong></p><p>1.Automator用来写键盘模拟的脚本（.ino文件），非必要，但是方便写代码</p><p>Automator很好装，<a href="https://github.com/Catboy96/Automator">https://github.com/Catboy96/Automator</a></p><p>2.hfs用来在配置Arduino IDE时模拟从官网下载包的操作</p><p>下载：<a href="http://www.rejetto.com/hfs/?f=dl">http://www.rejetto.com/hfs/?f=dl</a></p><p>下了直接用</p><p>3.Arduino IDE 用来烧录</p><p>安装：</p><p>1.<a href="http://digistump.com/wiki/digispark/tutorials/connecting">http://digistump.com/wiki/digispark/tutorials/connecting</a></p><p>2.<a href="https://www.bilibili.com/video/BV1z64y147oc/?spm_id_from=333.788.recommend_more_video.0&amp;vd_source=4d7ceec86e24de9c1f10dcb04b1715f0">https://www.bilibili.com/video/BV1z64y147oc/?spm_id_from=333.788.recommend_more_video.0&amp;vd_source=4d7ceec86e24de9c1f10dcb04b1715f0</a></p><p>比较麻烦，两个都要看</p><p><strong>三.</strong></p><p>写脚本，Ducky Script脚本语言，写完生成ino文件</p><p>直接把ino文件里的代码复制到ide里面，不要打开文件</p><p>点上传，显示plug in device now的时候插u盘就行了，很快就能烧录完。</p><p>注意</p><p>1.能重复烧录，会覆盖上一次</p><p>2.烧录的时候把虚拟机关掉</p><p>测试脚本：</p><figure class="highlight reasonml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs reasonml">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;DigiKeyboard.h&quot;</span><br><br>void loop<span class="hljs-literal">()</span> &#123;&#125;<br><br>void setup<span class="hljs-literal">()</span> &#123;<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>delay(<span class="hljs-number">1000</span>);<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>send<span class="hljs-constructor">KeyStroke(KEY_R, MOD_GUI_LEFT)</span>;<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>delay(<span class="hljs-number">200</span>);<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>print(<span class="hljs-string">&quot;notepad&quot;</span>);<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>delay(<span class="hljs-number">200</span>);<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>send<span class="hljs-constructor">KeyStroke(KEY_ENTER)</span>;<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>delay(<span class="hljs-number">200</span>);<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>send<span class="hljs-constructor">KeyStroke(KEY_ENTER)</span>;<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>delay(<span class="hljs-number">200</span>);<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>print(<span class="hljs-string">&quot;you&quot;</span>);<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>delay(<span class="hljs-number">200</span>);<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>send<span class="hljs-constructor">KeyStroke(KEY_ENTER)</span>;<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>delay(<span class="hljs-number">200</span>);<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>print(<span class="hljs-string">&quot; are&quot;</span>);<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>delay(<span class="hljs-number">200</span>);<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>send<span class="hljs-constructor">KeyStroke(KEY_ENTER)</span>;<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>delay(<span class="hljs-number">200</span>);<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>print(<span class="hljs-string">&quot; hacked&quot;</span>);<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>delay(<span class="hljs-number">200</span>);<br><span class="hljs-module-access"><span class="hljs-module"><span class="hljs-identifier">DigiKeyboard</span>.</span></span>send<span class="hljs-constructor">KeyStroke(KEY_ENTER)</span>;<br>&#125;<br></code></pre></td></tr></table></figure><p>delay不能太小，不然输入会错乱</p><p>payloads：<a href="https://github.com/hak5/usbrubberducky-payloads">https://github.com/hak5/usbrubberducky-payloads</a></p><p>很多工具也有powershell payload生成功能，可以直接执行，也可以放到公网再下载执行</p><p>因为能模拟键盘并获取目标机器的shell，所以利用姿势很多。</p><p>其它还有wifi ducky，蓝牙的貌似也有，连上u盘自带的wiki就能实现远程上传ducky script脚本，tb没有，jd现成的150左右一个。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>IOT</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>IOT</tag>
+      
+      <tag>BadUsb</tag>
+      
+      <tag>Hardware</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
   
 </search>
