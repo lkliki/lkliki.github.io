@@ -1,0 +1,794 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="../../../../img/touxiang.png">
+  <link rel="icon" href="../../../../img/touxiang.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="0P1N">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="pixel3刷机安卓12及root记录(附相关知识整理)前置知识安卓和Linux安卓基于Linux内核，是Linux发行版之一。Ubuntu、Debian、CentOs等也是Linux发行版，称为GNU&#x2F;Linux。虽然Android和GNU&#x2F;Linux都是Linux的发行版，但是从应用、库、抽象层甚至到内核层对Linux内核的拓展，系统架构间存在很大差别。 Android内核">
+<meta property="og:type" content="article">
+<meta property="og:title" content="pixel3刷机安卓12及root记录附相关知识整理">
+<meta property="og:url" content="https://lkliki.github.io/2024/12/15/pixel3%E5%88%B7%E6%9C%BA%E5%AE%89%E5%8D%9312%E5%8F%8Aroot%E8%AE%B0%E5%BD%95%E9%99%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/index.html">
+<meta property="og:site_name" content="0P1N">
+<meta property="og:description" content="pixel3刷机安卓12及root记录(附相关知识整理)前置知识安卓和Linux安卓基于Linux内核，是Linux发行版之一。Ubuntu、Debian、CentOs等也是Linux发行版，称为GNU&#x2F;Linux。虽然Android和GNU&#x2F;Linux都是Linux的发行版，但是从应用、库、抽象层甚至到内核层对Linux内核的拓展，系统架构间存在很大差别。 Android内核">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lkliki.github.io/2024/12/15/pixel3%E5%88%B7%E6%9C%BA%E5%AE%89%E5%8D%9312%E5%8F%8Aroot%E8%AE%B0%E5%BD%95%E9%99%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/1.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/12/15/pixel3%E5%88%B7%E6%9C%BA%E5%AE%89%E5%8D%9312%E5%8F%8Aroot%E8%AE%B0%E5%BD%95%E9%99%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/2.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/12/15/pixel3%E5%88%B7%E6%9C%BA%E5%AE%89%E5%8D%9312%E5%8F%8Aroot%E8%AE%B0%E5%BD%95%E9%99%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/3.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/12/15/pixel3%E5%88%B7%E6%9C%BA%E5%AE%89%E5%8D%9312%E5%8F%8Aroot%E8%AE%B0%E5%BD%95%E9%99%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/4.jpg">
+<meta property="og:image" content="https://lkliki.github.io/2024/12/15/pixel3%E5%88%B7%E6%9C%BA%E5%AE%89%E5%8D%9312%E5%8F%8Aroot%E8%AE%B0%E5%BD%95%E9%99%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/5.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/12/15/pixel3%E5%88%B7%E6%9C%BA%E5%AE%89%E5%8D%9312%E5%8F%8Aroot%E8%AE%B0%E5%BD%95%E9%99%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/6.jpg">
+<meta property="og:image" content="https://lkliki.github.io/2024/12/15/pixel3%E5%88%B7%E6%9C%BA%E5%AE%89%E5%8D%9312%E5%8F%8Aroot%E8%AE%B0%E5%BD%95%E9%99%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/7.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/12/15/pixel3%E5%88%B7%E6%9C%BA%E5%AE%89%E5%8D%9312%E5%8F%8Aroot%E8%AE%B0%E5%BD%95%E9%99%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/6.jpg">
+<meta property="og:image" content="https://lkliki.github.io/2024/12/15/pixel3%E5%88%B7%E6%9C%BA%E5%AE%89%E5%8D%9312%E5%8F%8Aroot%E8%AE%B0%E5%BD%95%E9%99%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/9.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/12/15/pixel3%E5%88%B7%E6%9C%BA%E5%AE%89%E5%8D%9312%E5%8F%8Aroot%E8%AE%B0%E5%BD%95%E9%99%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/10.png">
+<meta property="og:image" content="https://lkliki.github.io/2024/12/15/pixel3%E5%88%B7%E6%9C%BA%E5%AE%89%E5%8D%9312%E5%8F%8Aroot%E8%AE%B0%E5%BD%95%E9%99%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/11.png">
+<meta property="article:published_time" content="2024-12-15T11:36:55.000Z">
+<meta property="article:modified_time" content="2024-12-15T11:52:44.879Z">
+<meta property="article:author" content="0P1N">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="刷机">
+<meta property="article:tag" content="root">
+<meta property="article:tag" content="pixel">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://lkliki.github.io/2024/12/15/pixel3%E5%88%B7%E6%9C%BA%E5%AE%89%E5%8D%9312%E5%8F%8Aroot%E8%AE%B0%E5%BD%95%E9%99%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/1.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>pixel3刷机安卓12及root记录附相关知识整理 - 0P1N</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="../../../../css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="../../../../css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="../../../../css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"lkliki.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="../../../../js/utils.js" ></script>
+  <script  src="../../../../js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="../../../../index.html">
+      <strong>Welcome To 0P1N&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../index.html">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('../../../../img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="pixel3刷机安卓12及root记录附相关知识整理"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-12-15 19:36" pubdate>
+          2024年12月15日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          5.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          44 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">pixel3刷机安卓12及root记录附相关知识整理</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="pixel3刷机安卓12及root记录-附相关知识整理"><a href="#pixel3刷机安卓12及root记录-附相关知识整理" class="headerlink" title="pixel3刷机安卓12及root记录(附相关知识整理)"></a>pixel3刷机安卓12及root记录(附相关知识整理)</h1><h2 id="前置知识"><a href="#前置知识" class="headerlink" title="前置知识"></a>前置知识</h2><h3 id="安卓和Linux"><a href="#安卓和Linux" class="headerlink" title="安卓和Linux"></a>安卓和Linux</h3><p>安卓基于Linux内核，是Linux发行版之一。Ubuntu、Debian、CentOs等也是Linux发行版，称为GNU&#x2F;Linux。虽然Android和GNU&#x2F;Linux都是Linux的发行版，但是从应用、库、抽象层甚至到内核层对Linux内核的拓展，系统架构间存在很大差别。</p>
+<p>Android内核基于上游 <a target="_blank" rel="noopener" href="https://www.kernel.org/">Linux 长期支持 (LTS) 内核</a>，是AOSP一部分。在 Google，LTS 内核会与 Android 专用补丁结合，形成所谓的<code>Android通用内核(ACK)</code>。</p>
+<p>Android开源项目(Android Open Source Project,简称AOSP)提供了 Android系统的框架。以下是AOSP系统架构图：</p>
+<p><img src="/2024/12/15/pixel3%E5%88%B7%E6%9C%BA%E5%AE%89%E5%8D%9312%E5%8F%8Aroot%E8%AE%B0%E5%BD%95%E9%99%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/1.png" srcset="/img/loading.gif" lazyload alt="1"></p>
+<p>AOSP是开源的，我们可以基于AOSP定制自己的安卓系统。<a target="_blank" rel="noopener" href="https://source.android.com/?hl=zh-cn">AOSP官网</a>有源代码和文档。并且由于AOSP采用Apache2.0授权，我们基于AOSP开发的代码不需要开源，详情参考该<a target="_blank" rel="noopener" href="https://windliang.wang/2019/05/21/linux%E5%92%8CAndroid%E7%9A%84%E5%85%B3%E7%B3%BB/">文章</a>。</p>
+<p><img src="/2024/12/15/pixel3%E5%88%B7%E6%9C%BA%E5%AE%89%E5%8D%9312%E5%8F%8Aroot%E8%AE%B0%E5%BD%95%E9%99%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/2.png" srcset="/img/loading.gif" lazyload alt="2"></p>
+<h3 id="权限和分区"><a href="#权限和分区" class="headerlink" title="权限和分区"></a>权限和分区</h3><p>这部分比较复杂，这里只做简单介绍，详情参考<a target="_blank" rel="noopener" href="https://source.android.com/docs/core/architecture/partitions?hl=zh-cn">官方文档</a>。</p>
+<p>安卓系统权限从低到高分为应用权限、用户权限和超级用户(root)权限。</p>
+<p>几个常见的标准分区：</p>
+<ul>
+<li>boot:引导分区，启动引导文件，包含Kernel和Ramdisk，安卓root操作主要是修改boot分区。</li>
+<li>recovery:恢复分区，存放了recovery.img，相当于一个简易Linux系统，系统进入Recovery模式后会装载Recovery分区，运行Recovery服务(&#x2F;sbin&#x2F;recovery)，用于OTA升级。Recovery模式下可以擦写分区，是刷机的方式之一。</li>
+<li>system:系统分区。存放安卓系统和系统应用。</li>
+<li>vendor:包含定制应用与库文件，很多厂商也直接将这些文件放入system分区。</li>
+<li>data:也叫userdata，个人数据分区,包含用户安装的应用和数据，包括自定义数据。</li>
+<li>misc:校验数据分区，供 recovery 分区使用。</li>
+<li>cache:缓存分区，加快运行速度。</li>
+</ul>
+<p>A&#x2F;B分区：A&#x2F;B System Updates，Android7.0引入的一种新的OTA升级方式，将boot和system等分区变为两套，称为slot A(boot_a,system_a…)和slot B(boot_b,system_b…)，一个作为主分区，另一个作为备用分区。该方式的优点是可以进行无缝升级，即升级时不影响手机正常使用，并且如果主分区损坏可以通过备用分区恢复。缺点是要占用双倍存储空间。</p>
+<p>虚拟A&#x2F;B分区：Virtual A&#x2F;B System Updates，解决了A&#x2F;B分区的空间占用问题。</p>
+<p>对于采用A&#x2F;B分区和VA&#x2F;B分区的机型，recovery分区被并入了boot分区中。通过recovery模式刷机时，刷第三方recovery镜像会很麻烦。因此更推荐采用fastboot刷机。</p>
+<h3 id="刷机和root"><a href="#刷机和root" class="headerlink" title="刷机和root"></a>刷机和root</h3><p>刷机的两种方式，本文采用fastboot线刷</p>
+<ul>
+<li><p>卡刷：刷机包(通常是.zip)放入手机的内存卡或内置存储中，通过Recovery模式安装。一般情况下，官方内置的Recovery模式限制较多，只能安装官方ROM，而第三方Recovery提供了更多功能，可以自由地刷入第三方ROM，其中以TWRP Recovery较为知名。因此采用卡刷经常需要先刷入第三方Revocery。卡刷本质是对手机文件的替换过程，不会重新刷新整个手机分区、只是替换部分文件，整个卡刷包的内容实际上就是一些文件和目录，所以卡刷相对线刷风险较小。</p>
+<p>优点：方便、简单，刷机方法通用，不会破坏手机底层数据。</p>
+<p>缺点：需要借助第三方recovery，有时需要先获取root权限。</p>
+<p>用途：更新、恢复出厂设置、清除数据、系统备份&#x2F;还原。</p>
+</li>
+<li><p>线刷：刷机包(通常是.img)存在电脑，通过数据线连接电脑进行刷机。常见的线刷方式有fastboot模式、CPU端口模式(如高通9008端口模式、联发科端口模式)。线刷通常是修改底层的分区文件。</p>
+<p>优点：功能强大，可以进行底层修复，在升级过程中可直接将bootloader、基带等一并升级，可在卡刷失败时可以使用官方刷机包进行救砖。</p>
+<p>缺点：操作繁琐；风险较高，线刷变砖很难补救。</p>
+<p>用途：更换系统、解锁Bootloader、卡刷变砖补救、修改系统分区。</p>
+</li>
+</ul>
+<p>安卓root技术的发展历史、原理和工具可以参考该<a target="_blank" rel="noopener" href="https://www.dingxiang-inc.com/blog/post/619">文章</a></p>
+<p><img src="/2024/12/15/pixel3%E5%88%B7%E6%9C%BA%E5%AE%89%E5%8D%9312%E5%8F%8Aroot%E8%AE%B0%E5%BD%95%E9%99%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/3.png" srcset="/img/loading.gif" lazyload alt="3"></p>
+<h2 id="为什么root"><a href="#为什么root" class="headerlink" title="为什么root"></a>为什么root</h2><p>1.Android逆向&#x2F;攻防对抗需要真机环境。以native层动态调试为例，有的APP会检测模拟器，需要在真机才能运行，而不管模拟器还是真机，需要root才能动态调试。还有抓包，https的抓包需要安装系统证书，安装系统证书需要root，所以针对存在模拟器检测的APP抓包，需要root真机。</p>
+<p>2.拓展手机功能，增加DIY程度，比如各种Magisk模块。</p>
+<p>坏处：失去保修、设备安全性减弱、可能变砖。</p>
+<h2 id="如何选择用来root的手机"><a href="#如何选择用来root的手机" class="headerlink" title="如何选择用来root的手机"></a>如何选择用来root的手机</h2><p>主要考虑三个方面：</p>
+<p>1.root的难度：或者说解锁bootloader的难度，因为一般通过bootloader修改boot分区实现root，当然也不一定，不同厂商的产品root的方式各不相同。</p>
+<p>2.圈子和生态：决定了你从互联网获取到的相关资料的数量和质量，前人的经验可以大大降低上手难度。</p>
+<p>3.兼容的安卓系统版本：比如Pixel3最高兼容Android12，如果你有研究更高版本的需求，需要选择更新的型号。</p>
+<p>比较流行的用于root的手机：一加、谷歌Pixel、谷歌Nexus、小米、魅族</p>
+<h2 id="pixel购买注意事项"><a href="#pixel购买注意事项" class="headerlink" title="pixel购买注意事项"></a>pixel购买注意事项</h2><p>笔者在咸鱼上花380买的pixel3，oem已解锁。对于也想买pixel来root的同学，以下是一些经验。</p>
+<h3 id="地区、版本和oem锁"><a href="#地区、版本和oem锁" class="headerlink" title="地区、版本和oem锁"></a>地区、版本和oem锁</h3><p>OEM：Original Equipment Manufacturer，原始设备生产商。</p>
+<p>OEM锁：又称设备锁，厂商为防止设备被篡改加的锁，出厂自带，限制了用户修改底层配置。OEM解锁的设置在开发者选项中，有OEM锁的设备这一项是灰色的，无法修改。</p>
+<p>没有OEM锁才能解锁Bootloader，解锁Bootloader才能root。也就是说我们要买无OEM锁的设备。</p>
+<p>谷歌pixel手机官方版本(无oem锁)主要在欧洲和美洲销售，其它地区如亚太销售运营商定制版(verizon版)，当然欧洲和美洲也有运营商定制版。</p>
+<p>运营商定制版：verizon版，简称<code>v版</code>，有运营商定制锁(oem锁)。国内发售的只有v版，当然欧版和美版也可能是v版。</p>
+<p>美版：可能是官方版本，也可能是v版。需要查imei才能确定是不是v版，是v版则无法解锁oem。支持移动和联通，不支持电信。</p>
+<p>欧版：欧洲国家版本的统称。官版多v版少，但购买时也最好查imei确认。欧版支持国内三大运营商。</p>
+<p>OEM可解锁(非v版)是首位的，其次最好是欧版，网络问题比较好处理。</p>
+<h3 id="如何判断是否v版"><a href="#如何判断是否v版" class="headerlink" title="如何判断是否v版"></a>如何判断是否v版</h3><p>1.可通过<code>adb shell getprop ro.boot.cid</code>查看是不是v版。无锁的非v版返回11111111或00000000，否则是v版。</p>
+<p>2.官网查询</p>
+<p>输入IMEI&#x2F;设备序列号即可查询设备信息，欧版和美版不论是否v版都可以对应产地的官网查到。如果查不到多半是亚洲的v版。</p>
+<p><a target="_blank" rel="noopener" href="https://store.google.com/us/repair">美版</a>  <a target="_blank" rel="noopener" href="https://store.google.com/uk/repair">英版</a>  <a target="_blank" rel="noopener" href="https://store.google.com/fr/repair">法版</a>  <a target="_blank" rel="noopener" href="https://store.google.com/de/repair">德版</a>  <a target="_blank" rel="noopener" href="https://store.google.com/ie/repair">爱尔兰版</a>  <a target="_blank" rel="noopener" href="https://store.google.com/it/repair">意大利版</a>  <a target="_blank" rel="noopener" href="https://store.google.com/es/repair">西班牙版</a></p>
+<p>3.开发者选项查看OEM是否解锁。 </p>
+<h3 id="其它"><a href="#其它" class="headerlink" title="其它"></a>其它</h3><p>笔者买到的pixel3非常诡异，如图，OEM虽然已解锁，但是灰色无法修改；adb连接用户为shell说明未root；通过IMEI在官网查不到设备，说明很可能是国内v版；<code>getprop ro.boot.cid</code>输出是00000001；<code>Product revision</code>中 的MP1.0表示是工程机，JPN表示在日本发售。</p>
+<p><img src="/2024/12/15/pixel3%E5%88%B7%E6%9C%BA%E5%AE%89%E5%8D%9312%E5%8F%8Aroot%E8%AE%B0%E5%BD%95%E9%99%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/4.jpg" srcset="/img/loading.gif" lazyload alt="4"></p>
+<p><img src="/2024/12/15/pixel3%E5%88%B7%E6%9C%BA%E5%AE%89%E5%8D%9312%E5%8F%8Aroot%E8%AE%B0%E5%BD%95%E9%99%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/5.png" srcset="/img/loading.gif" lazyload alt="5"></p>
+<p><img src="/2024/12/15/pixel3%E5%88%B7%E6%9C%BA%E5%AE%89%E5%8D%9312%E5%8F%8Aroot%E8%AE%B0%E5%BD%95%E9%99%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/6.jpg" srcset="/img/loading.gif" lazyload alt="6"></p>
+<h2 id="准备工作"><a href="#准备工作" class="headerlink" title="准备工作"></a>准备工作</h2><h3 id="下载Android-SDK-platform-tools"><a href="#下载Android-SDK-platform-tools" class="headerlink" title="下载Android SDK platform-tools"></a>下载Android SDK platform-tools</h3><p>PC端需要Android SDK中的platform-tools工具包，主要用到其中的<code>adb</code>和<code>fastboot</code>工具。</p>
+<p><a target="_blank" rel="noopener" href="https://developer.android.com/tools/releases/platform-tools?hl=zh-cn">下载传送门</a></p>
+<h3 id="adb连接"><a href="#adb连接" class="headerlink" title="adb连接"></a>adb连接</h3><p>手机连点7次<code>设置-&gt;关于手机-&gt;版本号</code>进入开发者模式。</p>
+<p>进入<code>系统-&gt;高级-&gt;开发者选项</code>，开启<code>USB调试</code>。</p>
+<p>数据线连接手机和电脑。</p>
+<p>PC端运行<code>adb devices</code>，手机端在弹出的消息中选择同意调试，连接成功会显示已连接的设备。<code>adb shell</code>进入手机的shell。由于还没root，只有普通用户权限，部分文件夹无权限访问。</p>
+<p><img src="/2024/12/15/pixel3%E5%88%B7%E6%9C%BA%E5%AE%89%E5%8D%9312%E5%8F%8Aroot%E8%AE%B0%E5%BD%95%E9%99%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/7.png" srcset="/img/loading.gif" lazyload alt="7"></p>
+<p>如果无法识别设备，可以尝试安装最新的<a target="_blank" rel="noopener" href="https://developer.android.com/studio/run/win-usb">Google USB Drivers</a></p>
+<h2 id="解锁Bootloader"><a href="#解锁Bootloader" class="headerlink" title="解锁Bootloader"></a>解锁Bootloader</h2><p>重启手机并进入bootloader菜单，可以使用adb命令或在关机时长按[电源键]+[音量下键]</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">adb reboot bootloader<br></code></pre></td></tr></table></figure>
+
+<p>在bootloader菜单中使用fastboot命令解锁bootloader</p>
+<figure class="highlight ebnf"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs ebnf"><span class="hljs-attribute">fastboot flashing unlock</span><br></code></pre></td></tr></table></figure>
+
+<p>解锁后每次开机会有警告</p>
+<h2 id="刷入google官方安卓12镜像"><a href="#刷入google官方安卓12镜像" class="headerlink" title="刷入google官方安卓12镜像"></a>刷入google官方安卓12镜像</h2><p>镜像下载地址：<a target="_blank" rel="noopener" href="https://developers.google.com/android/images">传送门</a></p>
+<p>查看设备型号，笔者的是pixel3 blueline</p>
+<p><img src="/2024/12/15/pixel3%E5%88%B7%E6%9C%BA%E5%AE%89%E5%8D%9312%E5%8F%8Aroot%E8%AE%B0%E5%BD%95%E9%99%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/6.jpg" srcset="/img/loading.gif" lazyload alt="8"></p>
+<p>选择对应型号的镜像下载</p>
+<p><img src="/2024/12/15/pixel3%E5%88%B7%E6%9C%BA%E5%AE%89%E5%8D%9312%E5%8F%8Aroot%E8%AE%B0%E5%BD%95%E9%99%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/9.png" srcset="/img/loading.gif" lazyload alt="9"></p>
+<p>解压镜像压缩包，如果没有把Android platform-tools加入环境变量，则需要把压缩包中的文件和Android platform-tools放在同一文件夹，然后运行以下命令</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs shell">adb reboot bootloader # 先进入 bootloader 模式<br>flash-all.bat #Windows允许bat脚本<br></code></pre></td></tr></table></figure>
+
+<p>等待脚本跑完，中间如果卡住可以按回车试试。刷完进行系统初始化，自行设置即可。初始化完成记得重新进入开发者模式，开启USB调试，重新连上adb。</p>
+<h2 id="刷入Magisk-Patch过的boot-img实现root"><a href="#刷入Magisk-Patch过的boot-img实现root" class="headerlink" title="刷入Magisk Patch过的boot.img实现root"></a>刷入Magisk Patch过的boot.img实现root</h2><p>关于Magisk</p>
+<p><img src="/2024/12/15/pixel3%E5%88%B7%E6%9C%BA%E5%AE%89%E5%8D%9312%E5%8F%8Aroot%E8%AE%B0%E5%BD%95%E9%99%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/10.png" srcset="/img/loading.gif" lazyload alt="10"></p>
+<p>先安装Magisk <a target="_blank" rel="noopener" href="https://github.com/topjohnwu/Magisk/releases">下载地址</a></p>
+<figure class="highlight arduino"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs arduino">adb install app-release.apk<br></code></pre></td></tr></table></figure>
+
+<p>刚才的解压的镜像包中还有一个压缩文件<code>image-blueline-sp1a.210812.016.c2.zip</code>，解压后里面有个<code>boot.img</code>。</p>
+<p>把<code>boot.img</code>传到手机上</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs gradle">adb <span class="hljs-keyword">push</span> boot.img <span class="hljs-regexp">/sdcard/</span><br></code></pre></td></tr></table></figure>
+
+<p> 手机上打开 <code>Magisk</code> , 依次点击 <code>安装-&gt;选择并修补一个文件-&gt;/sdcard/boot.img-&gt;开始</code>。</p>
+<p>修补完成后，将修补后的 <code>boot.img</code> 传到电脑上</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">adb pull <span class="hljs-regexp">/storage/</span>emulated<span class="hljs-regexp">/0/</span>Download/magisk_patched-xxxxx_xxxxx.img<br></code></pre></td></tr></table></figure>
+
+<p>刷入经过 Magisk 修补好的 <code>boot.img</code></p>
+<figure class="highlight mipsasm"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs mipsasm">adb reboot <span class="hljs-keyword">bootloader </span><br>fastboot flash <span class="hljs-keyword">boot </span>magisk_patched-xxxxx_xxxxx.img<br></code></pre></td></tr></table></figure>
+
+<p>再次开机，电脑<code>adb shell</code>后输入<code>su</code>，手机同意超级用户权限，root成功。</p>
+<p><img src="/2024/12/15/pixel3%E5%88%B7%E6%9C%BA%E5%AE%89%E5%8D%9312%E5%8F%8Aroot%E8%AE%B0%E5%BD%95%E9%99%84%E7%9B%B8%E5%85%B3%E7%9F%A5%E8%AF%86%E6%95%B4%E7%90%86/11.png" srcset="/img/loading.gif" lazyload alt="11"></p>
+<h2 id="刷入电信模块"><a href="#刷入电信模块" class="headerlink" title="刷入电信模块"></a>刷入电信模块</h2><p>通过Magisk模块-<code>China Telecom Supporter</code>开启Pixel3对电信SIM卡的支持和VoLTE高清语音通话功能。</p>
+<p>项目地址：<a target="_blank" rel="noopener" href="https://github.com/apporc/china_telecom_supporter">传送门</a></p>
+<p>下载项目，打包成zip并传入手机</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs awk">git clone https:<span class="hljs-regexp">//gi</span>thub.com<span class="hljs-regexp">/apporc/</span>china_telecom_supporter<br>cd china_telecom_supporter<br>zip -r ./china_telecom_supporter.zip *<br>adb push .<span class="hljs-regexp">/china_telecom_supporter.zip /</span>sdcard<span class="hljs-regexp">/Download/</span><br></code></pre></td></tr></table></figure>
+
+<p>进入手机shell并解压</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs awk">adb shell<br>su<br>unzip -d <span class="hljs-regexp">/sdcard/</span>Download<span class="hljs-regexp">/china_telecom_supporter /</span>sdcard<span class="hljs-regexp">/Download/</span>china_telecom_supporter.zip<br></code></pre></td></tr></table></figure>
+
+<p>移动解压后的文件夹到系统目录&#x2F;data&#x2F;adb&#x2F;modules&#x2F;</p>
+<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs awk">mv <span class="hljs-regexp">/sdcard/</span>Download<span class="hljs-regexp">/china_telecom_supporter /</span>data<span class="hljs-regexp">/adb/m</span>odules/china_telecom_supporter<br></code></pre></td></tr></table></figure>
+
+<p>最后重启手机，插入电信SIM卡测试，能正常打电话和流量上网即可。</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><p><a target="_blank" rel="noopener" href="https://windliang.wang/2019/05/21/linux%E5%92%8CAndroid%E7%9A%84%E5%85%B3%E7%B3%BB/">linux和Android的关系</a></p>
+<p><a target="_blank" rel="noopener" href="https://ericclose.github.io/Pixel-repairs-and-carriers.html">查询 Google Pixel 保修信息以及判断是否为 Verizon （运营商） 版</a></p>
+<p><a target="_blank" rel="noopener" href="https://sspai.com/post/67932">Android 玩家必备神器入门：从零开始安装 Magisk</a></p>
+<p><a href="Magisk/XPOSED%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86">Magisk&#x2F;Xposed原理和区别</a></p>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1369719">如何使用Magisk解锁Bootloader以及RootGoogle Pixel 3？</a></p>
+<p><a target="_blank" rel="noopener" href="https://oacia.dev/Pixel3-root/">Pixel3 刷机与root记录</a></p>
+<p><a target="_blank" rel="noopener" href="https://jessieeeee.github.io/2021/05/28/PixelFlash/">Pixel3刷机+magisk+root+电信支持</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1BY4y1H7Mc/?spm_id_from=333.337.search-card.all.click&vd_source=4d7ceec86e24de9c1f10dcb04b1715f0">玩机必看！带你入坑安卓刷机，小白也能看懂的ROOT基础指南来啦！</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1bS4y1s7DR/?spm_id_from=333.337.search-card.all.click&vd_source=4d7ceec86e24de9c1f10dcb04b1715f0">处理器的引导及安卓之分区的意义及作用（内部课程）</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="../../../../categories/%E5%AE%89%E5%8D%93/" class="category-chain-item">安卓</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="../../../../tags/Android/">#Android</a>
+      
+        <a href="../../../../tags/%E5%88%B7%E6%9C%BA/">#刷机</a>
+      
+        <a href="../../../../tags/root/">#root</a>
+      
+        <a href="../../../../tags/pixel/">#pixel</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>pixel3刷机安卓12及root记录附相关知识整理</div>
+      <div>https://lkliki.github.io/2024/12/15/pixel3刷机安卓12及root记录附相关知识整理/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>0P1N</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年12月15日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="../../../11/11/chrome-v8-pwn%E5%85%A5%E9%97%A8/" title="chrome_v8_pwn入门">
+                        <span class="hidden-mobile">chrome_v8_pwn入门</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href=""><span>fffer</span></a> <i class="iconfont icon-bug"></i> <a href="" target="_blank" rel="nofollow noopener"><span>0p1n</span></a> <br /> <a href=""><span>富强 民主 文明 和谐 自由 平等 公正 法治 爱国 敬业 诚信 友善</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="../../../../js/events.js" ></script>
+<script  src="../../../../js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="../../../../js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="../../../../js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="../../../../js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
