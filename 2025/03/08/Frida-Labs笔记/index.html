@@ -1,0 +1,925 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=dark>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="../../../../img/touxiang.png">
+  <link rel="icon" href="../../../../img/touxiang.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+    <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="0P1N">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Frida_Labs笔记Frida介绍Frida是一个基于动态二进制插桩技术的轻量级hook框架，能够在不修改可执行文件的前提下注入代码到目标进程的内存中或访问内存，支持Windows、macOS、Linux、iOS、Android、QNX、FreeBSD等平台。 简单来说，frida的原理是将GumJS引擎以动态库的形式注入目标进程，我们编写脚本将JS代码发送给JS引擎执行。JS引擎可以和被注入">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Frida_Labs笔记">
+<meta property="og:url" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/index.html">
+<meta property="og:site_name" content="0P1N">
+<meta property="og:description" content="Frida_Labs笔记Frida介绍Frida是一个基于动态二进制插桩技术的轻量级hook框架，能够在不修改可执行文件的前提下注入代码到目标进程的内存中或访问内存，支持Windows、macOS、Linux、iOS、Android、QNX、FreeBSD等平台。 简单来说，frida的原理是将GumJS引擎以动态库的形式注入目标进程，我们编写脚本将JS代码发送给JS引擎执行。JS引擎可以和被注入">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/1.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/2.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/3.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/4.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/5.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/7.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/8.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/9.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/10.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/11.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/12.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/13.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/14.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/15.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/16.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/17.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/18.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/19.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/20.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/21.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/22.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/23.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/24.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/25.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/26.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/27.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/28.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/29.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/30.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/31.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/32.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/33.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/34.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/35.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/36.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/37.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/38.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/39.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/40.png">
+<meta property="og:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/41.png">
+<meta property="article:published_time" content="2025-03-07T17:42:16.000Z">
+<meta property="article:modified_time" content="2025-03-07T18:56:00.879Z">
+<meta property="article:author" content="0P1N">
+<meta property="article:tag" content="移动安全">
+<meta property="article:tag" content="安卓">
+<meta property="article:tag" content="hook框架">
+<meta property="article:tag" content="Frida">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://lkliki.github.io/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/1.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Frida_Labs笔记 - 0P1N</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="../../../../css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="../../../../css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="../../../../css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"lkliki.github.io","root":"/","version":"1.9.2","typing":{"enable":true,"typeSpeed":70,"cursorChar":"|","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":true,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="../../../../js/utils.js" ></script>
+  <script  src="../../../../js/color-schema.js" ></script>
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+  
+<meta name="generator" content="Hexo 6.2.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="../../../../index.html">
+      <strong>Welcome To 0P1N&#39;s Blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../index.html">
+                <i class="iconfont icon-home-fill"></i>
+                首页
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                归档
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../categories/">
+                <i class="iconfont icon-category-fill"></i>
+                分类
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                标签
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../about/">
+                <i class="iconfont icon-user-fill"></i>
+                关于
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="../../../../links/">
+                <i class="iconfont icon-link-fill"></i>
+                友链
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              &nbsp;<i class="iconfont icon-search"></i>&nbsp;
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">&nbsp;<i
+                class="iconfont icon-dark" id="color-toggle-icon"></i>&nbsp;</a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('../../../../img/background.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Frida_Labs笔记"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-03-08 01:42" pubdate>
+          2025年3月8日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          21k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          172 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Frida_Labs笔记</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="Frida-Labs笔记"><a href="#Frida-Labs笔记" class="headerlink" title="Frida_Labs笔记"></a>Frida_Labs笔记</h1><h2 id="Frida介绍"><a href="#Frida介绍" class="headerlink" title="Frida介绍"></a>Frida介绍</h2><p>Frida是一个基于<strong>动态二进制插桩技术</strong>的轻量级<strong>hook框架</strong>，能够在不修改可执行文件的前提下注入代码到目标进程的内存中或访问内存，支持Windows、macOS、Linux、iOS、Android、QNX、FreeBSD等平台。</p>
+<p>简单来说，frida的原理是将GumJS引擎以动态库的形式注入目标进程，我们编写脚本将JS代码发送给JS引擎执行。JS引擎可以和被注入的进程通信以实现内存访问、函数hook、函数调用等功能。</p>
+<p>Frida使用时分为Client和Server。Client一般在PC端，Server在移动端。Client通过Python脚本将Js代码提交到Server；Server接收到hook代码后注入目标进程，完成内存操作后给Client发送反馈消息。<strong>frida-server</strong> 是一个守护进程，通过 TCP 和 Frida 核心引擎通信，默认的监听端口是 <strong>27042</strong>。</p>
+<p>frida有三种模式，以上是注入模式的内容，需要设备root；其它还有嵌入和预加载两种模式，不需要root(基于frida-Gadget)，参考官方文档-<a target="_blank" rel="noopener" href="https://frida.re/docs/modes/">frida模式</a>。</p>
+<p>除了Python，脚本也可以用Go、C、Swift、TypeScript等语言，官方文档中有<a target="_blank" rel="noopener" href="https://frida.re/docs/javascript-api/">API参考</a>。</p>
+<p><a target="_blank" rel="noopener" href="https://book.crifan.org/books/reverse_debug_frida/website/frida_overview/code_arch.html">代码和架构</a></p>
+<p><a target="_blank" rel="noopener" href="https://book.crifan.org/books/reverse_debug_frida/website/frida_overview/doc_refer/">文档和资料</a></p>
+<p><a target="_blank" rel="noopener" href="https://evilpan.com/2022/04/05/frida-internal/">Frida内部原理</a></p>
+<p>其它类似的hook工具还有Xposed和SubstrateCydia等，Frida适合新手入门，Xposed适合java层hook，SubstrateCydia适合native层hook。</p>
+<h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><ul>
+<li>安卓设备需要ROOT</li>
+<li>PC端的frida版本和移动端的frida-server版本需要一致</li>
+</ul>
+<p>PC端安装frida和frida-tools</p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs cmake">pip <span class="hljs-keyword">install</span> frida<br>pip <span class="hljs-keyword">install</span> frida-tools<br></code></pre></td></tr></table></figure>
+
+<p>查看frida版本和CPU架构，获取版本和架构相同的server:<a target="_blank" rel="noopener" href="https://github.com/frida/frida/releases">传送门</a></p>
+<p>如下选择<code>frida-server-16.6.6-android-arm64.xz</code>，下载后解压后得到frida-server的二进制可执行文件</p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs stylus">frida <span class="hljs-attr">--version</span><br><span class="hljs-number">16.6</span>.<span class="hljs-number">6</span><br>adb shell getprop ro<span class="hljs-selector-class">.product</span><span class="hljs-selector-class">.cpu</span><span class="hljs-selector-class">.abi</span><br>arm64-v8a<br></code></pre></td></tr></table></figure>
+
+<p>移动端以root权限运行frida-server</p>
+<figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs gradle">adb <span class="hljs-keyword">push</span> frida-server-<span class="hljs-number">16.6</span>.<span class="hljs-number">6</span>-android-arm64 <span class="hljs-regexp">/data/</span>local<span class="hljs-regexp">/tmp/</span><br>adb shell<br>su<br>cd <span class="hljs-regexp">/data/</span>local<span class="hljs-regexp">/tmp/</span><br>chmod <span class="hljs-number">777</span> frida-server-<span class="hljs-number">16.6</span>.<span class="hljs-number">6</span>-android<br>./frida-server-<span class="hljs-number">16.6</span>.<span class="hljs-number">6</span>-android &amp;<br></code></pre></td></tr></table></figure>
+
+<p>再打开一个cmd，验证frida-server已成功运行</p>
+<figure class="highlight node-repl"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs node-repl">frida-ps -Ua<br><span class="hljs-meta prompt_">...</span><br>21185  frida-server-16.6.6-android<br><span class="hljs-meta prompt_">...</span> <br></code></pre></td></tr></table></figure>
+
+<p>将移动端frida-server的TCP端口转发至PC端，每次运行frida-server都要重新转发端口 </p>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs apache"><span class="hljs-attribute">adb</span> forward tcp:<span class="hljs-number">27042</span> tcp:<span class="hljs-number">27042</span><br></code></pre></td></tr></table></figure>
+
+<h2 id="Frida-labs"><a href="#Frida-labs" class="headerlink" title="Frida_labs"></a>Frida_labs</h2><p>包含一系列专为学习 Frida for Android 而设计的挑战，帮助新手开始使用Frida及其常用API。</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/DERE-ad2001/Frida-Labs?tab=readme-ov-file">项目地址</a></p>
+<figure class="highlight cmake"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs cmake">安装各关卡APP：adb <span class="hljs-keyword">install</span> Challenge <span class="hljs-number">0</span>xN.apk<br></code></pre></td></tr></table></figure>
+
+<h5 id="挑战0x1：Frida设置，hook方法-attach模式和spawn模式"><a href="#挑战0x1：Frida设置，hook方法-attach模式和spawn模式" class="headerlink" title="挑战0x1：Frida设置，hook方法 | attach模式和spawn模式"></a>挑战0x1：Frida设置，hook方法 | attach模式和spawn模式</h5><p>运行APP初步了解功能</p>
+<img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/1.png" srcset="/img/loading.gif" lazyload alt="1" style="zoom:25%;">
+
+<p> jadx反编译</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><code class="hljs java">        <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> get_random();<br>        ((Button) findViewById(R.id.button)).setOnClickListener(<span class="hljs-keyword">new</span> <span class="hljs-title class_">View</span>.OnClickListener() &#123; <span class="hljs-comment">// from class: com.ad2001.frida0x1.MainActivity.1</span><br>            <span class="hljs-meta">@Override</span> <span class="hljs-comment">// android.view.View.OnClickListener</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onClick</span><span class="hljs-params">(View view)</span> &#123;<br>                <span class="hljs-type">String</span> <span class="hljs-variable">obj</span> <span class="hljs-operator">=</span> editText.getText().toString(); <span class="hljs-comment">// 获取输入框内容</span><br>                <span class="hljs-keyword">if</span> (TextUtils.isDigitsOnly(obj)) &#123; <span class="hljs-comment">// 输入框内容必须是纯数字</span><br>                    MainActivity.<span class="hljs-built_in">this</span>.check(i, Integer.parseInt(obj)); <span class="hljs-comment">// ;check函数对输入进行校验</span><br>                &#125; <span class="hljs-keyword">else</span> &#123;<br>                    Toast.makeText(MainActivity.<span class="hljs-built_in">this</span>.getApplicationContext(), <span class="hljs-string">&quot;Enter a valid number !!&quot;</span>, <span class="hljs-number">1</span>).show();<br>                &#125;<br>            &#125;<br>        &#125;);<br><br>     <span class="hljs-type">int</span> <span class="hljs-title function_">get_random</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Random</span>().nextInt(<span class="hljs-number">100</span>);<br>    &#125;<br>       <br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">check</span><span class="hljs-params">(<span class="hljs-type">int</span> i, <span class="hljs-type">int</span> i2)</span> &#123;<br>        <span class="hljs-keyword">if</span> ((i * <span class="hljs-number">2</span>) + <span class="hljs-number">4</span> == i2) &#123;<br>            Toast.makeText(getApplicationContext(), <span class="hljs-string">&quot;Yey you guessed it right&quot;</span>, <span class="hljs-number">1</span>).show();<br>            <span class="hljs-type">StringBuilder</span> <span class="hljs-variable">sb</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">StringBuilder</span>();<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i3</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i3 &lt; <span class="hljs-number">20</span>; i3++) &#123;<br>                <span class="hljs-type">char</span> <span class="hljs-variable">charAt</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;AMDYV&#123;WVWT_CJJF_0s1&#125;&quot;</span>.charAt(i3);<br>                <span class="hljs-keyword">if</span> (charAt &lt; <span class="hljs-string">&#x27;a&#x27;</span> || charAt &gt; <span class="hljs-string">&#x27;z&#x27;</span>) &#123;<br>                    <span class="hljs-keyword">if</span> (charAt &gt;= <span class="hljs-string">&#x27;A&#x27;</span>) &#123;<br>                        <span class="hljs-keyword">if</span> (charAt &lt;= <span class="hljs-string">&#x27;Z&#x27;</span>) &#123;<br>                            charAt = (<span class="hljs-type">char</span>) (charAt - <span class="hljs-number">21</span>);<br>                            <span class="hljs-keyword">if</span> (charAt &gt;= <span class="hljs-string">&#x27;A&#x27;</span>) &#123;<br>                            &#125;<br>                            charAt = (<span class="hljs-type">char</span>) (charAt + <span class="hljs-number">26</span>);<br>                        &#125;<br>                    &#125;<br>                    sb.append(charAt);<br>                &#125; <span class="hljs-keyword">else</span> &#123;<br>                    charAt = (<span class="hljs-type">char</span>) (charAt - <span class="hljs-number">21</span>);<br>                    <span class="hljs-keyword">if</span> (charAt &gt;= <span class="hljs-string">&#x27;a&#x27;</span>) &#123;<br>                        sb.append(charAt);<br>                    &#125;<br>                    charAt = (<span class="hljs-type">char</span>) (charAt + <span class="hljs-number">26</span>);<br>                    sb.append(charAt);<br>                &#125;<br>            &#125;<br>            <span class="hljs-built_in">this</span>.t1.setText(sb.toString());<br>            <span class="hljs-keyword">return</span>;<br>        &#125;<br>        Toast.makeText(getApplicationContext(), <span class="hljs-string">&quot;Try again&quot;</span>, <span class="hljs-number">1</span>).show();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>主要的校验逻辑在check(int i, int i2)中，i是由get_radom函数生成的0-99随机数，i2是我们的输入，满足(i * 2) + 4 &#x3D;&#x3D; i2才能通过校验，然后解码AMDYV{WVWT_CJJF_0s1}输出flag。</p>
+<ul>
+<li><p>方法一：hook get_radom函数，将其返回值修改为固定值。</p>
+<p>这里改为0，所以hook之后输入4即可过关。注意由于get_random函数是在on_create即启动阶段被执行的，所以要采用<strong>spawn模式</strong>： 启动一个新的进程并挂起，在启动的同时注入frida代码，注入完成后再调用resume恢复进程。</p>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> frida,sys<br><br>PACKAGE = <span class="hljs-string">&quot;com.ad2001.frida0x1&quot;</span><br>jsCode = <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    Java.perform(function() &#123;</span><br><span class="hljs-string">        var a= Java.use(&quot;com.ad2001.frida0x1.MainActivity&quot;);</span><br><span class="hljs-string">        a.get_random.implementation = function()&#123;</span><br><span class="hljs-string">            return 0;</span><br><span class="hljs-string">        &#125;</span><br><span class="hljs-string">    &#125;)</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">on_message</span>(<span class="hljs-params">message, data</span>):<br>    <span class="hljs-built_in">print</span>(message)<br><br>device = frida.get_usb_device()<br>pid = device.spawn(PACKAGE)<br>process = device.attach(pid)<br>script = process.create_script(jsCode)<br>script.on(<span class="hljs-string">&#x27;message&#x27;</span>, on_message)<br>script.load()<br>device.resume(pid)<br>sys.stdin.read()<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>方法二：hook check函数，将其参数改为两个能通过校验的固定值。  由于该函数带两个参数，所以需要用overload关键字在重载时指定两个参数的类型。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> frida,sys<br><br>PACKAGE = <span class="hljs-string">&quot;Frida 0x1&quot;</span><br>jsCode = <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    Java.perform(function()&#123;</span><br><span class="hljs-string">		var MainActivity = Java.use(&quot;com.ad2001.frida0x1.MainActivity&quot;);</span><br><span class="hljs-string">        MainActivity.check.overload(&#x27;int&#x27;,&#x27;int&#x27;).implementation = function (a,b)&#123;</span><br><span class="hljs-string">            console.log(&quot;Origin i and i2 = &quot;,a,b);</span><br><span class="hljs-string">            return this.check(1,6);</span><br><span class="hljs-string">        &#125;</span><br><span class="hljs-string">	&#125;);</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">on_message</span>(<span class="hljs-params">message, data</span>):<br>    <span class="hljs-built_in">print</span>(message)<br><br>process = frida.get_usb_device().attach(PACKAGE)<br>script = process.create_script(jsCode)<br>script.on(<span class="hljs-string">&#x27;message&#x27;</span>, on_message)<br>script.load()<br>sys.stdin.read()<br></code></pre></td></tr></table></figure>
+
+<h5 id="挑战0x2：主动调用静态方法"><a href="#挑战0x2：主动调用静态方法" class="headerlink" title="挑战0x2：主动调用静态方法"></a>挑战0x2：主动调用静态方法</h5><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/2.png" srcset="/img/loading.gif" lazyload alt="2" style="zoom:25%;">
+
+<p>页面没有交互，但是有一个未被使用静态的get_flag方法，当参数为4919时解密输出flag。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MainActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AppCompatActivity</span> &#123;<br>    <span class="hljs-keyword">static</span> TextView t1;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onCreate</span><span class="hljs-params">(Bundle savedInstanceState)</span> &#123;<br>        <span class="hljs-built_in">super</span>.onCreate(savedInstanceState);<br>        setContentView(R.layout.activity_main);<br>        t1 = (TextView) findViewById(R.id.textview);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">get_flag</span><span class="hljs-params">(<span class="hljs-type">int</span> a)</span> &#123;<br>        <span class="hljs-keyword">if</span> (a == <span class="hljs-number">4919</span>) &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                <span class="hljs-type">SecretKeySpec</span> <span class="hljs-variable">secretKeySpec</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">SecretKeySpec</span>(<span class="hljs-string">&quot;HILLBILLWILLBINN&quot;</span>.getBytes(), <span class="hljs-string">&quot;AES&quot;</span>);<br>                <span class="hljs-type">Cipher</span> <span class="hljs-variable">cipher</span> <span class="hljs-operator">=</span> Cipher.getInstance(<span class="hljs-string">&quot;AES/CBC/PKCS5Padding&quot;</span>);<br>                <span class="hljs-type">IvParameterSpec</span> <span class="hljs-variable">iv</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IvParameterSpec</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">byte</span>[<span class="hljs-number">16</span>]);<br>                cipher.init(<span class="hljs-number">2</span>, secretKeySpec, iv);<br>                <span class="hljs-type">byte</span>[] decryptedBytes = cipher.doFinal(Base64.decode(<span class="hljs-string">&quot;q7mBQegjhpfIAr0OgfLvH0t/D0Xi0ieG0vd+8ZVW+b4=&quot;</span>, <span class="hljs-number">0</span>));<br>                <span class="hljs-type">String</span> <span class="hljs-variable">decryptedText</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>(decryptedBytes);<br>                t1.setText(decryptedText);<br>            &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>                e.printStackTrace();<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>思路：主动调用静态方法get_flag并传入参数4919</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> frida,sys<br><br>PACKAGE = <span class="hljs-string">&quot;Frida 0x2&quot;</span><br>jsCode = <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    Java.perform(function()&#123;</span><br><span class="hljs-string">		var MainActivity = Java.use(&quot;com.ad2001.frida0x2.MainActivity&quot;);</span><br><span class="hljs-string">        MainActivity.get_flag(4919);</span><br><span class="hljs-string">	&#125;);</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">on_message</span>(<span class="hljs-params">message, data</span>):<br>    <span class="hljs-built_in">print</span>(message)<br><br>process = frida.get_usb_device().attach(PACKAGE)<br>script = process.create_script(jsCode)<br>script.on(<span class="hljs-string">&#x27;message&#x27;</span>, on_message)<br>script.load()<br>sys.stdin.read()<br></code></pre></td></tr></table></figure>
+
+<h5 id="挑战0x3：改变变量的值"><a href="#挑战0x3：改变变量的值" class="headerlink" title="挑战0x3：改变变量的值"></a>挑战0x3：改变变量的值</h5><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/3.png" srcset="/img/loading.gif" lazyload alt="3" style="zoom:25%;">
+
+<p>点击按钮时如果Checker.code &#x3D;&#x3D; 512则解密并打印flag</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Checker</span> &#123;<br>    <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-variable">code</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">increase</span><span class="hljs-params">()</span> &#123;<br>        code += <span class="hljs-number">2</span>;<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MainActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AppCompatActivity</span> &#123;<br>    TextView t1;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onCreate</span><span class="hljs-params">(Bundle savedInstanceState)</span> &#123;<br>        <span class="hljs-built_in">super</span>.onCreate(savedInstanceState);<br>        setContentView(R.layout.activity_main);<br>        <span class="hljs-type">Button</span> <span class="hljs-variable">btn</span> <span class="hljs-operator">=</span> (Button) findViewById(R.id.button);<br>        <span class="hljs-built_in">this</span>.t1 = (TextView) findViewById(R.id.textView);<br>        btn.setOnClickListener(<span class="hljs-keyword">new</span> <span class="hljs-title class_">View</span>.OnClickListener() &#123; <span class="hljs-comment">// from class: com.ad2001.frida0x3.MainActivity.1</span><br>            <span class="hljs-meta">@Override</span> <span class="hljs-comment">// android.view.View.OnClickListener</span><br>            <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onClick</span><span class="hljs-params">(View v)</span> &#123;<br>                <span class="hljs-keyword">if</span> (Checker.code == <span class="hljs-number">512</span>) &#123;<br>                    <span class="hljs-type">byte</span>[] bArr = <span class="hljs-keyword">new</span> <span class="hljs-title class_">byte</span>[<span class="hljs-number">0</span>];<br>                    Toast.makeText(MainActivity.<span class="hljs-built_in">this</span>.getApplicationContext(), <span class="hljs-string">&quot;YOU WON!!!&quot;</span>, <span class="hljs-number">1</span>).show();<br>                    <span class="hljs-type">byte</span>[] KeyData = <span class="hljs-string">&quot;glass123&quot;</span>.getBytes();<br>                    <span class="hljs-type">SecretKeySpec</span> <span class="hljs-variable">KS</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">SecretKeySpec</span>(KeyData, <span class="hljs-string">&quot;Blowfish&quot;</span>);<br>                    <span class="hljs-type">byte</span>[] ecryptedtexttobytes = Base64.getDecoder().decode(<span class="hljs-string">&quot;MKxsZsY9Usw3ozXKKzTF0ymIaC8rs0AY74GnaKqkUrk=&quot;</span>);<br>                    <span class="hljs-keyword">try</span> &#123;<br>                        <span class="hljs-type">Cipher</span> <span class="hljs-variable">cipher</span> <span class="hljs-operator">=</span> Cipher.getInstance(<span class="hljs-string">&quot;Blowfish&quot;</span>);<br>                        cipher.init(<span class="hljs-number">2</span>, KS);<br>                        <span class="hljs-type">byte</span>[] decrypted = cipher.doFinal(ecryptedtexttobytes);<br>                        <span class="hljs-type">String</span> <span class="hljs-variable">decryptedString</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>(decrypted, Charset.forName(<span class="hljs-string">&quot;UTF-8&quot;</span>));<br>                        MainActivity.<span class="hljs-built_in">this</span>.t1.setText(decryptedString);<br>                        <span class="hljs-keyword">return</span>;<br>                    &#125; <span class="hljs-keyword">catch</span> (InvalidKeyException e) &#123;<br>                        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(e);<br>                    &#125; <span class="hljs-keyword">catch</span> (NoSuchAlgorithmException e2) &#123;<br>                        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(e2);<br>                    &#125; <span class="hljs-keyword">catch</span> (BadPaddingException e3) &#123;<br>                        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(e3);<br>                    &#125; <span class="hljs-keyword">catch</span> (IllegalBlockSizeException e4) &#123;<br>                        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(e4);<br>                    &#125; <span class="hljs-keyword">catch</span> (NoSuchPaddingException e5) &#123;<br>                        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">RuntimeException</span>(e5);<br>                    &#125;<br>                &#125;<br>                Toast.makeText(MainActivity.<span class="hljs-built_in">this</span>.getApplicationContext(), <span class="hljs-string">&quot;TRY AGAIN&quot;</span>, <span class="hljs-number">1</span>).show();<br>            &#125;<br>        &#125;);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>思路：修改checker类中code变量的值为512</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> frida,sys<br><br>PACKAGE = <span class="hljs-string">&quot;Frida 0x3&quot;</span><br>jsCode = <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    Java.perform(function()&#123;</span><br><span class="hljs-string">        let Checker = Java.use(&quot;com.ad2001.frida0x3.Checker&quot;);</span><br><span class="hljs-string">        Checker.code.value=512;</span><br><span class="hljs-string">	&#125;);</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">on_message</span>(<span class="hljs-params">message, data</span>):<br>    <span class="hljs-built_in">print</span>(message)<br><br>process = frida.get_usb_device().attach(PACKAGE)<br>script = process.create_script(jsCode)<br>script.on(<span class="hljs-string">&#x27;message&#x27;</span>, on_message)<br>script.load()<br>sys.stdin.read()<br></code></pre></td></tr></table></figure>
+
+<h5 id="挑战0x4：创建类实例"><a href="#挑战0x4：创建类实例" class="headerlink" title="挑战0x4：创建类实例"></a>挑战0x4：创建类实例</h5><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/4.png" srcset="/img/loading.gif" lazyload alt="4" style="zoom:25%;">
+
+<p>和挑战3类似，有一个未使用的非静态check类，传入参数为1337时返回flag。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Check</span> &#123;<br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">get_flag</span><span class="hljs-params">(<span class="hljs-type">int</span> a)</span> &#123;<br>        <span class="hljs-keyword">if</span> (a == <span class="hljs-number">1337</span>) &#123;<br>            <span class="hljs-type">byte</span>[] decoded = <span class="hljs-keyword">new</span> <span class="hljs-title class_">byte</span>[<span class="hljs-string">&quot;I]FKNtW@]JKPFA\\[NALJr&quot;</span>.getBytes().length];<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-string">&quot;I]FKNtW@]JKPFA\\[NALJr&quot;</span>.getBytes().length; i++) &#123;<br>                decoded[i] = (<span class="hljs-type">byte</span>) (<span class="hljs-string">&quot;I]FKNtW@]JKPFA\\[NALJr&quot;</span>.getBytes()[i] ^ <span class="hljs-number">15</span>);<br>            &#125;<br>            <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>(decoded);<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;&quot;</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>思路：获取Check类 &#x3D;&gt; 从类创建Check对象 &#x3D;&gt; 调用get_flag方法并传入参数1337 &#x3D;&gt; 接收打印check方法返回的Flag。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> frida,sys<br><br>PACKAGE = <span class="hljs-string">&quot;Frida 0x4&quot;</span><br>jsCode = <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    Java.perform(function()&#123;</span><br><span class="hljs-string">        let Check = Java.use(&quot;com.ad2001.frida0x4.Check&quot;);</span><br><span class="hljs-string">        let Check_obj = Check.$new();</span><br><span class="hljs-string">        let flag = Check_obj.get_flag(1337);</span><br><span class="hljs-string">        console.log(flag);</span><br><span class="hljs-string">	&#125;);</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">on_message</span>(<span class="hljs-params">message, data</span>):<br>    <span class="hljs-built_in">print</span>(message)<br><br>process = frida.get_usb_device().attach(PACKAGE)<br>script = process.create_script(jsCode)<br>script.on(<span class="hljs-string">&#x27;message&#x27;</span>, on_message)<br>script.load()<br>sys.stdin.read()<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight dust"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs dust"><span class="language-xml">输出：FRIDA</span><span class="hljs-template-variable">&#123;XORED_INSTANCE&#125;</span><br></code></pre></td></tr></table></figure>
+
+<h5 id="挑战0x5：调用现有实例上的方法"><a href="#挑战0x5：调用现有实例上的方法" class="headerlink" title="挑战0x5：调用现有实例上的方法"></a>挑战0x5：调用现有实例上的方法</h5><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/5.png" srcset="/img/loading.gif" lazyload alt="5" style="zoom:25%;">
+
+<p>MainActivity类中有一个非静态方法flag，code参数为1337时输出flag到TextView空件。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MainActivity</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AppCompatActivity</span> &#123;<br>    TextView t1;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">onCreate</span><span class="hljs-params">(Bundle savedInstanceState)</span> &#123;<br>        <span class="hljs-built_in">super</span>.onCreate(savedInstanceState);<br>        setContentView(R.layout.activity_main);<br>        <span class="hljs-built_in">this</span>.t1 = (TextView) findViewById(R.id.textview);<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">flag</span><span class="hljs-params">(<span class="hljs-type">int</span> code)</span> &#123;<br>        <span class="hljs-keyword">if</span> (code == <span class="hljs-number">1337</span>) &#123;<br>            <span class="hljs-keyword">try</span> &#123;<br>                <span class="hljs-type">SecretKeySpec</span> <span class="hljs-variable">secretKeySpec</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">SecretKeySpec</span>(<span class="hljs-string">&quot;WILLIWOMNKESAWEL&quot;</span>.getBytes(), <span class="hljs-string">&quot;AES&quot;</span>);<br>                <span class="hljs-type">Cipher</span> <span class="hljs-variable">cipher</span> <span class="hljs-operator">=</span> Cipher.getInstance(<span class="hljs-string">&quot;AES/CBC/PKCS5Padding&quot;</span>);<br>                <span class="hljs-type">IvParameterSpec</span> <span class="hljs-variable">iv</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IvParameterSpec</span>(<span class="hljs-keyword">new</span> <span class="hljs-title class_">byte</span>[<span class="hljs-number">16</span>]);<br>                cipher.init(<span class="hljs-number">2</span>, secretKeySpec, iv);<br>                <span class="hljs-type">byte</span>[] decodedEnc = Base64.getDecoder().decode(<span class="hljs-string">&quot;2Y2YINP9PtJCS/7oq189VzFynmpG8swQDmH4IC9wKAY=&quot;</span>);<br>                <span class="hljs-type">byte</span>[] decryptedBytes = cipher.doFinal(decodedEnc);<br>                <span class="hljs-type">String</span> <span class="hljs-variable">decryptedText</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span>(decryptedBytes);<br>                <span class="hljs-built_in">this</span>.t1.setText(decryptedText);<br>            &#125; <span class="hljs-keyword">catch</span> (Exception e) &#123;<br>                e.printStackTrace();<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>与挑战4不同，这里的MainActivity不能直接new创建，因为MainActivity需要context，需要系统的ActivityManager对其进行生命周期管理，而挑战4中的Check类不需要。</p>
+<p>参考下面两篇文章：</p>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/2295387">［干货］让你彻底搞懂 Context 到底是什么，如果没弄明白，还怎么做 Android 开发？</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.51cto.com/u_16213322/7603355">android Activity 可以new吗</a></p>
+<p>思路：利用<code>Java.choose</code>API获取上下文中的MainActivity实例，调用其flag方法。API用法参考<a target="_blank" rel="noopener" href="https://frida.re/docs/javascript-api/#frida">javascript-api-frida文档</a>。</p>
+<ul>
+<li><p><code>Java.choose(className, callbacks)</code>: 在运行时枚举指定Java类（作为第一个参数提供）的实例。</p>
+<p>enumerate live instances of the <code>className</code> class by scanning the Java heap, where <code>callbacks</code> is an object specifying:</p>
+<ul>
+<li><p><code>onMatch(instance)</code>: called with each live instance found with a ready-to-use <code>instance</code> just as if you would have called <a target="_blank" rel="noopener" href="https://frida.re/docs/javascript-api/#java-cast"><code>Java.cast()</code></a> with a raw handle to this particular instance.</p>
+<p>This function may return the string <code>stop</code> to cancel the enumeration early.</p>
+</li>
+<li><p><code>onComplete()</code>: called when all instances have been enumerated。</p>
+</li>
+</ul>
+</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> frida,sys<br><br>PACKAGE = <span class="hljs-string">&quot;Frida 0x5&quot;</span><br>jsCode = <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    Java.perform(function()&#123;</span><br><span class="hljs-string">        Java.choose(&#x27;com.ad2001.frida0x5.MainActivity&#x27;,&#123;</span><br><span class="hljs-string">            onMatch: function(instance)&#123;</span><br><span class="hljs-string">                instance.flag(1337)</span><br><span class="hljs-string">            &#125;,</span><br><span class="hljs-string">            onComplete: function()&#123;</span><br><span class="hljs-string">            &#125;</span><br><span class="hljs-string">        &#125;)</span><br><span class="hljs-string">    &#125;)</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">on_message</span>(<span class="hljs-params">message, data</span>):<br>    <span class="hljs-built_in">print</span>(message)<br><br>process = frida.get_usb_device().attach(PACKAGE)<br>script = process.create_script(jsCode)<br>script.on(<span class="hljs-string">&#x27;message&#x27;</span>, on_message)<br>script.load()<br>sys.stdin.read()<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/7.png" srcset="/img/loading.gif" lazyload alt="7"></p>
+<h5 id="挑战0x6：使用对象参数调用方法"><a href="#挑战0x6：使用对象参数调用方法" class="headerlink" title="挑战0x6：使用对象参数调用方法"></a>挑战0x6：使用对象参数调用方法</h5><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/8.png" srcset="/img/loading.gif" lazyload alt="8" style="zoom:25%;">
+
+<p>MainActivity类有个没用到的get_flag非静态方法，要传入Checker类的实例A作为参数，当A.num1&#x3D;&#x3D;1234且A.num2&#x3D;&#x3D;4321时显示flag</p>
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/9.png" srcset="/img/loading.gif" lazyload alt="9"></p>
+<p>Checker类</p>
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/10.png" srcset="/img/loading.gif" lazyload alt="10"></p>
+<p>思路：获取Checker类，new创建实例，设置num1和num2。使用<code>java.choose</code>获取MainActivity的实例，调用get_flag方法并传入所创建的Checker实例。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> frida,sys<br><br>PACKAGE = <span class="hljs-string">&quot;Frida 0x6&quot;</span><br>jsCode = <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">Java.perform(function () &#123;</span><br><span class="hljs-string">    let Checker = Java.use(&#x27;com.ad2001.frida0x6.Checker&#x27;)</span><br><span class="hljs-string">    let Checker_Obj = Checker.$new()</span><br><span class="hljs-string">    Checker_Obj.num1.value = 1234</span><br><span class="hljs-string">    Checker_Obj.num2.value = 4321</span><br><span class="hljs-string">    Java.choose(&#x27;com.ad2001.frida0x6.MainActivity&#x27;,&#123;</span><br><span class="hljs-string">        onMatch: function(instance)&#123;</span><br><span class="hljs-string">            instance.get_flag(Checker_Obj)</span><br><span class="hljs-string">        &#125;,</span><br><span class="hljs-string">        onComplete:function()&#123;</span><br><span class="hljs-string">        &#125;</span><br><span class="hljs-string">    &#125;)</span><br><span class="hljs-string">&#125;)</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">on_message</span>(<span class="hljs-params">message, data</span>):<br>    <span class="hljs-built_in">print</span>(message)<br><br>process = frida.get_usb_device().attach(PACKAGE)<br>script = process.create_script(jsCode)<br>script.on(<span class="hljs-string">&#x27;message&#x27;</span>, on_message)<br>script.load()<br>sys.stdin.read()<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/11.png" srcset="/img/loading.gif" lazyload alt="11"></p>
+<h5 id="挑战0x7：hook构造函数"><a href="#挑战0x7：hook构造函数" class="headerlink" title="挑战0x7：hook构造函数"></a>挑战0x7：hook构造函数</h5><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/12.png" srcset="/img/loading.gif" lazyload alt="12" style="zoom:25%;">
+
+<p>Checker有个构造函数，可以控制类中num1和num2变量的值</p>
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/13.png" srcset="/img/loading.gif" lazyload alt="13"></p>
+<p>MainActivity的OnCreate启动方法中向flag方法传入Checker实例，num1&#x3D;123，num2&#x3D;321。</p>
+<p>flag方法：如果传入的Checker实例中num1和num2都&gt;512则显示flag。</p>
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/14.png" srcset="/img/loading.gif" lazyload alt="14"></p>
+<p>思路：Java.use获取Checker类，hook其构造函数，使两个参数为大于512的固定值，hook后创建实例。Java.choose获取MainActivity实例，以新建的Checker实例为参数调用flag方法。(或者采用spawn模式，重启APP，后让MainActivity创建被hook的Checker类实例)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> frida,sys<br><br>PACKAGE = <span class="hljs-string">&quot;Frida 0x7&quot;</span><br>jsCode = <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">Java.perform(function () &#123;</span><br><span class="hljs-string">    let Checker = Java.use(&quot;com.ad2001.frida0x7.Checker&quot;);</span><br><span class="hljs-string">    console.log(&#x27;hook $init()&#x27;)</span><br><span class="hljs-string">    Checker.$init.overload(&#x27;int&#x27;,&#x27;int&#x27;).implementation = function (a,b)&#123;</span><br><span class="hljs-string">        console.log(&quot;Origin i and i2 = &quot;,a,b);</span><br><span class="hljs-string">        return this.$init(521,521);</span><br><span class="hljs-string">    &#125;</span><br><span class="hljs-string">    let obj = Checker.$new(1,2);</span><br><span class="hljs-string">    Java.choose(&#x27;com.ad2001.frida0x7.MainActivity&#x27;,&#123;</span><br><span class="hljs-string">        onMatch: function(instance)&#123;</span><br><span class="hljs-string">            instance.flag(obj)</span><br><span class="hljs-string">        &#125;,</span><br><span class="hljs-string">        onComplete: function()&#123;</span><br><span class="hljs-string">        &#125;</span><br><span class="hljs-string">    &#125;)</span><br><span class="hljs-string">&#125;)</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">on_message</span>(<span class="hljs-params">message, data</span>):<br>    <span class="hljs-built_in">print</span>(message)<br><br>process = frida.get_usb_device().attach(PACKAGE)<br>script = process.create_script(jsCode)<br>script.on(<span class="hljs-string">&#x27;message&#x27;</span>, on_message)<br>script.load()<br>sys.stdin.read()<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/15.png" srcset="/img/loading.gif" lazyload alt="15"></p>
+<h5 id="挑战0x8：native-hook简介"><a href="#挑战0x8：native-hook简介" class="headerlink" title="挑战0x8：native hook简介"></a>挑战0x8：native hook简介</h5><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/16.png" srcset="/img/loading.gif" lazyload alt="16" style="zoom:25%;">
+
+<p>输入的字符串作为cmpstr方法的参数，返回1则显示flag。cmpstr方法的实现位于native层。</p>
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/17.png" srcset="/img/loading.gif" lazyload alt="17"></p>
+<p>s1是java层传过来的输入，s2每位减1后等于<code>FRIDA&#123;NATIVE_LAND&#125;</code>，s1&#x3D;&#x3D;s2时返回1，否则返回0。同时会在日志中输出s1和解密后的s2</p>
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/18.png" srcset="/img/loading.gif" lazyload alt="18"></p>
+<p>这里的native层hook需要以下API：</p>
+<ul>
+<li><code>Interceptor.attach</code>：将回调函数附加到指定的函数地址。<code>targetAddress</code> 应该是我们想要挂钩的本地函数的地址。</li>
+<li><code>onEnter</code>：当挂钩的函数被调用时，调用此回调。它提供对函数参数 (<code>args</code>) 的访问。</li>
+<li><code>onLeave</code>：当挂钩的函数即将退出时，调用此回调。它提供对返回值 (<code>retval</code>) 的访问。</li>
+</ul>
+<p>在hook前需要先获取函数地址、函数的导入导出库、库基址等信息，可以使用以下API：</p>
+<ul>
+<li><p><code>Module.enumerateImports(libname)</code>：查看库的<code>导入表项信息</code>，包括：函数(表项)名、函数(表项)地址、函数(表项)的导出库名称等。</p>
+</li>
+<li><p><code>Module.enumerateExports(libname</code>：查看库的<code>导出表项信息</code>。</p>
+</li>
+<li><p><code>Module.getExportByName(libname,funcname)</code><br>：以<code>导出库名称</code>和<code>导出函数(表项)名称</code>为参数，获取对应的<code>函数(表项)地址</code>。</p>
+</li>
+<li><p><code>Module.findExportByName(libname,funcname)</code><br>“与Module.getExportByName()相同。唯一的区别在于，如果未找到导出项，Module.getExportByName() 会引发异常，而 Module.findExportByName() 如果未找到导出项则返回 <code>null</code>。</p>
+</li>
+<li><p><code>Module.getBaseAddress(libname)</code>：获取库(模块)基址。</p>
+</li>
+</ul>
+<p>方法论如下：</p>
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/19.png" srcset="/img/loading.gif" lazyload alt="19"></p>
+<p>该挑战中没有去除符号，所以可以枚举<code>libfrida0x8.so</code>的导入表，获取导入表项信息，其中包括导入函数的名称、所在库和函数地址。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> frida,sys<br><br>PACKAGE = <span class="hljs-string">&quot;Frida 0x8&quot;</span><br>jsCode = <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    var imports = Module.enumerateImports(&quot;libfrida0x8.so&quot;);</span><br><span class="hljs-string">    for(var i=0;i &lt; imports.length;i++)&#123;</span><br><span class="hljs-string">        console.log(JSON.stringify(imports[i]));</span><br><span class="hljs-string">        console.log(&#x27;-----------------------------------------------------------------&#x27;);</span><br><span class="hljs-string">    &#125;</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">on_message</span>(<span class="hljs-params">message, data</span>):<br>    <span class="hljs-built_in">print</span>(message)<br><br>process = frida.get_usb_device().attach(PACKAGE)<br>script = process.create_script(jsCode)<br>script.on(<span class="hljs-string">&#x27;message&#x27;</span>, on_message)<br>script.load()<br>sys.stdin.read()<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/20.png" srcset="/img/loading.gif" lazyload alt="20"></p>
+<p>思路1：hook native层的<code>strcmp</code>函数，打印其第二个参数，同时对第一个参数加以限制防止打印不相关的strcmp调用。strcmp函数导出自libc.so。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> frida,sys<br><br>PACKAGE = <span class="hljs-string">&quot;Frida 0x8&quot;</span><br>jsCode = <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    var targetAddress = Module.findExportByName(&quot;libc.so&quot;,&quot;strcmp&quot;);</span><br><span class="hljs-string">    console.log(&quot;Strcmp Address: &quot;,targetAddress.toString(16));</span><br><span class="hljs-string">    Interceptor.attach(targetAddress,&#123;</span><br><span class="hljs-string">        onEnter:function (args)&#123;</span><br><span class="hljs-string">            var input = Memory.readUtf8String(args[0]);</span><br><span class="hljs-string">            if (input.includes(&quot;111&quot;))&#123;</span><br><span class="hljs-string">                console.log(Memory.readUtf8String(args[1]));</span><br><span class="hljs-string">            &#125;</span><br><span class="hljs-string">        &#125;,onLeave:function(retval)&#123;</span><br><span class="hljs-string">        &#125;</span><br><span class="hljs-string">    &#125;)</span><br><span class="hljs-string">    console.log(&quot;success!&quot;);</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">on_message</span>(<span class="hljs-params">message, data</span>):<br>    <span class="hljs-built_in">print</span>(message)<br><br>process = frida.get_usb_device().attach(PACKAGE)<br>script = process.create_script(jsCode)<br>script.on(<span class="hljs-string">&#x27;message&#x27;</span>, on_message)<br>script.load()<br>sys.stdin.read()<br></code></pre></td></tr></table></figure>
+
+<p>APP中输入111后在PC端得到flag</p>
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/21.png" srcset="/img/loading.gif" lazyload alt="21"></p>
+<p>思路2：hook native层<code>__android_log_print</code>函数，打印其参数。该函数导出自<code>liblog.so</code>。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> frida,sys<br><br>PACKAGE = <span class="hljs-string">&quot;Frida 0x8&quot;</span><br>jsCode = <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    var targetAddress = Module.findExportByName(&quot;liblog.so&quot;,&quot;__android_log_print&quot;);</span><br><span class="hljs-string">    console.log(&quot;__android_log_print : &quot;,targetAddress.toString(16));</span><br><span class="hljs-string">    Interceptor.attach(targetAddress,&#123;</span><br><span class="hljs-string">        onEnter:function (args)&#123;</span><br><span class="hljs-string">            console.log(Memory.readUtf8String(args[3]));</span><br><span class="hljs-string">        &#125;,onLeave:function(retval)&#123;</span><br><span class="hljs-string">        &#125;</span><br><span class="hljs-string">    &#125;)</span><br><span class="hljs-string">    console.log(&quot;success!&quot;);</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">on_message</span>(<span class="hljs-params">message, data</span>):<br>    <span class="hljs-built_in">print</span>(message)<br><br>process = frida.get_usb_device().attach(PACKAGE)<br>script = process.create_script(jsCode)<br>script.on(<span class="hljs-string">&#x27;message&#x27;</span>, on_message)<br>script.load()<br>sys.stdin.read()<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/22.png" srcset="/img/loading.gif" lazyload alt="22"></p>
+<p>思路3：用<code>adb logcat</code>命令查看日志。</p>
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/23.png" srcset="/img/loading.gif" lazyload alt="23"></p>
+<h5 id="挑战0x9：更改native函数的返回值"><a href="#挑战0x9：更改native函数的返回值" class="headerlink" title="挑战0x9：更改native函数的返回值"></a>挑战0x9：更改native函数的返回值</h5><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/24.png" srcset="/img/loading.gif" lazyload alt="24" style="zoom:25%;">
+
+<p>点击按钮后，如果native层方法check_flag返回值为1337，则输出flag。</p>
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/25.png" srcset="/img/loading.gif" lazyload alt="25"></p>
+<p>check_flag返回1</p>
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/26.png" srcset="/img/loading.gif" lazyload alt="26"></p>
+<p>思路：hook <code>check_flag</code>方法的返回值为1337.</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> frida,sys<br><br>PACKAGE = <span class="hljs-string">&quot;Frida 0x9&quot;</span><br>jsCode = <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    var targetAddress = Module.findExportByName(&quot;liba0x9.so&quot;,&quot;Java_com_ad2001_a0x9_MainActivity_check_1flag&quot;);</span><br><span class="hljs-string">    console.log(&quot;Java_com_ad2001_a0x9_MainActivity_check_1flag : &quot;,targetAddress);</span><br><span class="hljs-string">    Interceptor.attach(targetAddress,&#123;</span><br><span class="hljs-string">        onEnter:function (args)&#123;</span><br><span class="hljs-string">        &#125;,onLeave:function(retval)&#123;</span><br><span class="hljs-string">            retval.replace(1337);</span><br><span class="hljs-string">            console.log(&quot;success!&quot;);</span><br><span class="hljs-string">        &#125;</span><br><span class="hljs-string">    &#125;)</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">on_message</span>(<span class="hljs-params">message, data</span>):<br>    <span class="hljs-built_in">print</span>(message)<br><br>process = frida.get_usb_device().attach(PACKAGE)<br>script = process.create_script(jsCode)<br>script.on(<span class="hljs-string">&#x27;message&#x27;</span>, on_message)<br>script.load()<br>sys.stdin.read()<br></code></pre></td></tr></table></figure>
+
+<p>hook后点击按钮即可</p>
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/27.png" srcset="/img/loading.gif" lazyload alt="27"></p>
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/28.png" srcset="/img/loading.gif" lazyload alt="28"></p>
+<h5 id="挑战0xA：主动调用未被调用的native方法"><a href="#挑战0xA：主动调用未被调用的native方法" class="headerlink" title="挑战0xA：主动调用未被调用的native方法"></a>挑战0xA：主动调用未被调用的native方法</h5><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/29.png" srcset="/img/loading.gif" lazyload alt="29" style="zoom:25%;">
+
+<p> 导入了<code>frida0xa</code>库，<code>activityMainBinding.sampleText.setText(stringFromJNI())</code>将<code>stringFromJNI()</code>返回的字符串设置为sampleText视图的文本内容。</p>
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/30.png" srcset="/img/loading.gif" lazyload alt="30"></p>
+<p>native层的<code>frida0xa</code>库中除了<code>stringFromJNI</code>方法，还有一个没用到的<code>get_flag</code>方法，两个参数相加等于3时通过<code>__android_log_print</code>函数在日志输出flag</p>
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/31.png" srcset="/img/loading.gif" lazyload alt="31"></p>
+<p>思路：主动调用get_flag方法，然后通过<code>adb logcat</code>命令查看日志，查看前先<code>adb logcat -c</code>清空日志。</p>
+<p>遍历导出表项找get_flag方法 </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"> <span class="hljs-keyword">import</span> frida,sys<br><br>PACKAGE = <span class="hljs-string">&quot;Frida 0xa&quot;</span><br>jsCode = <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    var imports = Module.enumerateExports(&quot;libfrida0xa.so&quot;);</span><br><span class="hljs-string">    for(var i=0;i &lt; imports.length;i++)&#123;</span><br><span class="hljs-string">        console.log(JSON.stringify(imports[i]));</span><br><span class="hljs-string">        console.log(&#x27;-----------------------------------------------------------------&#x27;);</span><br><span class="hljs-string">    &#125;</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">on_message</span>(<span class="hljs-params">message, data</span>):<br>    <span class="hljs-built_in">print</span>(message)<br><br>process = frida.get_usb_device().attach(PACKAGE)<br>script = process.create_script(jsCode)<br>script.on(<span class="hljs-string">&#x27;message&#x27;</span>, on_message)<br>script.load()<br>sys.stdin.read()<br></code></pre></td></tr></table></figure>
+
+<p>发现get_flag方法的全名是<code>_Z8get_flagii</code></p>
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/32.png" srcset="/img/loading.gif" lazyload alt="32"></p>
+<p>进行主动调用，这里要用到<code>NativePointer</code>和<code>NativeFunction</code></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs python"> <span class="hljs-keyword">import</span> frida,sys<br><br>PACKAGE = <span class="hljs-string">&quot;Frida 0xa&quot;</span><br>jsCode = <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        var targetAddress = Module.findExportByName(&quot;libfrida0xa.so&quot;,&quot;_Z8get_flagii&quot;);</span><br><span class="hljs-string">        console.log(&quot;_Z8get_flagii : &quot;,targetAddress);</span><br><span class="hljs-string">        let func_pointer = new NativePointer(targetAddress);</span><br><span class="hljs-string">        let get_flag = new NativeFunction(func_pointer,&#x27;int&#x27;,[&#x27;int&#x27;,&#x27;int&#x27;]);</span><br><span class="hljs-string">        get_flag(1,2);</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">on_message</span>(<span class="hljs-params">message, data</span>):<br>    <span class="hljs-built_in">print</span>(message)<br><br>process = frida.get_usb_device().attach(PACKAGE)<br>script = process.create_script(jsCode)<br>script.on(<span class="hljs-string">&#x27;message&#x27;</span>, on_message)<br>script.load()<br>sys.stdin.read()<br></code></pre></td></tr></table></figure>
+
+<p>先<code>adb logcat</code>实时查看日志，再主动调用，日志中看到flag</p>
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/33.png" srcset="/img/loading.gif" lazyload alt="33"></p>
+<h5 id="挑战0xB：使用X86Writer和ARM64Writer来Patch指令"><a href="#挑战0xB：使用X86Writer和ARM64Writer来Patch指令" class="headerlink" title="挑战0xB：使用X86Writer和ARM64Writer来Patch指令"></a>挑战0xB：使用X86Writer和ARM64Writer来Patch指令</h5><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/34.png" srcset="/img/loading.gif" lazyload alt="34" style="zoom:25%;">
+
+<p>按按钮时调用<code>frida0xb</code>库中的<code>getFlag</code>方法</p>
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/35.png" srcset="/img/loading.gif" lazyload alt="35"></p>
+<p>看getFlag函数的伪c代码，什么都没有</p>
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/36.png" srcset="/img/loading.gif" lazyload alt="36"></p>
+<p>看汇编，有个永假的jnz分支，导致直接跳转到了函数末尾</p>
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/37.png" srcset="/img/loading.gif" lazyload alt="37"></p>
+<p>将jnz patch为jz后看伪c，正常流程是解密flag密文并输出到日志</p>
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/38.png" srcset="/img/loading.gif" lazyload alt="38"></p>
+<p>思路：用<code>X86Writer</code>或<code>ARM64Writer</code>API将jnz指令patch为jz指令</p>
+<p>X86Writer模板，Arm64Writer模板只要把X86改成Arm64</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs python">var writer = new X86Writer(patchaddr); //指定要修改的指令地址，创建一个X86Writer类的实例<br>Memory.protect(patchaddr, <span class="hljs-number">0x1000</span>, <span class="hljs-string">&quot;rwx&quot;</span>);  //修改段权限<br><span class="hljs-keyword">try</span> &#123;<br>  //在<span class="hljs-keyword">try</span>块内，我们可以插入要修改/添加的x86指令。X86Writer实例提供了各种方法来插入各种x86指令。我们可以查阅文档以了解详情。<br>  writer.flush();//插入指令后，调用flush方法将更改应用到内存中。这确保修改后的指令被写入内存位置。<br>    <br>&#125; <span class="hljs-keyword">finally</span> &#123;<br>  // 释放X86Writer以释放资源 <br>  writer.dispose();//调用dispose方法释放与X86Writer实例关联的资源<br>    <br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p><a target="_blank" rel="noopener" href="https://frida.re/docs/javascript-api/#x86writer">X86WriterAPI文档</a></p>
+<p><a target="_blank" rel="noopener" href="https://frida.re/docs/javascript-api/#arm64writer">Arm64WriterAPI文档</a></p>
+<p>x86的库，我们要patch的位置相对模块基址偏移是170CE，可以nop，也可以把jnz修改为jz。</p>
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/39.png" srcset="/img/loading.gif" lazyload alt="39"></p>
+<p>arm64的库，同样存在花指令，要把0x15248的指令NOP掉</p>
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/40.png" srcset="/img/loading.gif" lazyload alt="40"></p>
+<p>查看目标进程架构，发现是arm64，因此采用Arm64Writer</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> frida,sys<br><br>PACKAGE = <span class="hljs-string">&quot;Frida 0xB&quot;</span><br>jsCode = <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">    console.log(Process.arch)</span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">on_message</span>(<span class="hljs-params">message, data</span>):<br>    <span class="hljs-built_in">print</span>(message)<br><br>process = frida.get_usb_device().attach(PACKAGE)<br>script = process.create_script(jsCode)<br>script.on(<span class="hljs-string">&#x27;message&#x27;</span>, on_message)<br>script.load()<br>sys.stdin.read()<br></code></pre></td></tr></table></figure>
+
+<p>写脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">import</span> frida,sys<br><br>PACKAGE = <span class="hljs-string">&quot;Frida 0xB&quot;</span><br>jsCode = <span class="hljs-string">&quot;&quot;&quot;</span><br><span class="hljs-string">        let libbase = Module.getBaseAddress(&quot;libfrida0xb.so&quot;);</span><br><span class="hljs-string">        console.log(&quot;libbase : &quot;,libbase);</span><br><span class="hljs-string">        let patchAddr = libbase.add(0x15248);</span><br><span class="hljs-string">        Memory.protect(patchAddr,0x1000,&quot;rwx&quot;);</span><br><span class="hljs-string">        let writer = new Arm64Writer(patchAddr);</span><br><span class="hljs-string">        try&#123;</span><br><span class="hljs-string">            writer.putNop();</span><br><span class="hljs-string">            //writer.putJccShort(&quot;jz&quot;,0x171A6,&quot;Patch Success!&quot;);</span><br><span class="hljs-string">            writer.flush();</span><br><span class="hljs-string">        &#125;finally&#123;</span><br><span class="hljs-string">            writer.dispose();</span><br><span class="hljs-string">        &#125; </span><br><span class="hljs-string">&quot;&quot;&quot;</span><br><br><span class="hljs-keyword">def</span> <span class="hljs-title function_">on_message</span>(<span class="hljs-params">message, data</span>):<br>    <span class="hljs-built_in">print</span>(message)<br><br>process = frida.get_usb_device().attach(PACKAGE)<br>script = process.create_script(jsCode)<br>script.on(<span class="hljs-string">&#x27;message&#x27;</span>, on_message)<br>script.load()<br>sys.stdin.read()<br></code></pre></td></tr></table></figure>
+
+<p>查看日志得到flag</p>
+<p><img src="/2025/03/08/Frida-Labs%E7%AC%94%E8%AE%B0/41.png" srcset="/img/loading.gif" lazyload alt="41"></p>
+<h2 id="其它相关资料"><a href="#其它相关资料" class="headerlink" title="其它相关资料"></a>其它相关资料</h2><p><a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-280812.htm#msg_header_h2_1">Frida-Hook-Native层操作大全</a></p>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/m0_63462097/article/details/140251923">安卓逆向-SO层相关HOOK</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.anquanke.com/post/id/195869">FRIDA-API使用篇：Java、Interceptor、NativePointer(Function&#x2F;Callback)使用方法及示例</a></p>
+<p><a target="_blank" rel="noopener" href="https://bbs.kanxue.com/thread-278145.htm">frida常用检测点及其原理–一把梭方案</a></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="../../../../categories/%E7%A7%BB%E5%8A%A8%E5%AE%89%E5%85%A8/" class="category-chain-item">移动安全</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="../../../../tags/%E7%A7%BB%E5%8A%A8%E5%AE%89%E5%85%A8/">#移动安全</a>
+      
+        <a href="../../../../tags/%E5%AE%89%E5%8D%93/">#安卓</a>
+      
+        <a href="../../../../tags/hook%E6%A1%86%E6%9E%B6/">#hook框架</a>
+      
+        <a href="../../../../tags/Frida/">#Frida</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Frida_Labs笔记</div>
+      <div>https://lkliki.github.io/2025/03/08/Frida-Labs笔记/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>0P1N</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年3月8日</div>
+        </div>
+      
+      
+      <div class="license-meta-item">
+        <div>许可协议</div>
+        <div>
+          
+            
+            
+              <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+              <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                <i class="iconfont icon-by"></i>
+              </span>
+              </a>
+            
+          
+        </div>
+      </div>
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="../../../02/11/%E6%97%A0%E7%BA%BF%E7%94%B5%E5%AE%89%E5%85%A8-RTLSDR%E9%85%8D%E5%90%88CC1101%E5%88%86%E6%9E%90%E9%87%8D%E6%94%BE%E9%81%A5%E6%8E%A7%E4%BF%A1%E5%8F%B7/" title="无线电安全-RTLSDR配合CC1101分析重放遥控信号">
+                        <span class="hidden-mobile">无线电安全-RTLSDR配合CC1101分析重放遥控信号</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header"><i class="iconfont icon-list"></i>&nbsp;目录</p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href=""><span>fffer</span></a> <i class="iconfont icon-bug"></i> <a href="" target="_blank" rel="nofollow noopener"><span>0p1n</span></a> <br /> <a href=""><span>富强 民主 文明 和谐 自由 平等 公正 法治 爱国 敬业 诚信 友善</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="../../../../js/events.js" ></script>
+<script  src="../../../../js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="../../../../js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      headingSelector : CONFIG.toc.headingSelector || 'h1,h2,h3,h4,h5,h6',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      collapseDepth   : CONFIG.toc.collapseDepth || 0,
+      scrollSmooth    : true,
+      headingsOffset  : -boardTop
+    });
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.10/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="../../../../js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="../../../../js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
